@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, forwardRef } from "react";
+import React, { useEffect, useState, useRef, forwardRef, useImperativeHandle } from "react";
 import "./Scroll.scss"
 import { useNavigate } from "react-router-dom";
 import BetterScroll from 'better-scroll'
@@ -32,10 +32,10 @@ const Scroll = forwardRef((props: Props, ref: any): JSX.Element => {
     const { direction, click, refresh, pullUpLoading, pullDownLoading, bounceTop, bounceBottom } = props;
     const { pullUp, pullDown, onScroll } = props;
     //better-scroll 实例对象
-    const [bScroll, setBScroll] = useState();
+    const [bScroll, setBScroll] = useState<any>();
     //current 指向初始化 bs 实例需要的 DOM 元素 
-    const scrollContaninerRef = useRef(null);
-
+    const scrollContaninerRef = useRef();
+    // init BetterScroll
     useEffect(() => {
         const scroll = new BetterScroll(scrollContaninerRef.current, {
             scrollX: direction === 'horizental',// When set to true, horizontal scrolling would be enabled
@@ -62,20 +62,53 @@ const Scroll = forwardRef((props: Props, ref: any): JSX.Element => {
             setBScroll(null)
         }
     }, [])
-    // useEffect(() => {
-    //     if (refresh && bScroll) {
-    //         bScroll.refresh();
-    //     }
-    // });
-    // useEffect(() => {
-    //     if (!bScroll || !onScroll) return;
-    //     bScroll.on('scroll', (scroll) => {
-    //         onScroll(scroll);
-    //     })
-    //     return () => {
-    //         bScroll.off('scroll');
-    //     }
-    // }, [onScroll, bScroll]);
+    // if refresh ,Scroll must be refreshed
+    useEffect(() => {
+        if (refresh && bScroll) {
+            bScroll.refresh();
+        }
+    });
+    // bounding scroll event
+    useEffect(() => {
+        if (!onScroll || !bScroll) return
+        bScroll.on('scroll', onScroll)
+        return () => {
+            bScroll.off('scroll', onScroll)
+        }
+    }, [onScroll, bScroll])
+    // scrollUp
+    useEffect(() => {
+        if (!bScroll || !pullUp) return
+        bScroll.on('scrollEnd', () => {
+            if (Math.abs(bScroll.maxScrollY - bScroll.y) < 100) pullUp()
+        })
+        return () => {
+            bScroll.off('scrollEnd')
+        }
+    }, [bScroll, pullUp])
+    // on down using 'touchEnd' because I want to get position 
+    // when I loosen my fingers instead of scroll animation ends
+    useEffect(() => {
+        if (!bScroll || !pullDown) return
+        bScroll.on('touchEnd', (pos: { x: number, y: number }) => {
+            if (pos.y > 50) pullDown()
+        })
+        return () => {
+            bScroll.off('touchEnd')
+        }
+    }, [bScroll, pullDown])
+    // use with forWardRef
+    useImperativeHandle(ref, () => ({
+        refresh() {
+            if (bScroll) {
+                bScroll.refresh()
+                bScroll.scrollTo(0, 0)
+            }
+        },
+        getBscroll() {
+            if (bScroll) return bScroll
+        }
+    }))
     return (
         <div ref={scrollContaninerRef} className='scroll'>
             {props.children}

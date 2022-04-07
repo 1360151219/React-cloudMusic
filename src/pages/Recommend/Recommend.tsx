@@ -1,9 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./Recommend.scss"
 import { useNavigate } from "react-router-dom";
 import RecommendList from "../../components/RecommendList/RecommendList";
 import Scroll from "../../components/Scroll/Scroll";
 import Slider from '../../components/slider';
+import { getBanner } from "../../api/request";
+function pullUp() {
+    console.log('up');
+}
+function pullDown() {
+    console.log('down');
+}
+
 function Recommend() {
     //mock 数据
     const bannerList = [1, 2, 3, 4].map(item => {
@@ -17,16 +25,16 @@ function Recommend() {
             name: "朴树、许巍、李健、郑钧、老狼、赵雷"
         }
     });
+    const scrollRef = useRef()
     return (
         <div className="Recommend">
-            <Scroll>
+            <Scroll pullUp={pullUp} pullDown={pullDown} ref={scrollRef}>
                 <div>
                     <Slider bannerList={bannerList}></Slider>
                     <RecommendList recommendList={recommendList}></RecommendList>
+                    <button onClick={() => { scrollRef.current.refresh() }}>refresh</button>
                 </div>
-
             </Scroll>
-
         </div>
     )
 }
