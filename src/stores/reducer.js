@@ -1,19 +1,6 @@
-//reducer.js
-import { combineReducers } from 'redux-immutable';
-import * as actionTypes from './constants'
-import { fromJS, set } from 'immutable';
+import { combineReducers } from "redux";
+import { reducer as recommendReducer } from "../pages/Recommend/store";
 
-const defaultState = fromJS({
-    bannerList: [],
-    recommendList: []
+export default combineReducers({
+    recommend: recommendReducer
 })
-export default (state = defaultState, action) => {
-    switch (action.type) {
-        case actionTypes.CHANGE_BANNER:
-            return state.set('bannerList', action.data)
-        case actionTypes.CHANGE_RECOMMEND_LIST:
-            return state.set('recommendList', action.data)
-        default:
-            return state
-    }
-}

@@ -15,20 +15,20 @@ interface Props {
     bounceTop?: boolean,// 是否支持向上吸顶
     bounceBottom?: boolean// 是否支持向下吸底
 }
-const BlankProps = {
-    direction: "vertical",
-    click: true,
-    refresh: true,
-    onScroll: null,
-    pullUpLoading: false,
-    pullDownLoading: false,
-    pullUp: null,
-    pullDown: null,
-    bounceTop: true,
-    bounceBottom: true
-}
+// const BlankProps = {
+//     direction: "vertical",
+//     click: true,
+//     refresh: true,
+//     onScroll: null,
+//     pullUpLoading: false,
+//     pullDownLoading: false,
+//     pullUp: null,
+//     pullDown: null,
+//     bounceTop: true,
+//     bounceBottom: true
+// }
+
 const Scroll = forwardRef((props: Props, ref: any): JSX.Element => {
-    props = Object.assign(BlankProps, props)
     const { direction, click, refresh, pullUpLoading, pullDownLoading, bounceTop, bounceBottom } = props;
     const { pullUp, pullDown, onScroll } = props;
     //better-scroll 实例对象
@@ -45,15 +45,15 @@ const Scroll = forwardRef((props: Props, ref: any): JSX.Element => {
             // 1, and only when the finger is moving on the scroll area, a scroll event is dispatched every momentumLimitTime milliseconds.
             // 2, and only when the finger is moving on the scroll area, a scroll event is dispatched all the time.
             // 3, scroll events are dispatched at any time, including invoking scrollTo or triggering momentum
-            probeType: 3,
+            probeType: 2,
             //To override the native scrolling BetterScroll has to inhibit some default browser behaviors,
             //such as mouse clicks.If you want your application to respond to the click event
             //you have to explicitly set this option to true.And then BetterScroll will add a private attribute 
             //called _constructed to the dispatched event whose value is true
             click: click,
             bounce: {
-                bottom: bounceBottom,
-                top: bounceTop
+                top: bounceTop,
+                bottom: bounceBottom
             },
             mouseWheel: true
         })
@@ -63,17 +63,15 @@ const Scroll = forwardRef((props: Props, ref: any): JSX.Element => {
         }
     }, [])
     // if refresh ,Scroll must be refreshed
-    useEffect(() => {
-        if (refresh && bScroll) {
-            bScroll.refresh();
-        }
-    });
+
     // bounding scroll event
     useEffect(() => {
         if (!onScroll || !bScroll) return
         bScroll.on('scroll', onScroll)
         return () => {
-            bScroll.off('scroll', onScroll)
+            bScroll.off('scroll', (scroll) => {
+                onScroll(scroll)
+            })
         }
     }, [onScroll, bScroll])
     // scrollUp
@@ -115,5 +113,16 @@ const Scroll = forwardRef((props: Props, ref: any): JSX.Element => {
         </div>
     )
 })
-
+Scroll.defaultProps = {
+    direction: "vertical",
+    click: true,
+    refresh: true,
+    onScroll: null,
+    pullUpLoading: false,
+    pullDownLoading: false,
+    pullUp: null,
+    pullDown: null,
+    bounceTop: true,
+    bounceBottom: true
+};
 export default React.memo(Scroll)
