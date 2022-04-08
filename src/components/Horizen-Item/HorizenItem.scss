@@ -1,11 +1,13 @@
 $theme-color: #d44439;
-
+.scroll-content {
+  width: max-content;
+}
 .list {
   display: flex;
   align-items: center;
   height: 30px;
   overflow: hidden;
-  span {
+  span.title {
     display: block;
     flex: 0 0 auto;
     padding: 5px 0;
