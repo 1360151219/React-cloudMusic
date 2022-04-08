@@ -3,9 +3,9 @@ import "./HorizenItem.scss"
 import Scroll from '../Scroll/Scroll'
 interface HorizenProps<T> {
     list: Array<T>,
-    oldVal?: string,
-    title?: string,
-    handleClick?: (value: string) => void
+    oldVal: string,
+    title: string,
+    handleClick: (value: string) => void
 }
 interface HorizenItem {
     name: string,
