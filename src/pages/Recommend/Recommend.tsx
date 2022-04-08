@@ -2,9 +2,11 @@ import React, { useEffect, useRef, useState } from "react";
 import "./Recommend.scss"
 import RecommendList from "../../components/RecommendList/RecommendList";
 import Scroll from "../../components/Scroll/Scroll";
-import Slider from '../../components/slider';
+import Slider from '../../components/Slider/slider';
 import * as actions from './store/actionCreator'
 import { connect } from "react-redux";
+import { forceCheck } from "react-lazyload";
+import Loading from "../../components/Loading/Loading";
 function pullUp() {
     console.log('up');
 }
@@ -31,7 +33,7 @@ function Recommend(props) {
     //         name: "朴树、许巍、李健、郑钧、老狼、赵雷"
     //     }
     // });
-    const { bannerList, recommendList } = props;
+    const { bannerList, recommendList, loading } = props;
 
     const { getBannerDataDispatch, getRecommendListDataDispatch } = props;
     useEffect(() => {
@@ -44,12 +46,13 @@ function Recommend(props) {
     const recommendListJS = recommendList ? recommendList.toJS() : []
     return (
         <div className="Recommend">
-            <Scroll pullUp={pullUp} pullDown={pullDown}>
+            <Scroll pullUp={pullUp} pullDown={pullDown} onScroll={forceCheck}>
                 <div>
                     <Slider bannerList={bannerListJS}></Slider>
                     <RecommendList recommendList={recommendListJS}></RecommendList>
                 </div>
             </Scroll>
+            {loading ? <Loading></Loading> : null}
         </div>
     )
 }
@@ -58,7 +61,8 @@ function Recommend(props) {
 const mapStateToProps = (state) => {
     return {
         bannerList: state.getIn(['recommend', 'bannerList']),
-        recommendList: state.getIn(['recommend', 'recommendList'])
+        recommendList: state.getIn(['recommend', 'recommendList']),
+        loading: state.getIn(['recommend', 'loading'])
     }
 }
 const mapDispatchToProps = (dispatch) => {

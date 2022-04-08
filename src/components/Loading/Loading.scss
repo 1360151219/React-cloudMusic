@@ -1,0 +1,29 @@
+$theme-color: #d44439;
+
+@keyframes load {
+  0%,
+  100% {
+    transform: scale(0);
+  }
+  50% {
+    transform: scale(1);
+  }
+}
+.Loading > div {
+  z-index: 100;
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  width: 60px;
+  height: 60px;
+  opacity: 0.6;
+  border-radius: 50%;
+  background-color: $theme-color;
+  animation: load infinite 1.4s ease-in;
+  &:nth-of-type(2) {
+    animation-delay: 0.7s;
+  }
+}

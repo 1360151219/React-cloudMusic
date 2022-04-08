@@ -45,7 +45,7 @@ const Scroll = forwardRef((props: Props, ref: any): JSX.Element => {
             // 1, and only when the finger is moving on the scroll area, a scroll event is dispatched every momentumLimitTime milliseconds.
             // 2, and only when the finger is moving on the scroll area, a scroll event is dispatched all the time.
             // 3, scroll events are dispatched at any time, including invoking scrollTo or triggering momentum
-            probeType: 2,
+            probeType: 3,
             //To override the native scrolling BetterScroll has to inhibit some default browser behaviors,
             //such as mouse clicks.If you want your application to respond to the click event
             //you have to explicitly set this option to true.And then BetterScroll will add a private attribute 
@@ -71,9 +71,14 @@ const Scroll = forwardRef((props: Props, ref: any): JSX.Element => {
     // bounding scroll event
     useEffect(() => {
         if (!onScroll || !bScroll) return
-        bScroll.on('scroll', onScroll)
+        bScroll.on('scroll', () => {
+            // Better Scroll：这里只要手指松开 即使继续滚动也不会触发
+            onScroll()
+        })
+        bScroll.on('mousewheelMove', onScroll)
         return () => {
             bScroll.off('scroll')
+            bScroll.on('mousewheelMove')
         }
     }, [onScroll, bScroll])
     // scrollUp
