@@ -1,5 +1,5 @@
 import { axiosInstance as axioss } from "./config";
-
+export const Limits = 30
 export const getBannerRequest = () => {
     return axioss.get('/banner')
 }
@@ -7,6 +7,13 @@ export const getRecommendListRequest = () => {
     return axioss.get('/personalized');
 }
 
+export const getHotSingersRequest = (offset: number) => {
+    return axioss.get('/top/artists?limit=' + Limits + '&offset=' + offset)
+}
+
+export const getSingerTypesRequest = (type: number, initial: string, offset: number) => {
+    return axioss.get(`/artist/list?type=${type}&area=-1&initial=${initial}&offset=${offset}`)
+}
 // 歌手种类
 export const categoryTypes = [{
     name: "华语男",
