@@ -20,7 +20,6 @@ const changeRecommendList = (data) => {
 const getBannerList = () => {
     return (dispatch) => {
         getBannerRequest().then(data => {
-            console.log(data);
             dispatch(changeBannerList(data.banners))
         }).catch((err) => {
             console.log(err);

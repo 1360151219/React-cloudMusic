@@ -37,7 +37,7 @@ const Scroll = forwardRef((props: Props, ref: any): JSX.Element => {
     const scrollContaninerRef = useRef();
     // init BetterScroll
     useEffect(() => {
-        const scroll = new BetterScroll(scrollContaninerRef.current, {
+        let scroll = new BetterScroll(scrollContaninerRef.current, {
             scrollX: direction === 'horizental',// When set to true, horizontal scrolling would be enabled
             scrollY: direction === 'vertical',
             // The probeType is:
@@ -63,15 +63,17 @@ const Scroll = forwardRef((props: Props, ref: any): JSX.Element => {
         }
     }, [])
     // if refresh ,Scroll must be refreshed
-
+    useEffect(() => {
+        if (refresh && bScroll) {
+            bScroll.refresh();
+        }
+    });
     // bounding scroll event
     useEffect(() => {
         if (!onScroll || !bScroll) return
         bScroll.on('scroll', onScroll)
         return () => {
-            bScroll.off('scroll', (scroll) => {
-                onScroll(scroll)
-            })
+            bScroll.off('scroll')
         }
     }, [onScroll, bScroll])
     // scrollUp
@@ -89,7 +91,9 @@ const Scroll = forwardRef((props: Props, ref: any): JSX.Element => {
     useEffect(() => {
         if (!bScroll || !pullDown) return
         bScroll.on('touchEnd', (pos: { x: number, y: number }) => {
-            if (pos.y > 50) pullDown()
+            if (pos.y > 50) {
+                pullDown()
+            }
         })
         return () => {
             bScroll.off('touchEnd')
@@ -117,11 +121,11 @@ Scroll.defaultProps = {
     direction: "vertical",
     click: true,
     refresh: true,
-    onScroll: null,
+    onScroll: () => { },
     pullUpLoading: false,
     pullDownLoading: false,
-    pullUp: null,
-    pullDown: null,
+    pullUp: () => { },
+    pullDown: () => { },
     bounceTop: true,
     bounceBottom: true
 };

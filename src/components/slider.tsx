@@ -21,10 +21,11 @@ function Slider(props: Props): JSX.Element {
                 <Swiper
                     modules={[Pagination, Autoplay]}
                     spaceBetween={0}
+                    loop={true}
                     slidesPerView={1}
                     pagination={{ clickable: true }}
                     onSlideChange={() => console.log('slide change')}
-                    autoplay={{ delay: 1000000 }}
+                    autoplay={{ delay: 1000 }}
                 >
                     {
                         bannerList.map((slide, index) => {

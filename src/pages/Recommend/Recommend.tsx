@@ -23,7 +23,7 @@ function Recommend(props) {
     // const bannerList = [1, 2, 3, 4].map(item => {
     //     return { imageUrl: "http://p1.music.126.net/ZYLJ2oZn74yUz5x8NBGkVA==/109951164331219056.jpg" }
     // });
-    // const recommendList = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(item => {
+    // const recommendList = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 1, 1, 1, 1, 1, 1, 1, 1, 1].map(item => {
     //     return {
     //         id: 1,
     //         picUrl: "https://p1.music.126.net/fhmefjUfMD-8qtj3JKeHbA==/18999560928537533.jpg",
@@ -35,9 +35,10 @@ function Recommend(props) {
 
     const { getBannerDataDispatch, getRecommendListDataDispatch } = props;
     useEffect(() => {
-        getBannerDataDispatch();
-        getRecommendListDataDispatch();
-        //eslint-disable-next-line
+        if (!bannerList.size)
+            getBannerDataDispatch();
+        if (recommendList.size == 0)
+            getRecommendListDataDispatch();
     }, []);
     const bannerListJS = bannerList ? bannerList.toJS() : []
     const recommendListJS = recommendList ? recommendList.toJS() : []
@@ -56,8 +57,8 @@ function Recommend(props) {
 
 const mapStateToProps = (state) => {
     return {
-        bannerList: state.recommend.get('bannerList'),
-        recommendList: state.recommend.get('recommendList')
+        bannerList: state.getIn(['recommend', 'bannerList']),
+        recommendList: state.getIn(['recommend', 'recommendList'])
     }
 }
 const mapDispatchToProps = (dispatch) => {

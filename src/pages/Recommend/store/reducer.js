@@ -1,8 +1,6 @@
 //reducer.js
-import { combineReducers } from 'redux-immutable';
 import * as actionTypes from './constants'
-import { fromJS, set } from 'immutable';
-import { reducer } from './reducer'
+import { fromJS } from 'immutable';
 
 const defaultState = fromJS({
     bannerList: [],

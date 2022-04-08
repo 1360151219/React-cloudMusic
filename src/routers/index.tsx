@@ -14,7 +14,7 @@ const router: RouteObject[] = [
             // },
             {
                 index: true,
-                element: <Recommend></Recommend>
+                element: <Recommend />
             },
             {
                 path: "/singers",
