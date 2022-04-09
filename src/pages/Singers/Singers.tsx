@@ -17,6 +17,7 @@ import {
     refreshMoreSingerList
 } from "./store/actionCreator";
 import { connect } from "react-redux";
+import { loadavg } from "os";
 
 const SingerList = (props) => {
     const { singerList } = props
@@ -38,7 +39,7 @@ const SingerList = (props) => {
     )
 };
 function Singers(props) {
-    let { singerList, pageCount, pullUpLoading } = props
+    let { singerList, pageCount, pullUpLoading, pullDownLoading, loading } = props
     let { getHotSingerDispatch, pullUpRefreshDispatch, updateDispatch, pullDownRefreshDispatch } = props
     useEffect(() => {
         getHotSingerDispatch()
@@ -55,7 +56,7 @@ function Singers(props) {
     }
     const handleAlpha = (value: number | string) => {
         setAlpha(value as string)
-        let hot = value && category == -1 && area == -1
+        let hot = !value && category == -1 && area == -1
         updateDispatch(scrollRef, category, area, value, hot)
     }
     const handleArea = (value: number | string) => {
@@ -98,19 +99,20 @@ function Singers(props) {
                         ref={scrollRef}
                         pullUp={handlePullUp}
                         pullDown={handlePullDown}
+                        pullDownLoading={pullDownLoading}
+                        pullUpLoading={pullUpLoading}
                     >
                         <SingerList singerList={singerListJS}></SingerList>
                     </Scroll>
                 </div>
-
-                {pullUpLoading ? <Loading></Loading> : null}
+                {loading ? <Loading></Loading> : null}
             </div>
         </>
     )
 }
 const mapStateToProps = (state) => ({
     singerList: state.getIn(['singers', 'singerList']),
-    enterLoading: state.getIn(['singers', 'loading']),
+    loading: state.getIn(['singers', 'loading']),
     pullUpLoading: state.getIn(['singers', 'pullUpLoading']),
     pullDownLoading: state.getIn(['singers', 'pullDownLoading']),
     pageCount: state.getIn(['singers', 'pageCount'])

@@ -1,7 +1,10 @@
 import React, { useEffect, useState, useRef, forwardRef, useImperativeHandle } from "react";
 import "./Scroll.scss"
 import { useNavigate } from "react-router-dom";
-import BetterScroll from 'better-scroll'
+import BetterScroll from 'better-scroll';
+import Loading from '../Loading/Loading'
+import Loadingv2 from '../Loadingv2/Loading'
+
 interface Props {
     children: React.ReactNode;
     direction?: 'vertical' | 'horizental',// 滚动的方向
@@ -118,7 +121,9 @@ const Scroll = forwardRef((props: Props, ref: any): JSX.Element => {
     }))
     return (
         <div ref={scrollContaninerRef} className='scroll'>
+            {pullDownLoading ? <Loadingv2 /> : null}
             {props.children}
+            {pullUpLoading ? <Loading /> : null}
         </div>
     )
 })
