@@ -8,6 +8,51 @@
 
 ### Redux
 
+经典用法：
+
+**全局 Store**
+
+```js
+// reducer：全局reducer
+import { combineReducers } from "redux-immutable";
+import { reducer as recommendReducer } from "../pages/Recommend/store";
+import { reducer as singersReducer } from "../pages/Singers/store";
+export default combineReducers({
+  recommend: recommendReducer,
+  singers: singersReducer,
+});
+// store
+const store = createStore(reducer, composeEnhancers(applyMiddleware(thunk)));
+```
+
+**组件连接**
+
+- 局部 reducer
+- 局部 action types
+- action creator
+
+```js
+// example.
+export const changePageCount = (data: number) => {
+  return {
+    type: actionTypes.CHANGE_LOADING,
+    data,
+  };
+};
+export const getloading = () => {
+  return (dispatch) => {
+    dispatch(changeLoading(false));
+  };
+};
+```
+
+- 连接组件
+
+```js
+// 将 Store state 以及 dispatchFun 注入到组件里
+connect(mapStateToProps, mapDispatchToProps)(React.memo(Singers));
+```
+
 ### react-lazyload
 
 ### Better Scroll 监听 scroll 事件却不会触发？✅
