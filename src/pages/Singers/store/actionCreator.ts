@@ -63,9 +63,9 @@ export const refreshMoreHotSingerList = () => {
 };
 
 //第一次加载对应类别的歌手
-export const getSingeTypes = (category, alpha) => {
+export const getSingeTypes = (type, area, alpha) => {
     return (dispatch, getState) => {
-        getSingerTypesRequest(category, alpha, 0).then(res => {
+        getSingerTypesRequest(type, area, alpha, 0).then(res => {
             const data = res.artists;
             dispatch(changeSingerList(data));
             dispatch(changeLoading(false));
@@ -77,11 +77,11 @@ export const getSingeTypes = (category, alpha) => {
 };
 
 //加载更多歌手
-export const refreshMoreSingerList = (category, alpha) => {
+export const refreshMoreSingerList = (category, area, alpha) => {
     return (dispatch, getState) => {
         const pageCount = getState().getIn(['singers', 'pageCount']);
         const singerList = getState().getIn(['singers', 'singerList']).toJS();
-        getSingerTypesRequest(category, alpha, pageCount).then(res => {
+        getSingerTypesRequest(category, area, alpha, pageCount * Limits).then(res => {
             const data = [...singerList, ...res.artists];
             dispatch(changeSingerList(data));
             dispatch(changePullUpLoading(false));
@@ -90,32 +90,3 @@ export const refreshMoreSingerList = (category, alpha) => {
         });
     }
 };
-// export const getHotSingerList = (page: number) => {
-//     return (dispatch, getState) => {
-//         const pageCount = getState().getIn(['singers', 'pageCount'])
-//         const singerList = getState().getIn(['singers', 'singerList']).toJS()
-//         const loading = getState().getIn(['singers', 'loading'])
-//         getHotSingersRequest(page * pageCount).then(res => {
-//             const data = [...singerList, ...res.artists]
-//             dispatch(changeSingerList(data))
-//             if (loading) dispatch(changeLoading(false))
-//             dispatch(changePullDownLoading(false))
-//         }).catch((err: any) => {
-//             console.log('hot singer error');
-//         })
-//     }
-// }
-
-// export const getSingerTypes = (type: number, initial: string, offset: number) => {
-//     return (dispatch, getState) => {
-//         const pageCount = getState().getIn(['singers', 'pageCount'])
-//         const singerList = getState().getIn(['singers', 'singerList']).toJS()
-//         getSingerTypesRequest(type, initial, pageCount).then(res => {
-//             const data = [...singerList, ...res.artists]
-//             dispatch(changeSingerList(data))
-//             dispatch(changePullDownLoading(false))
-//         }).catch(err => {
-//             console.log(err);
-//         })
-//     }
-// }

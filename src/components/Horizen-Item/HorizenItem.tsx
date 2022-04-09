@@ -3,13 +3,13 @@ import "./HorizenItem.scss"
 import Scroll from '../Scroll/Scroll'
 interface HorizenProps<T> {
     list: Array<T>,
-    oldVal: string,
+    oldVal: string | number,
     title: string,
-    handleClick: (value: string) => void
+    handleClick: (value: string | number) => void
 }
 interface HorizenItem {
     name: string,
-    key: string
+    key: string | number
 }
 const HorizenItem: React.FC<HorizenProps<HorizenItem>> = ({ list, oldVal, title = 'title', handleClick }) => {
     // 注：这里给content加一个css：width:max-content 即可
