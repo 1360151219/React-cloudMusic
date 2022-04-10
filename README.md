@@ -27,6 +27,20 @@ export default combineReducers({
 const store = createStore(reducer, composeEnhancers(applyMiddleware(thunk)));
 ```
 
+**全局注入**
+
+```js
+<React.StrictMode>
+  <Provider store={store}>
+    <Router>
+      <App />
+      <GlobalStyle></GlobalStyle>
+      <IconStyle></IconStyle>
+    </Router>
+  </Provider>
+</React.StrictMode>
+```
+
 **组件连接**
 
 - 局部 reducer
@@ -48,9 +62,20 @@ export const getloading = () => {
 };
 ```
 
-- 连接组件
+**连接组件**
 
 ```js
+//example
+const mapStateToProps = (state) => ({
+  loading: state.getIn(["rank", "loading"]),
+  rankList: state.getIn(["rank", "rankList"]),
+});
+const mapDispatchToProps = (dispatch) => ({
+  getRankListDispatch() {
+    dispatch(changeLoading(true));
+    dispatch(getRankList());
+  },
+});
 // 将 Store state 以及 dispatchFun 注入到组件里
 connect(mapStateToProps, mapDispatchToProps)(React.memo(Singers));
 ```
@@ -129,4 +154,4 @@ useEffect(() => {
 
 值得注意的是，当 flex 布局一行填满三个元素，但是最后一行只有两个元素的时候，会出现一些问题，你会发现最后一个元素并不是在居中的位置，而是在最右边，中间留出了空白
 
-使用伪元素解决（占位）
+使用**伪元素**解决（占位）
