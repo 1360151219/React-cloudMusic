@@ -15,6 +15,7 @@ import {
     changeAlpha,
     changeArea,
     changePullUpLoading,
+    changeNoMore,
     refreshMoreHotSingerList,
     refreshMoreSingerList
 } from "./store/actionCreator";
@@ -146,6 +147,7 @@ const mapDispatchToProps = (dispatch) => {
         pullDownRefreshDispatch(isHot: boolean) {
             dispatch(changePullDownLoading(true))
             dispatch(changePageCount(0))
+            dispatch(changeNoMore(false))
             if (isHot)
                 dispatch(getHotSingerList())
             else dispatch(getSingeTypes())
@@ -155,6 +157,7 @@ const mapDispatchToProps = (dispatch) => {
         updateDispatch(scrollRef, isHot: boolean) {
             dispatch(changePageCount(0));//由于改变了分类，所以pageCount清零
             dispatch(changeLoading(true));//loading，现在实现控制逻辑，效果实现放到下一节，后面的loading同理
+            dispatch(changeNoMore(false))
             if (isHot) dispatch(getHotSingerList());
             else
                 dispatch(getSingeTypes());

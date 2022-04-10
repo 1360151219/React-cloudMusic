@@ -160,3 +160,7 @@ export const alphaTypes = [{
     name: "Z"
 }
 ];
+
+export const getRankListRequest = () => {
+    return axioss.get('/toplist/detail')
+}

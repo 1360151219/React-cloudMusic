@@ -99,7 +99,7 @@ Better Scroll 滚动的原理是通过 transform 动画来做的。因此需要�
 
 直接使用`width:max-content`即可。具体属性的介绍见 https://blog.csdn.net/qq_21522331/article/details/108011206
 
-### Section 12 完成后，思考题：路由跳转数据缓存
+### Section 12 完成后，思考题：路由跳转数据缓存 ✅
 
 在进行路由跳转后，`category`、`alpha`、`initial`以及`singerList`属性都会重置。有什么办法可以缓存呢？？
 
@@ -114,3 +114,11 @@ useEffect(() => {
 ```
 
 2. `category`、`alpha`、`initial`这三个属性我也把他们放进 redux 中，这样组件切换后属性也不会被改变
+
+---
+
+第二种方法：在 Section 13 中使用`useReducer`以及`useContext`来实现一个简单的模拟 redux
+
+### Section 12/13 完成后，当一直加载数据到没有新数据之后，上拉还是会触发请求。 ✅
+
+根据网易云 api 返回的`more`属性，在 redux 中存储一个`nomore`状态来规定是否发请求。

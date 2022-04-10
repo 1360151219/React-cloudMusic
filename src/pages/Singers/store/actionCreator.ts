@@ -53,6 +53,12 @@ export const changeAlpha = (data: string) => {
         data
     }
 }
+export const changeNoMore = (data: boolean) => {
+    return {
+        type: actionTypes.CHANGE_NOMORE,
+        data
+    }
+}
 //第一次加载热门歌手
 export const getHotSingerList = () => {
     return (dispatch) => {
@@ -71,7 +77,13 @@ export const refreshMoreHotSingerList = () => {
     return (dispatch, getState) => {
         const pageCount = getState().getIn(['singers', 'pageCount']);
         const singerList = getState().getIn(['singers', 'singerList']).toJS();
+        const nomore = getState().getIn(['singers', 'nomore']);
+        if (nomore) {
+            dispatch(changePullUpLoading(false));
+            return
+        }
         getHotSingersRequest(pageCount * Limits).then(res => {
+            if (!res.more) dispatch(changeNoMore(true))
             const data = [...singerList, ...res.artists];
             dispatch(changeSingerList(data));
             dispatch(changePullUpLoading(false));
@@ -106,7 +118,13 @@ export const refreshMoreSingerList = () => {
         const category = getState().getIn(['singers', 'category'])
         const area = getState().getIn(['singers', 'area'])
         const alpha = getState().getIn(['singers', 'alpha'])
+        const nomore = getState().getIn(['singers', 'nomore']);
+        if (nomore) {
+            dispatch(changePullUpLoading(false));
+            return
+        }
         getSingerTypesRequest(category, area, alpha, pageCount * Limits).then(res => {
+            if (!res.more) dispatch(changeNoMore(true))
             const data = [...singerList, ...res.artists];
             dispatch(changeSingerList(data));
             dispatch(changePullUpLoading(false));

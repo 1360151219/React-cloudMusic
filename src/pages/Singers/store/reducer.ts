@@ -6,6 +6,7 @@ const defaultState = fromJS({
     pullUpLoading: false,
     pullDownLoading: false,
     pageCount: 0,
+    nomore: false,
     category: -1,
     area: -1,
     alpha: ''
@@ -29,6 +30,8 @@ export default (state = defaultState, action: { data: any, type: string }) => {
             return state.set('alpha', action.data)
         case actionTypes.CHANGE_AREA:
             return state.set('area', action.data)
+        case actionTypes.CHANGE_NOMORE:
+            return state.set('nomore', action.data)
         default:
             return state
     }
