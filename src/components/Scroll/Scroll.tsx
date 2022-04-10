@@ -1,6 +1,6 @@
-import React, { useEffect, useState, useRef, forwardRef, useImperativeHandle } from "react";
+import React, { useEffect, useState, useRef, forwardRef, useImperativeHandle, useMemo } from "react";
 import "./Scroll.scss"
-import { useNavigate } from "react-router-dom";
+import { debounce } from "../../utils";
 import BetterScroll from 'better-scroll';
 import Loading from '../Loading/Loading'
 import Loadingv2 from '../Loadingv2/Loading'
@@ -34,6 +34,13 @@ interface Props {
 const Scroll = forwardRef((props: Props, ref: any): JSX.Element => {
     const { direction, click, refresh, pullUpLoading, pullDownLoading, bounceTop, bounceBottom } = props;
     const { pullUp, pullDown, onScroll } = props;
+    // 防抖处理
+    const debouncePullUp = useMemo(() => {
+        return debounce(pullUp, 300);
+    }, [])
+    const debouncePullDown = useMemo(() => {
+        return debounce(pullDown, 300);
+    }, [pullDown])
     //better-scroll 实例对象
     const [bScroll, setBScroll] = useState<any>();
     //current 指向初始化 bs 实例需要的 DOM 元素 
@@ -86,27 +93,27 @@ const Scroll = forwardRef((props: Props, ref: any): JSX.Element => {
     }, [onScroll, bScroll])
     // scrollUp
     useEffect(() => {
-        if (!bScroll || !pullUp) return
+        if (!bScroll || !debouncePullUp) return
         bScroll.on('scrollEnd', () => {
-            if (Math.abs(bScroll.maxScrollY - bScroll.y) < 100) pullUp()
+            if (Math.abs(bScroll.maxScrollY - bScroll.y) < 100) debouncePullUp()
         })
         return () => {
             bScroll.off('scrollEnd')
         }
-    }, [bScroll, pullUp])
+    }, [bScroll, debouncePullUp])
     // on down using 'touchEnd' because I want to get position 
     // when I loosen my fingers instead of scroll animation ends
     useEffect(() => {
-        if (!bScroll || !pullDown) return
+        if (!bScroll || !debouncePullDown) return
         bScroll.on('touchEnd', (pos: { x: number, y: number }) => {
             if (pos.y > 50) {
-                pullDown()
+                debouncePullDown()
             }
         })
         return () => {
             bScroll.off('touchEnd')
         }
-    }, [bScroll, pullDown])
+    }, [bScroll, debouncePullDown])
     // use with forWardRef
     useImperativeHandle(ref, () => ({
         refresh() {

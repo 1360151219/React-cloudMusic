@@ -17,8 +17,8 @@ import {
     refreshMoreSingerList
 } from "./store/actionCreator";
 import { connect } from "react-redux";
-import { loadavg } from "os";
-
+import LazyLoad, { forceCheck } from "react-lazyload";
+import placeholder from '../../assets/singer.png'
 const SingerList = (props) => {
     const { singerList } = props
     return (
@@ -28,7 +28,10 @@ const SingerList = (props) => {
                     return (
                         <div className="singerlist-item" key={item.accountId + "" + index}>
                             <div className="img_wrapper">
-                                <img src={`${item.picUrl}?param=300x300`} width="100%" height="100%" alt="music" />
+                                <LazyLoad placeholder={<img src={placeholder} width="100%" height="100%" alt="music" />}>
+                                    <img src={`${item.picUrl}?param=300x300`} width="100%" height="100%" alt="music" />
+                                </LazyLoad>
+
                             </div>
                             <span className="name">{item.name}</span>
                         </div>
@@ -101,6 +104,7 @@ function Singers(props) {
                         pullDown={handlePullDown}
                         pullDownLoading={pullDownLoading}
                         pullUpLoading={pullUpLoading}
+                        onScroll={forceCheck}
                     >
                         <SingerList singerList={singerListJS}></SingerList>
                     </Scroll>
