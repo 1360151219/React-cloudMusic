@@ -3,7 +3,12 @@ import Home from "../pages/Home/Home"
 import Rank from "../pages/Rank/Rank"
 import Singers from "../pages/Singers/Singers"
 import Recommend from "../pages/Recommend/Recommend"
+import Album from "../pages/Album/Album"
 const router: RouteObject[] = [
+    {
+        path: '*',
+        element: <Navigate to="/recommend"></Navigate>
+    },
     {
         path: '/',
         element: <Home />,
@@ -13,8 +18,14 @@ const router: RouteObject[] = [
             //     element: <Navigate to='/recommend'></Navigate>
             // },
             {
-                index: true,
-                element: <Recommend />
+                path: "/recommend",
+                element: <Recommend />,
+                children: [
+                    {
+                        path: '/recommend/:id',
+                        element: <Album />
+                    }
+                ]
             },
             {
                 path: "/singers",

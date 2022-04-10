@@ -4,7 +4,7 @@ import "./Home.scss"
 import { Top } from "./style";
 const Links = [
     {
-        path: '',
+        path: '/recommend',
         title: '推荐'
     },
     {

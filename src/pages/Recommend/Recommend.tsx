@@ -5,6 +5,7 @@ import Scroll from "../../components/Scroll/Scroll";
 import Slider from '../../components/Slider/slider';
 import * as actions from './store/actionCreator'
 import { connect } from "react-redux";
+import { Outlet } from "react-router-dom";
 import { forceCheck } from "react-lazyload";
 import Loading from "../../components/Loading/Loading";
 function pullUp() {
@@ -53,6 +54,7 @@ function Recommend(props) {
                 </div>
             </Scroll>
             {loading ? <Loading></Loading> : null}
+            <Outlet></Outlet>
         </div>
     )
 }
