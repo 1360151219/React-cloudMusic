@@ -1,2 +1,85 @@
+@import "../../assets/global-style.scss";
 .Rank {
+  position: fixed;
+  top: 90px;
+  bottom: 0;
+  width: 100%;
+
+  .rank-list,
+  .rank-list-flex {
+    margin-top: 10px;
+    padding: 0 5px;
+    flex-direction: row;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    background: $background-color;
+    &::after {
+      content: "";
+      display: block;
+      width: 32vw;
+    }
+    .rank-list-item,
+    .rank-list-item-flex {
+      padding: 3px 0;
+      border-bottom: 1px solid $border-color;
+      .img-wrapper {
+        border-radius: 3px;
+        position: relative;
+        width: 32vw;
+        height: 32vw;
+        img {
+          width: 100%;
+          height: 100%;
+          border-radius: 3px;
+        }
+        .decorate {
+          position: absolute;
+          bottom: 0;
+          width: 100%;
+          height: 35px;
+          border-radius: 3px;
+          background: linear-gradient(
+            hsla(0, 0%, 100%, 0),
+            hsla(0, 0%, 43%, 0.4)
+          );
+        }
+        .update_frequency {
+          position: absolute;
+          left: 7px;
+          bottom: 7px;
+          font-size: 13px;
+          color: $font-color-light;
+        }
+      }
+    }
+    .rank-list-item-flex {
+      display: flex;
+      .img-wrapper {
+        width: 27vw;
+        height: 27vw;
+      }
+    }
+  }
+  .rank-list-flex {
+    display: flex;
+  }
+  .offical,
+  .global {
+    margin: 6px 5px;
+    padding-top: 15px;
+    font-weight: 700;
+    font-size: 14px;
+    color: $font-color-desc;
+  }
+  .song-wrap {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    padding: 10px;
+    & > li {
+      font-size: 12px;
+      color: gray;
+    }
+  }
 }
