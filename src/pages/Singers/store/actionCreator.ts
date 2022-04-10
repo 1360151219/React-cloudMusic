@@ -34,6 +34,25 @@ export const changePageCount = (data: number) => {
         data,
     }
 }
+
+export const changeCategory = (data: number) => {
+    return {
+        type: actionTypes.CHANGE_CATEGORY,
+        data
+    }
+}
+export const changeArea = (data: number) => {
+    return {
+        type: actionTypes.CHANGE_AREA,
+        data
+    }
+}
+export const changeAlpha = (data: string) => {
+    return {
+        type: actionTypes.CHANGE_ALPHA,
+        data
+    }
+}
 //第一次加载热门歌手
 export const getHotSingerList = () => {
     return (dispatch) => {
@@ -63,9 +82,12 @@ export const refreshMoreHotSingerList = () => {
 };
 
 //第一次加载对应类别的歌手
-export const getSingeTypes = (type, area, alpha) => {
+export const getSingeTypes = () => {
     return (dispatch, getState) => {
-        getSingerTypesRequest(type, area, alpha, 0).then(res => {
+        const category = getState().getIn(['singers', 'category'])
+        const area = getState().getIn(['singers', 'area'])
+        const alpha = getState().getIn(['singers', 'alpha'])
+        getSingerTypesRequest(category, area, alpha, 0).then(res => {
             const data = res.artists;
             dispatch(changeSingerList(data));
             dispatch(changeLoading(false));
@@ -77,10 +99,13 @@ export const getSingeTypes = (type, area, alpha) => {
 };
 
 //加载更多歌手
-export const refreshMoreSingerList = (category, area, alpha) => {
+export const refreshMoreSingerList = () => {
     return (dispatch, getState) => {
         const pageCount = getState().getIn(['singers', 'pageCount']);
         const singerList = getState().getIn(['singers', 'singerList']).toJS();
+        const category = getState().getIn(['singers', 'category'])
+        const area = getState().getIn(['singers', 'area'])
+        const alpha = getState().getIn(['singers', 'alpha'])
         getSingerTypesRequest(category, area, alpha, pageCount * Limits).then(res => {
             const data = [...singerList, ...res.artists];
             dispatch(changeSingerList(data));

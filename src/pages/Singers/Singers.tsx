@@ -11,7 +11,9 @@ import {
     changeLoading,
     changePageCount,
     changePullDownLoading,
-    changeSingerList,
+    changeCategory,
+    changeAlpha,
+    changeArea,
     changePullUpLoading,
     refreshMoreHotSingerList,
     refreshMoreSingerList
@@ -42,38 +44,38 @@ const SingerList = (props) => {
     )
 };
 function Singers(props) {
-    let { singerList, pageCount, pullUpLoading, pullDownLoading, loading } = props
-    let { getHotSingerDispatch, pullUpRefreshDispatch, updateDispatch, pullDownRefreshDispatch } = props
+    let { singerList, pageCount, pullUpLoading, pullDownLoading, loading, category, alpha, area } = props
+    let { getHotSingerDispatch, pullUpRefreshDispatch, updateDispatch, pullDownRefreshDispatch, categoryDispatch,
+        alphaDispatch, areaDispatch } = props
     useEffect(() => {
+        // 修复再次渲染Singers的时候导致数据重新刷新的问题
+        if (singerList.size > 0) return
         getHotSingerDispatch()
     }, [])
     // ！！！这里逻辑一定要清晰：每次改变参数的时候，都需要以新的参数状态去判断当前是否是hot
-    let [category, setCategory] = useState(-1)
-    let [alpha, setAlpha] = useState('')
-    let [area, setArea] = useState(-1)
     let scrollRef = useRef()
     const handleCategory = (value: number | string) => {
-        setCategory(value as number)
+        categoryDispatch(value as number)
         let hot = !alpha && value == -1 && area == -1
-        updateDispatch(scrollRef, value, area, alpha, hot)
+        updateDispatch(scrollRef, hot)
     }
     const handleAlpha = (value: number | string) => {
-        setAlpha(value as string)
+        alphaDispatch(value)
         let hot = !value && category == -1 && area == -1
-        updateDispatch(scrollRef, category, area, value, hot)
+        updateDispatch(scrollRef, hot)
     }
     const handleArea = (value: number | string) => {
-        setArea(value as number)
+        areaDispatch(value as number)
         let hot = !alpha && category == -1 && value == -1
-        updateDispatch(scrollRef, category, value, alpha, hot)
+        updateDispatch(scrollRef, hot)
     }
     const handlePullUp = () => {
         let hot = !alpha && category == -1 && area == -1
-        pullUpRefreshDispatch(pageCount, hot, category, area, alpha)
+        pullUpRefreshDispatch(pageCount, hot, area, alpha)
     }
     const handlePullDown = () => {
         let hot = !alpha && category == -1 && area == -1
-        pullDownRefreshDispatch(category, area, alpha, hot)
+        pullDownRefreshDispatch(hot)
     }
     const singerListJS = singerList ? singerList.toJS() : []
     return (
@@ -119,43 +121,55 @@ const mapStateToProps = (state) => ({
     loading: state.getIn(['singers', 'loading']),
     pullUpLoading: state.getIn(['singers', 'pullUpLoading']),
     pullDownLoading: state.getIn(['singers', 'pullDownLoading']),
-    pageCount: state.getIn(['singers', 'pageCount'])
+    pageCount: state.getIn(['singers', 'pageCount']),
+    category: state.getIn(['singers', 'category']),
+    alpha: state.getIn(['singers', 'alpha']),
+    area: state.getIn(['singers', 'area']),
 });
 const mapDispatchToProps = (dispatch) => {
     return {
-        // 首次请求热门歌手
+        // 首次请求热门歌手（会将singerList先置空）
         getHotSingerDispatch() {
             dispatch(getHotSingerList());
         },
         // 上拉加载新数据
-        pullUpRefreshDispatch(count, isHot, type, area, alpha) {
+        pullUpRefreshDispatch(count: number, isHot: boolean) {
             dispatch(changePullUpLoading(true))
             dispatch(changePageCount(count + 1))
             if (isHot)
                 dispatch(refreshMoreHotSingerList())
             else {
-                dispatch(refreshMoreSingerList(type, area, alpha))
+                dispatch(refreshMoreSingerList())
             }
         },
         //顶部下拉刷新
-        pullDownRefreshDispatch(category, area, alpha, isHot) {
+        pullDownRefreshDispatch(isHot: boolean) {
             dispatch(changePullDownLoading(true))
             dispatch(changePageCount(0))
             if (isHot)
                 dispatch(getHotSingerList())
-            else dispatch(getSingeTypes(category, area, alpha))
+            else dispatch(getSingeTypes())
         }
         ,
         // 重新刷新
-        updateDispatch(scrollRef, category, area, alpha, isHot) {
+        updateDispatch(scrollRef, isHot: boolean) {
             dispatch(changePageCount(0));//由于改变了分类，所以pageCount清零
             dispatch(changeLoading(true));//loading，现在实现控制逻辑，效果实现放到下一节，后面的loading同理
             if (isHot) dispatch(getHotSingerList());
             else
-                dispatch(getSingeTypes(category, area, alpha));
+                dispatch(getSingeTypes());
             scrollRef.current.refresh()
         },
-
+        // 数据参数变化
+        categoryDispatch(category: number) {
+            dispatch(changeCategory(category))
+        },
+        alphaDispatch(alpha: string) {
+            dispatch(changeAlpha(alpha))
+        },
+        areaDispatch(area: number) {
+            dispatch(changeArea(area))
+        }
     }
 };
 export default connect(mapStateToProps, mapDispatchToProps)(React.memo(Singers))

@@ -5,7 +5,10 @@ const defaultState = fromJS({
     loading: true,
     pullUpLoading: false,
     pullDownLoading: false,
-    pageCount: 0
+    pageCount: 0,
+    category: -1,
+    area: -1,
+    alpha: ''
 })
 
 export default (state = defaultState, action: { data: any, type: string }) => {
@@ -20,6 +23,12 @@ export default (state = defaultState, action: { data: any, type: string }) => {
             return state.set('pullUpLoading', action.data)
         case actionTypes.CHANGE_PAGECOUNT:
             return state.set('pageCount', action.data)
+        case actionTypes.CHANGE_CATEGORY:
+            return state.set('category', action.data)
+        case actionTypes.CHANGE_ALPHA:
+            return state.set('alpha', action.data)
+        case actionTypes.CHANGE_AREA:
+            return state.set('area', action.data)
         default:
             return state
     }

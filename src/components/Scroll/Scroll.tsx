@@ -37,7 +37,7 @@ const Scroll = forwardRef((props: Props, ref: any): JSX.Element => {
     // 防抖处理
     const debouncePullUp = useMemo(() => {
         return debounce(pullUp, 300);
-    }, [])
+    }, [pullUp])
     const debouncePullDown = useMemo(() => {
         return debounce(pullDown, 300);
     }, [pullDown])
