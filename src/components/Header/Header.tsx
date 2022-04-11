@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from "react";
 import "./Header.scss"
-import { useNavigate } from "react-router-dom";
 
 interface HeaderProps {
     handleClick: () => void,
-    title: string
+    title: string,
+    isMarquee: boolean
 }
-const Header = React.forwardRef((props: HeaderProps = { handleClick: () => { }, title: 'Title' }, ref) => {
-    let { title, handleClick } = props
+const Header = React.forwardRef((props: HeaderProps = { handleClick: () => { }, title: 'Title', isMarquee: false }, ref) => {
+    let { title, handleClick, isMarquee } = props
     return (
         <>
             <div className="Header" ref={ref}>
                 <i className="iconfont back" onClick={handleClick}>&#xe655;</i>
-                <h1>{title}</h1>
+                {isMarquee ? <marquee><h1>{title}</h1></marquee> : <h1>{title}</h1>}
             </div>
         </>
     )

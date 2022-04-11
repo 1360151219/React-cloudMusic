@@ -10,7 +10,7 @@ interface Props {
     direction?: 'vertical' | 'horizental',// 滚动的方向
     click?: boolean,// 是否支持点击
     refresh?: boolean,// 是否刷新
-    onScroll?: () => void,// 滑动触发的回调函数
+    onScroll?: (pos: { x: number, y: number }) => void,// 滑动触发的回调函数
     pullUp?: () => void,// 上拉加载逻辑
     pullDown?: () => void,// 下拉加载逻辑
     pullUpLoading?: boolean,// 是否显示上拉 loading 动画
@@ -81,9 +81,9 @@ const Scroll = forwardRef((props: Props, ref: any): JSX.Element => {
     // bounding scroll event
     useEffect(() => {
         if (!onScroll || !bScroll) return
-        bScroll.on('scroll', () => {
+        bScroll.on('scroll', (pos: { x: number, y: number }) => {
             // Better Scroll：这里只要手指松开 即使继续滚动也不会触发
-            onScroll()
+            onScroll(pos)
         })
         bScroll.on('mousewheelMove', onScroll)
         return () => {

@@ -21,3 +21,12 @@ export const findGlobalIndex = (rankList) => {
         if (rankList[i].tracks.length && !rankList[i + 1].tracks.length) return i + 1
     }
 }
+// 拼接名字
+export const getName = list => {
+    let str = "";
+    list.map((item, index) => {
+        str += index === 0 ? item.name : "/" + item.name;
+        return item;
+    });
+    return str;
+};
