@@ -6,4 +6,26 @@
   right: 0;
   z-index: 100;
   background-color: #fff;
+  transform-origin: right bottom;
+  &.fly-appear {
+    transform: rotateZ(30deg) translate3d(100%, 0, 0);
+  }
+  &.fly-appear-active {
+    transition: transform 0.3s;
+    transform: rotateZ(0deg) translate3d(0, 0, 0);
+    /* transition: opacity 300ms; */
+  }
+  &.fly-appear-done {
+    transform: rotateZ(0deg) translate3d(0, 0, 0);
+  }
+  &.fly-exit {
+    transform: rotateZ(0deg) translate3d(0, 0, 0);
+  }
+  &.fly-exit-active {
+    transition: transform 0.3s;
+    transform: rotateZ(30deg) translate3d(100%, 0, 0);
+  }
+  .album-content {
+    margin-top: 50px;
+  }
 }

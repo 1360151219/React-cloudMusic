@@ -2,28 +2,30 @@ import React, { useEffect, useState } from "react";
 import "./Album.scss"
 import { useNavigate, useParams } from "react-router-dom";
 import { CSSTransition } from 'react-transition-group';
+import Header from "../../components/Header/Header";
 function Album() {
     let navigate = useNavigate()
     let param = useParams()
-    let [fly, setFly] = useState(false)
+    let [fly, setFly] = useState(true)
     const id = param.id
+    const handleBack = () => {
+        setFly(false)
+    }
     return (
         <>
-            {/* <CSSTransition
+            <CSSTransition
                 in={fly}
                 timeout={300}
                 classNames="fly"
                 appear={true}
                 unmountOnExit
-                onExited={}
+                onExited={() => { navigate(-1) }}
             >
                 <div className="Album">
-                    album
+                    <Header title='返回' handleClick={handleBack} />
+                    <div className="album-content">album</div>
                 </div>
-            </CSSTransition> */}
-            <div className="Album">
-                album
-            </div>
+            </CSSTransition>
         </>
     )
 }

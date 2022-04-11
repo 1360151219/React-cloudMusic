@@ -6,7 +6,7 @@ import Recommend from "../pages/Recommend/Recommend"
 import Album from "../pages/Album/Album"
 const router: RouteObject[] = [
     {
-        path: '*',
+        path: '/',
         element: <Navigate to="/recommend"></Navigate>
     },
     {

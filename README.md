@@ -157,3 +157,23 @@ useEffect(() => {
 使用**伪元素**解决（占位）
 
 ### Section 15: react-transition-group 动画库
+
+现在的类名如下：
+
+```css
+.fade-appear,
+.fade-appear-active,
+.fade-appear-done,
+//
+.fade-enter,
+.fade-enter-active,
+.fade-enter-done,
+//
+.fade-exit,
+.fade-exit-active,
+.fade-exit-done,;
+```
+
+### Section 15：退出详情页后路由跳转问题
+
+这里如果在`handleBack`中直接调用`navigate(-1)`，则当前组件被立即卸载就不会有动画了。因此要去使用 react-transition-group 库内置的`onExit`钩子。
