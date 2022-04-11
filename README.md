@@ -177,3 +177,5 @@ useEffect(() => {
 ### Section 15：退出详情页后路由跳转问题
 
 这里如果在`handleBack`中直接调用`navigate(-1)`，则当前组件被立即卸载就不会有动画了。因此要去使用 react-transition-group 库内置的`onExit`钩子。
+
+### Section 16: `<marquee>` 标签被弃用
