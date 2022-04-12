@@ -187,3 +187,9 @@ useEffect(() => {
 解决方法很简单，只要当前 currentAlbum 为空，则不渲染 Scroll 组件
 
 ### 获取列表有多个 diapatch 同时进行，也会造成多次 setstate，组件多次 render，需要优化。是否可以合并成一个对象，一次执行 setstate？
+
+### Section 20：函数组件中定义的渲染 jsx 函数，写成组件形式会有 bug，？
+
+位置`Singers.tsx:line 31`.
+
+推测：如果写成组件形式，因为没有 React.memo 包裹，每次 props 传入的数组更新的时候，组件都会被渲染一次，因此 Scroll 会一直重置。写成函数形式，就没有这个问题了。

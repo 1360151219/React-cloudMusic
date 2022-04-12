@@ -28,15 +28,15 @@ function Singers(props) {
     let { getHotSingerDispatch, pullUpRefreshDispatch, updateDispatch, pullDownRefreshDispatch, categoryDispatch,
         alphaDispatch, areaDispatch } = props
     let navigate = useNavigate()
-    const SingerList = (props) => {
+    // 注意，这里渲染的时候不能写成组件形式，会出bug！！
+    const renderSingerList = (childList) => {
         const enterDetail = (id: number) => {
             navigate(`/singers/${id}`)
         }
-        const { singerList } = props
         return (
             <div className="singerlist">
                 {
-                    singerList.map((item, index) => {
+                    childList.map((item, index) => {
                         return (
                             <div className="singerlist-item" key={item.accountId + "" + index} onClick={() => enterDetail(item.id)}>
                                 <div className="img_wrapper">
@@ -114,7 +114,7 @@ function Singers(props) {
                         pullUpLoading={pullUpLoading}
                         onScroll={forceCheck}
                     >
-                        <SingerList singerList={singerListJS}></SingerList>
+                        {renderSingerList(singerListJS)}
                     </Scroll>
                 </div>
                 {loading ? <Loading></Loading> : null}
