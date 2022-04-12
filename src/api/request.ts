@@ -160,7 +160,11 @@ export const alphaTypes = [{
     name: "Z"
 }
 ];
-
+// 排行榜
 export const getRankListRequest = () => {
     return axioss.get('/toplist/detail')
+}
+// 歌单详情
+export const getAlbumDetailRequest = (id: number) => {
+    return axioss.get(`/playlist/detail?id=${id}`)
 }

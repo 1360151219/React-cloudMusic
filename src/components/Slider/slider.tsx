@@ -24,7 +24,7 @@ function Slider(props: Props): JSX.Element {
                     loop={true}
                     slidesPerView={1}
                     pagination={{ clickable: true }}
-                    onSlideChange={() => console.log('slide change')}
+                    onSlideChange={() => { }}
                     autoplay={{ delay: 1000 }}
                 >
                     {

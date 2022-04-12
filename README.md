@@ -156,7 +156,7 @@ useEffect(() => {
 
 使用**伪元素**解决（占位）
 
-### Section 15: react-transition-group 动画库
+### Section 15: react-transition-group 动画库 ✅
 
 现在的类名如下：
 
@@ -179,3 +179,9 @@ useEffect(() => {
 这里如果在`handleBack`中直接调用`navigate(-1)`，则当前组件被立即卸载就不会有动画了。因此要去使用 react-transition-group 库内置的`onExit`钩子。
 
 ### Section 16: `<marquee>` 标签被弃用
+
+### Section 17: `currentAlbum.creator.avatarUrl` 在初始化时报错 ✅
+
+当页面进入 Ajax 请求还没有获取数据时，currentAlbum 的值为初始态 {}。直到数据异步加载完成，currentAlbum 才会改变，那么在这个过程中，通过 currentAlbum.creator 为 undefined，通过 current.creator.avatarUrl 取值自然会报错。
+
+解决方法很简单，只要当前 currentAlbum 为空，则不渲染 Scroll 组件

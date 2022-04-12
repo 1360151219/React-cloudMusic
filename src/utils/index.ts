@@ -30,3 +30,8 @@ export const getName = list => {
     });
     return str;
 };
+
+export const isEmptyObject = (obj: any) => {
+    if (typeof obj != 'object') return false
+    return !obj || Object.keys(obj).length == 0
+}
