@@ -185,3 +185,5 @@ useEffect(() => {
 当页面进入 Ajax 请求还没有获取数据时，currentAlbum 的值为初始态 {}。直到数据异步加载完成，currentAlbum 才会改变，那么在这个过程中，通过 currentAlbum.creator 为 undefined，通过 current.creator.avatarUrl 取值自然会报错。
 
 解决方法很简单，只要当前 currentAlbum 为空，则不渲染 Scroll 组件
+
+### 获取列表有多个 diapatch 同时进行，也会造成多次 setstate，组件多次 render，需要优化。是否可以合并成一个对象，一次执行 setstate？

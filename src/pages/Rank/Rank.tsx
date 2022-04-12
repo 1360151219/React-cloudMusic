@@ -4,37 +4,45 @@ import { getRankList, changeLoading } from "./store";
 import { connect } from "react-redux";
 import { findGlobalIndex } from "../../utils";
 import Scroll from "../../components/Scroll/Scroll";
+import { useNavigate, Outlet } from "react-router-dom";
 // 渲染榜单
-function renderRankList(list, isGlobal = false) {
-    return (
-        <div className={isGlobal ? "rank-list-flex" : 'rank-list'}>
-            {
-                list.map((item, index) => {
-                    return (
-                        <div key={item.createTime} className={isGlobal ? "rank-list-item" : 'rank-list-item-flex'} onClick={() => enterDetail(item.name)}>
-                            <div className="img-wrapper">
-                                <img src={item.coverImgUrl} width="100px" height='100px' />
-                                <div className="decorate"></div>
-                                <span className="update_frequency">{item.updateFrequency}</span>
-                            </div>
-                            {renderSongList(item.tracks)}
-                        </div>
-                    )
-                })
-            }
-        </div>
-    )
-}
-function renderSongList(list) {
-    return list.length ? (
-        <ul className="song-wrap">
-            {list.map((item, index) => {
-                return <li key={index}>{index + 1}. {item.first} - {item.second}</li>
-            })}
-        </ul>
-    ) : null
-}
+
 function Rank(props) {
+    let navigate = useNavigate()
+
+    function renderRankList(list, isGlobal = false) {
+        const enterDetail = (detail) => {
+            console.log(detail.id);
+            navigate(`/rank/${detail.id}`)
+        }
+        return (
+            <div className={isGlobal ? "rank-list-flex" : 'rank-list'}>
+                {
+                    list.map((item, index) => {
+                        return (
+                            <div key={item.createTime} className={isGlobal ? "rank-list-item" : 'rank-list-item-flex'} onClick={() => enterDetail(item)}>
+                                <div className="img-wrapper">
+                                    <img src={item.coverImgUrl} width="100px" height='100px' />
+                                    <div className="decorate"></div>
+                                    <span className="update_frequency">{item.updateFrequency}</span>
+                                </div>
+                                {renderSongList(item.tracks)}
+                            </div>
+                        )
+                    })
+                }
+            </div>
+        )
+    }
+    function renderSongList(list) {
+        return list.length ? (
+            <ul className="song-wrap">
+                {list.map((item, index) => {
+                    return <li key={index}>{index + 1}. {item.first} - {item.second}</li>
+                })}
+            </ul>
+        ) : null
+    }
     const { loading, rankList } = props
     const { getRankListDispatch } = props
     useEffect(() => {
@@ -58,6 +66,8 @@ function Rank(props) {
                         {renderRankList(globalList, true)}
                     </div>
                 </Scroll>
+                <Outlet></Outlet>
+
             </div>
         </>
     )
