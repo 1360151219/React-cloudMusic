@@ -10,6 +10,95 @@ import { getCount, getName, isEmptyObject } from "../../utils";
 import { getAlbumList } from "./store/actionCreator";
 import { connect } from "react-redux";
 import Loading from "../../components/Loading/Loading";
+
+function renderTopDes(currentAlbumJS) {
+    return (
+        <TopDesc background={currentAlbumJS.coverImgUrl}>
+            <div className="background">
+                <div className="filter"></div>
+            </div>
+            <div className="img-wrapper">
+                <div className="decorate"></div>
+                <img src={currentAlbumJS.coverImgUrl} alt="" />
+                <div className="play_count">
+                    <i className="iconfont play">&#xe885;</i>
+                    <span className="count">{Math.floor(currentAlbumJS.subscribedCount / 1000) / 10} 万 </span>
+                </div>
+            </div>
+            <div className="desc-wrapper">
+                <div className="title">{currentAlbumJS.name}</div>
+                <div className="person">
+                    <div className="avatar">
+                        <img src={currentAlbumJS.creator.avatarUrl} alt="" />
+                    </div>
+                    <div className="name">{currentAlbumJS.creator.nickname}</div>
+                </div>
+            </div>
+        </TopDesc>
+    )
+}
+function renderMenu(currentAlbumJS) {
+    return (
+        <Menu>
+            <div>
+                <i className="iconfont">&#xe6ad;</i>
+                评论
+            </div>
+            <div>
+                <i className="iconfont">&#xe86f;</i>
+                点赞
+            </div>
+            <div>
+                <i className="iconfont">&#xe62d;</i>
+                收藏
+            </div>
+            <div>
+                <i className="iconfont">&#xe606;</i>
+                更多
+            </div>
+        </Menu>
+    )
+}
+function renderSongList(currentAlbumJS) {
+    return (
+        <SongList>
+            <div className="first-line">
+                <div className="play-all">
+                    <i className="iconfont">&#xe6e3;</i>
+                    <span >
+                        播放全部
+                        <span className="sum">(共 {currentAlbumJS.tracks.length} 首)</span>
+                    </span>
+                </div>
+                <div className="add-list">
+                    <i className="iconfont">&#xe62d;</i>
+                    <span > 收藏 ({getCount(currentAlbumJS.subscribedCount)})</span>
+                </div>
+            </div>
+        </SongList>
+    )
+}
+function renderSongItem(currentAlbumJS) {
+    return (
+        <SongItem>
+            {
+                currentAlbumJS.tracks.map((item, index) => {
+                    return (
+                        <li key={index}>
+                            <span className="index">{index + 1}</span>
+                            <div className="info">
+                                <span>{item.name}</span>
+                                <span>
+                                    {getName(item.ar)} - {item.al.name}
+                                </span>
+                            </div>
+                        </li>
+                    )
+                })
+            }
+        </SongItem>
+    )
+}
 function Album(props) {
     const { getAlbumListDispatch } = props
     const { loading, currentAlbum } = props
@@ -61,78 +150,10 @@ function Album(props) {
                         {!isEmptyObject(currentAlbumJS) ?
                             <Scroll bounceTop={false} onScroll={handleScroll}>
                                 <div>
-                                    <TopDesc background={currentAlbumJS.coverImgUrl}>
-                                        <div className="background">
-                                            <div className="filter"></div>
-                                        </div>
-                                        <div className="img-wrapper">
-                                            <div className="decorate"></div>
-                                            <img src={currentAlbumJS.coverImgUrl} alt="" />
-                                            <div className="play_count">
-                                                <i className="iconfont play">&#xe885;</i>
-                                                <span className="count">{Math.floor(currentAlbumJS.subscribedCount / 1000) / 10} 万 </span>
-                                            </div>
-                                        </div>
-                                        <div className="desc-wrapper">
-                                            <div className="title">{currentAlbumJS.name}</div>
-                                            <div className="person">
-                                                <div className="avatar">
-                                                    <img src={currentAlbumJS.creator.avatarUrl} alt="" />
-                                                </div>
-                                                <div className="name">{currentAlbumJS.creator.nickname}</div>
-                                            </div>
-                                        </div>
-                                    </TopDesc>
-                                    <Menu>
-                                        <div>
-                                            <i className="iconfont">&#xe6ad;</i>
-                                            评论
-                                        </div>
-                                        <div>
-                                            <i className="iconfont">&#xe86f;</i>
-                                            点赞
-                                        </div>
-                                        <div>
-                                            <i className="iconfont">&#xe62d;</i>
-                                            收藏
-                                        </div>
-                                        <div>
-                                            <i className="iconfont">&#xe606;</i>
-                                            更多
-                                        </div>
-                                    </Menu>
-                                    <SongList>
-                                        <div className="first-line">
-                                            <div className="play-all">
-                                                <i className="iconfont">&#xe6e3;</i>
-                                                <span >
-                                                    播放全部
-                                                    <span className="sum">(共 {currentAlbumJS.tracks.length} 首)</span>
-                                                </span>
-                                            </div>
-                                            <div className="add-list">
-                                                <i className="iconfont">&#xe62d;</i>
-                                                <span > 收藏 ({getCount(currentAlbumJS.subscribedCount)})</span>
-                                            </div>
-                                        </div>
-                                    </SongList>
-                                    <SongItem>
-                                        {
-                                            currentAlbumJS.tracks.map((item, index) => {
-                                                return (
-                                                    <li key={index}>
-                                                        <span className="index">{index + 1}</span>
-                                                        <div className="info">
-                                                            <span>{item.name}</span>
-                                                            <span>
-                                                                {getName(item.ar)} - {item.al.name}
-                                                            </span>
-                                                        </div>
-                                                    </li>
-                                                )
-                                            })
-                                        }
-                                    </SongItem>
+                                    {renderTopDes(currentAlbumJS)}
+                                    {renderMenu(currentAlbumJS)}
+                                    {renderSongList(currentAlbumJS)}
+                                    {renderSongItem(currentAlbumJS)}
                                 </div>
                             </Scroll>
                             : null}
