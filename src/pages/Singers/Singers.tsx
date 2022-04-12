@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./Singers.scss"
-import { useNavigate } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import Scroll from "../../components/Scroll/Scroll";
 import HorizenItem from "../../components/Horizen-Item/HorizenItem";
 import { categoryTypes, alphaTypes, areaTypes } from '../../api/request'
@@ -22,32 +22,37 @@ import {
 import { connect } from "react-redux";
 import LazyLoad, { forceCheck } from "react-lazyload";
 import placeholder from '../../assets/singer.png'
-const SingerList = (props) => {
-    const { singerList } = props
-    return (
-        <div className="singerlist">
-            {
-                singerList.map((item, index) => {
-                    return (
-                        <div className="singerlist-item" key={item.accountId + "" + index}>
-                            <div className="img_wrapper">
-                                <LazyLoad placeholder={<img src={placeholder} width="100%" height="100%" alt="music" />}>
-                                    <img src={`${item.picUrl}?param=300x300`} width="100%" height="100%" alt="music" />
-                                </LazyLoad>
 
-                            </div>
-                            <span className="name">{item.name}</span>
-                        </div>
-                    )
-                })
-            }
-        </div>
-    )
-};
 function Singers(props) {
     let { singerList, pageCount, pullUpLoading, pullDownLoading, loading, category, alpha, area } = props
     let { getHotSingerDispatch, pullUpRefreshDispatch, updateDispatch, pullDownRefreshDispatch, categoryDispatch,
         alphaDispatch, areaDispatch } = props
+    let navigate = useNavigate()
+    const SingerList = (props) => {
+        const enterDetail = (id: number) => {
+            navigate(`/singers/${id}`)
+        }
+        const { singerList } = props
+        return (
+            <div className="singerlist">
+                {
+                    singerList.map((item, index) => {
+                        return (
+                            <div className="singerlist-item" key={item.accountId + "" + index} onClick={() => enterDetail(item.id)}>
+                                <div className="img_wrapper">
+                                    <LazyLoad placeholder={<img src={placeholder} width="100%" height="100%" alt="music" />}>
+                                        <img src={`${item.picUrl}?param=300x300`} width="100%" height="100%" alt="music" />
+                                    </LazyLoad>
+
+                                </div>
+                                <span className="name">{item.name}</span>
+                            </div>
+                        )
+                    })
+                }
+            </div>
+        )
+    };
     useEffect(() => {
         // 修复再次渲染Singers的时候导致数据重新刷新的问题
         if (singerList.size > 0) return
@@ -113,6 +118,7 @@ function Singers(props) {
                     </Scroll>
                 </div>
                 {loading ? <Loading></Loading> : null}
+                <Outlet></Outlet>
             </div>
         </>
     )

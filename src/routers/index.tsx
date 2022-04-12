@@ -2,6 +2,7 @@ import { RouteObject, Navigate } from "react-router-dom"
 import Home from "../pages/Home/Home"
 import Rank from "../pages/Rank/Rank"
 import Singers from "../pages/Singers/Singers"
+import Singer from "../pages/Singer/Singer"
 import Recommend from "../pages/Recommend/Recommend"
 import Album from "../pages/Album/Album"
 const router: RouteObject[] = [
@@ -29,11 +30,17 @@ const router: RouteObject[] = [
             },
             {
                 path: "/singers",
-                element: <Singers></Singers>
+                element: <Singers />,
+                children: [
+                    {
+                        path: '/singers/:id',
+                        element: <Singer />
+                    }
+                ]
             },
             {
                 path: "/rank",
-                element: <Rank></Rank>,
+                element: <Rank />,
                 children: [
                     {
                         path: "/rank/:id",
