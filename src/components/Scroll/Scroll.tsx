@@ -47,7 +47,6 @@ const Scroll = forwardRef((props: Props, ref: any): JSX.Element => {
     const scrollContaninerRef = useRef();
     // init BetterScroll
     useEffect(() => {
-        console.log("build");
         let scroll = new BetterScroll(scrollContaninerRef.current, {
             scrollX: direction === 'horizental',// When set to true, horizontal scrolling would be enabled
             scrollY: direction === 'vertical',

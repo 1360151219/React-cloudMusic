@@ -168,3 +168,7 @@ export const getRankListRequest = () => {
 export const getAlbumDetailRequest = (id: number) => {
     return axioss.get(`/playlist/detail?id=${id}`)
 }
+// 歌手歌曲
+export const getSingerSongsRequest = (id: number) => {
+    return axioss.get(`/artists?id=${id}`)
+}
