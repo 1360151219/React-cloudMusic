@@ -28,6 +28,109 @@ function Singer() {
                 }
             },
             // 省略 20 条
+            {
+                name: "我好像在哪见过你",
+                ar: [{ name: "薛之谦" }],
+                al: {
+                    name: "薛之谦专辑"
+                }
+            }, {
+                name: "我好像在哪见过你",
+                ar: [{ name: "薛之谦" }],
+                al: {
+                    name: "薛之谦专辑"
+                }
+            }, {
+                name: "我好像在哪见过你",
+                ar: [{ name: "薛之谦" }],
+                al: {
+                    name: "薛之谦专辑"
+                }
+            }, {
+                name: "我好像在哪见过你",
+                ar: [{ name: "薛之谦" }],
+                al: {
+                    name: "薛之谦专辑"
+                }
+            }, {
+                name: "我好像在哪见过你",
+                ar: [{ name: "薛之谦" }],
+                al: {
+                    name: "薛之谦专辑"
+                }
+            }, {
+                name: "我好像在哪见过你",
+                ar: [{ name: "薛之谦" }],
+                al: {
+                    name: "薛之谦专辑"
+                }
+            }, {
+                name: "我好像在哪见过你",
+                ar: [{ name: "薛之谦" }],
+                al: {
+                    name: "薛之谦专辑"
+                }
+            }, {
+                name: "我好像在哪见过你",
+                ar: [{ name: "薛之谦" }],
+                al: {
+                    name: "薛之谦专辑"
+                }
+            }, {
+                name: "我好像在哪见过你",
+                ar: [{ name: "薛之谦" }],
+                al: {
+                    name: "薛之谦专辑"
+                }
+            }, {
+                name: "我好像在哪见过你",
+                ar: [{ name: "薛之谦" }],
+                al: {
+                    name: "薛之谦专辑"
+                }
+            }, {
+                name: "我好像在哪见过你",
+                ar: [{ name: "薛之谦" }],
+                al: {
+                    name: "薛之谦专辑"
+                }
+            }, {
+                name: "我好像在哪见过你",
+                ar: [{ name: "薛之谦" }],
+                al: {
+                    name: "薛之谦专辑"
+                }
+            }, {
+                name: "我好像在哪见过你",
+                ar: [{ name: "薛之谦" }],
+                al: {
+                    name: "薛之谦专辑"
+                }
+            }, {
+                name: "我好像在哪见过你",
+                ar: [{ name: "薛之谦" }],
+                al: {
+                    name: "薛之谦专辑"
+                }
+            }, {
+                name: "我好像在哪见过你",
+                ar: [{ name: "薛之谦" }],
+                al: {
+                    name: "薛之谦专辑"
+                }
+            }, {
+                name: "我好像在哪见过你",
+                ar: [{ name: "薛之谦" }],
+                al: {
+                    name: "薛之谦专辑"
+                }
+            }, {
+                name: "我好像在哪见过你",
+                ar: [{ name: "薛之谦" }],
+                al: {
+                    name: "薛之谦专辑"
+                }
+            },
         ]
     }
     let [fly, setFly] = useState(true)
@@ -43,13 +146,38 @@ function Singer() {
         let h = imgWrapper.current.offsetHeight
         songScrollWrapper.current.style.top = h - OFFSET + 'px'
         heightInitial.current = h
-        console.log(heightInitial);
         // 这个layer非常牛
         layer.current.style.top = `${h - OFFSET}px`;
         songScroll.current.refresh();
     }, [])
     const handleClick = useCallback(() => {
         setFly(false)
+    }, [])
+    const handleScroll = useCallback((pos: { x: number, y: number }) => {
+        let height = heightInitial.current
+        let percent = Math.abs(pos.y / height)
+        let headerHeight = header.current.offsetHeight
+        let minScrollY = -(height - OFFSET - headerHeight)
+        // 当下拉的时候
+        if (pos.y > 0) {
+            imgWrapper.current.style.transform = `scale(${1 + percent})`
+            layer.current.style.top = `${height - OFFSET + pos.y}px`
+            collectButton.current.style.transform = `translateY(${pos.y}px)`
+        } else if (pos.y >= minScrollY) {
+            // 上拉
+            layer.current.style.top = `${height - OFFSET + pos.y}px`
+            collectButton.current.style.transform = `translateY(${pos.y}px)`
+            collectButton.current.style.opacity = `${1 - percent * 2}`// 加快消失速度
+            imgWrapper.current.style.height = `0px`;
+            imgWrapper.current.style.paddingTop = '75%';
+            imgWrapper.current.style.zIndex = 0;
+        } else {
+            // 超过了Header的时候
+            imgWrapper.current.style.height = `${headerHeight}px`;
+            imgWrapper.current.style.paddingTop = 0;
+            imgWrapper.current.style.zIndex = 99;
+        }
+
     }, [])
     return (
         <CSSTransition
@@ -71,8 +199,10 @@ function Singer() {
                 </CollectButton>
                 <BgLayer ref={layer}></BgLayer>
                 <SongListWrapper ref={songScrollWrapper}>
-                    <Scroll ref={songScroll}>
-                        <SongsList songs={artist.hotSongs} showCollect={false} collectCount={1}></SongsList>
+                    <Scroll ref={songScroll} onScroll={handleScroll}>
+                        <div>
+                            <SongsList songs={artist.hotSongs} showCollect={false} collectCount={1}></SongsList>
+                        </div>
                     </Scroll>
                 </SongListWrapper>
             </Container>

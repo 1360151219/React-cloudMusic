@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { SongList, SongItem } from "./style";
 import { getName } from "../../utils";
 const SongsList = React.forwardRef((props, ref) => {
@@ -25,7 +24,7 @@ const SongsList = React.forwardRef((props, ref) => {
             </SongItem>
         )
     }
-    function collect(count) {
+    function collect(count: number) {
         return (
             <div className="add-list">
                 <i className="iconfont">&#xe62d;</i>
@@ -43,7 +42,6 @@ const SongsList = React.forwardRef((props, ref) => {
                         <span className="sum">(共 10 首)</span>
                     </span>
                 </div>
-
                 {showCollect ? collect(collectCount) : null}
             </div>
             <SongItem>

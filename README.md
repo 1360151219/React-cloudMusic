@@ -197,3 +197,5 @@ useEffect(() => {
 ### Section 20 中完成的 SongsList 组件可以在 Album 中复用
 
 ### Section 20 的遮罩：利用 z-index 和 position 进行位置控制 ✅
+
+歌单列表其实是没有自己的背景的。Layer 起到一个背景的作用，因此它也要滚动
