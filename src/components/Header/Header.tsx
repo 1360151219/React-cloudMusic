@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import "./Header.scss"
 
 interface HeaderProps {
-    handleClick: () => void,
+    handleClick?: () => void,
     title: string,
-    isMarquee: boolean
+    isMarquee?: boolean
 }
 const Header = React.forwardRef((props: HeaderProps = { handleClick: () => { }, title: 'Title', isMarquee: false }, ref) => {
     let { title, handleClick, isMarquee } = props
