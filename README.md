@@ -195,3 +195,5 @@ useEffect(() => {
 ### 获取列表有多个 diapatch 同时进行，也会造成多次 setstate，组件多次 render，需要优化。是否可以合并成一个对象，一次执行 setstate？
 
 ### Section 20 中完成的 SongsList 组件可以在 Album 中复用
+
+### Section 20 的遮罩：利用 z-index 和 position 进行位置控制 ✅
