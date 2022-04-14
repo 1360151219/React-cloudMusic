@@ -18,9 +18,6 @@ function Singer(props) {
         getArtistDispatch(id)
 
     }, [])
-    console.log(artist);
-    console.log(songsList);
-    console.log(loading);
     let [fly, setFly] = useState(true)
     let navigate = useNavigate()
     let songScrollWrapper = useRef()

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Outlet, NavLink } from "react-router-dom";
 import "./Home.scss"
 import { Top } from "./style";
+import Player from "../Player/Player";
 const Links = [
     {
         path: '/recommend',
@@ -30,7 +31,7 @@ function Home() {
             <div className="tab">
                 {Tab}
             </div>
-
+            <Player></Player>
             <Outlet></Outlet>
         </div>
     )
