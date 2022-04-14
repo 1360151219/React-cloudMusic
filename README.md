@@ -82,6 +82,12 @@ connect(mapStateToProps, mapDispatchToProps)(React.memo(Singers));
 
 ### react-lazyload
 
+### 学会了 CSS 技巧啊~~~
+
+- 设置`top`、`bottom`、`left`、`right`四个属性来设置全屏或者扩大区域等。
+
+- `animation-play-state` 控制动画的停止开始
+
 ### Better Scroll 监听 scroll 事件却不会触发？✅
 
 **Why does my BetterScroll listen for the scroll hook and the listener doesn't execute?**
