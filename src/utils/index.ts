@@ -30,8 +30,25 @@ export const getName = list => {
     });
     return str;
 };
-
+// 判断对象是否空
 export const isEmptyObject = (obj: any) => {
     if (typeof obj != 'object') return false
     return !obj || Object.keys(obj).length == 0
+}
+// 计算偏移的函数
+export const getPosAndScale = () => {
+    const targetWidth = 40;
+    const paddingLeft = 40;
+    const paddingBottom = 40;
+    const paddingTop = 80;
+    const width = window.innerWidth * 0.8;
+    const scale = targetWidth / width;
+    // 两个圆心的横坐标距离和纵坐标距离
+    const x = -(window.innerWidth / 2 - paddingLeft);
+    const y = (window.innerHeight - paddingBottom - 100) - (paddingTop + width / 2);
+    return {
+        x,
+        y,
+        scale
+    };
 }

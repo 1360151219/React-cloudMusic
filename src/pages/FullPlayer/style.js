@@ -19,24 +19,54 @@ export const FullPlayerContainer = styled.div`
     z-index: 100;
     background-color: ${style["background-color"]};
      &.fullScreen-enter {
-        transform: translate3d(0, 100%, 0);
-        transition: all .4s;
+         opacity: 0;
+        .top{
+            transform: translateY(-100px);
+        }
+        .bottom{
+            transform: translateY(100px);
+        }
     }
-    &.fullScreen-enter-active,
+    &.fullScreen-enter-active{
+        .top,
+        .bottom {
+            transform: translate3d(0, 0, 0);
+            transition: all 0.4s cubic-bezier(0.86, 0.18, 0.82, 1.32);
+        }
+        opacity: 1;
+        transition: all 0.4s;
+    } 
     &.fullScreen-enter-done {
-        transform: translate3d(0, 0, 0);
-        transition: all .4s;
+         opacity: 1;
+        .top{
+            transform: translateY(0px);
+        }
+        .bottom{
+            transform: translateY(0px);
+        }
     }
     &.fullScreen-exit {
-        transform: translate3d(0, 0, 0);
-        transition: all .4s
+         opacity: 1;
+
+        .top{
+            transform: translateY(0px);
+        }
+        .bottom{
+            transform: translateY(0px);
+        }
     }
     &.fullScreen-exit-active,
     &.fullScreen-exit-done {
-        transform: translate3d(0, 100%, 0);
-        transition: all .4s
+        opacity: 0;
+        transition: all .4s;
+        .top{
+            transform: translateY(-100px);
+        }
+        .bottom{
+            transform: translateY(100px);
+        }
     }
-
+      
     .background{
         position: absolute;
         left: 0;

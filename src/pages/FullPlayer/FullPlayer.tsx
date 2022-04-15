@@ -1,22 +1,54 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { CSSTransition } from 'react-transition-group';
-import { getName } from "../../utils";
+import { getName, getPosAndScale } from "../../utils";
 import { FullPlayerContainer, Top, Middle, CDWrapper, Bottom, Operators } from "./style";
+import animations from "create-keyframe-animation";
 function FullPlayer(props) {
     const { song, fullScreen } = props
     const { toggleFullScreen } = props
+    // 帧动画
+    const fullPlayerRef = useRef()
+    const cdWrapperRef = useRef()
+    const enter = () => {
+        fullPlayerRef.current.style.display = "block"
+        const { x, y, scale } = getPosAndScale()// 获取 miniPlayer 图片中心相对 normalPlayer 唱片中心的偏移
+        let animation = {
+            0: {
+                transform: `translate3d(${x}px,${y}px,0) scale(${scale})`
+            },
+            60: {
+                transform: `translate3d(0, 0, 0) scale(1.1)`
+            },
+            100: {
+                transform: `translate3d(0, 0, 0) scale(1)`
+            }
+        }
+        animations.registerAnimation({
+            name: "move",
+            animation,
+            presets: {
+                duration: 500,
+                easing: "linear"
+            }
+        });
+        animations.runAnimation(cdWrapperRef.current, "move");
+    }
+    const afterEnter = () => {
+        animations.unregisterAnimation('move')
+        cdWrapperRef.current.style.animation = ""
+    }
     return (
         <CSSTransition
             classNames="fullScreen"
             in={fullScreen}
-            timeout={400}
+            timeout={500}
             mountOnEnter
-        //onEnter={enter}
-        //onEntered={afterEnter}
+            onEnter={enter}
+            onEntered={afterEnter}
         //onExit={leave}
         //onExited={afterLeave}
         >
-            <FullPlayerContainer>
+            <FullPlayerContainer ref={fullPlayerRef}>
                 <div className="background">
                     <img
                         src={song.al.picUrl + "?param=300x300"}
@@ -33,7 +65,7 @@ function FullPlayer(props) {
                     <h1 className="title">{song.name}</h1>
                     <h1 className="subtitle">{getName(song.ar)}</h1>
                 </Top>
-                <Middle>
+                <Middle ref={cdWrapperRef}>
                     <CDWrapper>
                         <div className="cd">
                             <img
