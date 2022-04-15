@@ -52,3 +52,30 @@ export const getPosAndScale = () => {
         scale
     };
 }
+// 增加浏览器前缀，处理浏览器兼容问题
+let elementStyle = document.createElement("div").style
+let vendor = (() => {
+    let transformNames = {
+        webkit: "webkitTransform",
+        Moz: "MozTransform",
+        O: "OTransfrom",
+        ms: "msTransform",
+        standard: "Transform"
+    };
+    for (let key in transformNames) {
+        if (elementStyle[transformNames[key]] != undefined) {
+            return key
+        }
+    }
+    return false
+})()
+export function prefixStyle(style: string) {
+    if (vendor === false) {
+        return false;
+    }
+    if (vendor === "standard") {
+        return style;
+    }
+    return vendor + style.charAt(0).toUpperCase() + style.substr(1);
+}
+// console.log(prefixStyle("transform")); webkitTransform 

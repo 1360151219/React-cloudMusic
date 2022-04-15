@@ -1,8 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import { CSSTransition } from 'react-transition-group';
-import { getName, getPosAndScale } from "../../utils";
+import { getName, getPosAndScale, prefixStyle } from "../../utils";
 import { FullPlayerContainer, Top, Middle, CDWrapper, Bottom, Operators } from "./style";
 import animations from "create-keyframe-animation";
+const transform = prefixStyle("transform")
 function FullPlayer(props) {
     const { song, fullScreen } = props
     const { toggleFullScreen } = props
@@ -37,6 +38,19 @@ function FullPlayer(props) {
         animations.unregisterAnimation('move')
         cdWrapperRef.current.style.animation = ""
     }
+    const leave = () => {
+        if (!cdWrapperRef.current) return
+        const { x, y, scale } = getPosAndScale()
+        cdWrapperRef.current.style.transition = "all .4s"
+        cdWrapperRef.current.style[transform] = `translate3d(${x}px,${y}px,0) scale(${scale})`
+
+    }
+    const afterLeave = () => {
+        if (!cdWrapperRef.current) return
+        cdWrapperRef.current.style.transition = ""
+        cdWrapperRef.current.style[transform] = ""
+        fullPlayerRef.current.style.display = "none"
+    }
     return (
         <CSSTransition
             classNames="fullScreen"
@@ -45,8 +59,8 @@ function FullPlayer(props) {
             mountOnEnter
             onEnter={enter}
             onEntered={afterEnter}
-        //onExit={leave}
-        //onExited={afterLeave}
+            onExit={leave}
+            onExited={afterLeave}
         >
             <FullPlayerContainer ref={fullPlayerRef}>
                 <div className="background">
