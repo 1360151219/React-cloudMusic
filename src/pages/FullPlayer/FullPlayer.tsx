@@ -1,8 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import { CSSTransition } from 'react-transition-group';
 import { getName, getPosAndScale, prefixStyle } from "../../utils";
-import { FullPlayerContainer, Top, Middle, CDWrapper, Bottom, Operators } from "./style";
+import { FullPlayerContainer, Top, Middle, CDWrapper, Bottom, Operators, ProgressWrapper } from "./style";
 import animations from "create-keyframe-animation";
+import ProgressBar from "../../components/ProgressBar/ProgressBar";
 const transform = prefixStyle("transform")
 function FullPlayer(props) {
     const { song, fullScreen } = props
@@ -91,6 +92,13 @@ function FullPlayer(props) {
                     </CDWrapper>
                 </Middle>
                 <Bottom className="bottom">
+                    <ProgressWrapper>
+                        <span className="time time-l">0:00</span>
+                        <div className="progress-bar-wrapper">
+                            <ProgressBar percent={0.2}></ProgressBar>
+                        </div>
+                        <div className="time time-r">4:17</div>
+                    </ProgressWrapper>
                     <Operators>
                         <div className="icon i-left" >
                             <i className="iconfont">&#xe625;</i>

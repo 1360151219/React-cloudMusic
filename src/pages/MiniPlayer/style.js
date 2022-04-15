@@ -97,4 +97,11 @@ export const MiniPlayerContainer = styled.div`
       }
     }
   }
+  .stop{
+    .iconfont{
+      text-align: center;
+      font-size: 20px;
+      vertical-align: -webkit-baseline-middle;
+    }
+  }
 `
