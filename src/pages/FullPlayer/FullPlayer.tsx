@@ -1,10 +1,21 @@
 import React, { useEffect, useState } from "react";
+import { CSSTransition } from 'react-transition-group';
 import { getName } from "../../utils";
-import { FullPlayerContainer, Top, Middle, CDWrapper } from "./style";
+import { FullPlayerContainer, Top, Middle, CDWrapper, Bottom, Operators } from "./style";
 function FullPlayer(props) {
-    const { song } = props
+    const { song, fullScreen } = props
+    const { toggleFullScreen } = props
     return (
-        <>
+        <CSSTransition
+            classNames="fullScreen"
+            in={fullScreen}
+            timeout={400}
+            mountOnEnter
+        //onEnter={enter}
+        //onEntered={afterEnter}
+        //onExit={leave}
+        //onExited={afterLeave}
+        >
             <FullPlayerContainer>
                 <div className="background">
                     <img
@@ -17,7 +28,7 @@ function FullPlayer(props) {
                 <div className="background layer"></div>
                 <Top className="top">
                     <div className="back">
-                        <i className="iconfont icon-back">&#xe662;</i>
+                        <i className="iconfont icon-back" onClick={() => toggleFullScreen(false)}>&#xe662;</i>
                     </div>
                     <h1 className="title">{song.name}</h1>
                     <h1 className="subtitle">{getName(song.ar)}</h1>
@@ -33,8 +44,27 @@ function FullPlayer(props) {
                         </div>
                     </CDWrapper>
                 </Middle>
+                <Bottom className="bottom">
+                    <Operators>
+                        <div className="icon i-left" >
+                            <i className="iconfont">&#xe625;</i>
+                        </div>
+                        <div className="icon i-left">
+                            <i className="iconfont">&#xe6e1;</i>
+                        </div>
+                        <div className="icon i-center">
+                            <i className="iconfont">&#xe723;</i>
+                        </div>
+                        <div className="icon i-right">
+                            <i className="iconfont">&#xe718;</i>
+                        </div>
+                        <div className="icon i-right">
+                            <i className="iconfont">&#xe640;</i>
+                        </div>
+                    </Operators>
+                </Bottom>
             </FullPlayerContainer>
-        </>
+        </CSSTransition>
     )
 }
 

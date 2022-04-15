@@ -1,11 +1,23 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import { CSSTransition } from 'react-transition-group';
 import { getName } from "../../utils";
 import { MiniPlayerContainer } from "./style";
 function MiniPlayer(props) {
-    const { song } = props
+    const { song, fullScreen } = props
+    const { toggleFullScreen } = props
+    const miniRef = useRef()
     return (
-        <>
-            <MiniPlayerContainer>
+        <CSSTransition
+            classNames="mini"
+            in={!fullScreen}
+            timeout={400}
+            mountOnEnter
+        //onEnter={enter}
+        //onEntered={afterEnter}
+        //onExit={leave}
+        //onExited={afterLeave}
+        >
+            <MiniPlayerContainer ref={miniRef} onClick={() => toggleFullScreen(true)}>
                 <div className="icon">
                     <div className="imgWrapper">
                         <img className="play" src={song.al.picUrl} width="40" height="40" alt="img" />
@@ -22,7 +34,7 @@ function MiniPlayer(props) {
                     <i className="iconfont">&#xe640;</i>
                 </div>
             </MiniPlayerContainer>
-        </>
+        </CSSTransition>
     )
 }
 

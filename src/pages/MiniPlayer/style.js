@@ -20,15 +20,26 @@ export const MiniPlayerContainer = styled.div`
     width: 100%;
     height: 60px;
     background-color: ${style["highlight-background-color"]};
-    &.mini-enter{
-        transform:translateY(100%)
+    &.mini-appear {
+        transform: translate3d(0, 0, 0);
+        transition: all .4s;
     }
-    &.mini-enter-active {
-        transform: translate3d (0, 0, 0);
-        transition: all 0.4s;
+    &.mini-enter {
+        transform: translate3d(0, 100%, 0);
+        transition: all .4s;
     }
-    &.mini-exit-active {
-        transform: translate3d (0, 100%, 0);
+    &.mini-enter-active,
+    &.mini-enter-done {
+        transform: translate3d(0, 0, 0);
+        transition: all .4s;
+    }
+    &.mini-exit {
+        transform: translate3d(0, 0, 0);
+        transition: all .4s
+    }
+    &.mini-exit-active,
+    &.mini-exit-done {
+        transform: translate3d(0, 100%, 0);
         transition: all .4s
     }
     .icon {

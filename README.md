@@ -88,6 +88,8 @@ connect(mapStateToProps, mapDispatchToProps)(React.memo(Singers));
 
 - `animation-play-state` 控制动画的停止开始
 
+### Section 24: create-keyframe-animation 帧动画插件
+
 ### Better Scroll 监听 scroll 事件却不会触发？✅
 
 **Why does my BetterScroll listen for the scroll hook and the listener doesn't execute?**
@@ -179,6 +181,8 @@ useEffect(() => {
 .fade-exit-active,
 .fade-exit-done,;
 ```
+
+- `CSSTransition`动画 class 只添加在其第一个子元素上。
 
 ### Section 15：退出详情页后路由跳转问题
 
