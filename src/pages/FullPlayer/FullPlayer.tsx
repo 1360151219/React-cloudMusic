@@ -1,12 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
 import { CSSTransition } from 'react-transition-group';
-import { getName, getPosAndScale, prefixStyle } from "../../utils";
+import { getName, getPosAndScale, prefixStyle, formatPlayTime } from "../../utils";
 import { FullPlayerContainer, Top, Middle, CDWrapper, Bottom, Operators, ProgressWrapper } from "./style";
 import animations from "create-keyframe-animation";
 import ProgressBar from "../../components/ProgressBar/ProgressBar";
 const transform = prefixStyle("transform")
 function FullPlayer(props) {
-    const { song, fullScreen } = props
+    const { song, fullScreen, playing, clickPlaying, percent, playTime, duration, onPercentChange } = props
     const { toggleFullScreen } = props
     // 帧动画
     const fullPlayerRef = useRef()
@@ -50,7 +50,8 @@ function FullPlayer(props) {
         if (!cdWrapperRef.current) return
         cdWrapperRef.current.style.transition = ""
         cdWrapperRef.current.style[transform] = ""
-        fullPlayerRef.current.style.display = "none"
+        // 这里如果卸载的话，唱片的角度会变成0
+        // fullPlayerRef.current.style.display = "none"
     }
     return (
         <CSSTransition
@@ -84,7 +85,7 @@ function FullPlayer(props) {
                     <CDWrapper>
                         <div className="cd">
                             <img
-                                className="image play"
+                                className={`image play ${playing ? "" : "pause"}`}
                                 src={song.al.picUrl + "?param=400x400"}
                                 alt=""
                             />
@@ -93,11 +94,14 @@ function FullPlayer(props) {
                 </Middle>
                 <Bottom className="bottom">
                     <ProgressWrapper>
-                        <span className="time time-l">0:00</span>
+                        <span className="time time-l">{formatPlayTime(playTime)}</span>
                         <div className="progress-bar-wrapper">
-                            <ProgressBar percent={0.2}></ProgressBar>
+                            <ProgressBar
+                                percent={percent}
+                                percentChange={onPercentChange}
+                            ></ProgressBar>
                         </div>
-                        <div className="time time-r">4:17</div>
+                        <div className="time time-r">{formatPlayTime(duration)}</div>
                     </ProgressWrapper>
                     <Operators>
                         <div className="icon i-left" >
@@ -107,7 +111,13 @@ function FullPlayer(props) {
                             <i className="iconfont">&#xe6e1;</i>
                         </div>
                         <div className="icon i-center">
-                            <i className="iconfont">&#xe723;</i>
+                            <i
+                                className="iconfont"
+                                onClick={e => clickPlaying(e, !playing)}
+                                dangerouslySetInnerHTML={{
+                                    __html: playing ? "&#xe723;" : "&#xe731;"
+                                }}
+                            ></i>
                         </div>
                         <div className="icon i-right">
                             <i className="iconfont">&#xe718;</i>

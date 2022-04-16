@@ -53,7 +53,7 @@ export const MiniPlayerContainer = styled.div`
       img {
         border-radius: 50%;
         &.play {
-          animation: ${rotate} 10s infinite;
+          animation: ${rotate} 20s infinite;
           &.pause {
             animation-play-state: paused;
           }
@@ -93,15 +93,9 @@ export const MiniPlayerContainer = styled.div`
       left: 8px;
       top: 8px;
       &.icon-play {
-        left: 9px
+        left: 10px;
       }
-    }
-  }
-  .stop{
-    .iconfont{
-      text-align: center;
-      font-size: 20px;
-      vertical-align: -webkit-baseline-middle;
+
     }
   }
 `

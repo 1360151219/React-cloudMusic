@@ -37,18 +37,25 @@ const ProgressBarWrapper = styled.div`
 `
 
 function ProgressBar(props) {
-    const { percentChange } = props;
-    const _changePercent = () => {
-        const barWidth = progressBar.current.clientWidth - progressBtnWidthg
-        // 新的进度
-        const curPercent = progress.current.clientWidth / barWidth
-        percentChange(curPercent)
-    }
+    const { percentChange, percent } = props;
     const progressBar = useRef();
     const progress = useRef();
     const progressBtn = useRef();
     const [touch, setTouch] = useState({});
-    const progressBtnWidth = 14;
+    useEffect(() => {
+        if (percent >= 0 && percent <= 1 && !touch.moving) {
+            const barWidth = progressBar.current.clientWidth
+            const newWidth = percent * barWidth
+            progress.current.style.width = `${newWidth}px`
+            progressBtn.current.style.transform = `translate3d(${newWidth}px,0,0)`
+        }
+    }, [percent])
+    const _changePercent = () => {
+        const barWidth = progressBar.current.clientWidth
+        // 新的进度
+        const curPercent = progress.current.clientWidth / barWidth
+        percentChange(curPercent)
+    }
     const _handleOffset = (offset) => {
         progress.current.style.width = `${offset}px`
         progressBtn.current.style.transform = `translate3d(${offset}px,0,0)`

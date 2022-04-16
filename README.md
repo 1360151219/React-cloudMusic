@@ -213,3 +213,7 @@ useEffect(() => {
 ### Section 22：`useRef`除了操作 DOM 以外，还可以用来做数据保存。
 
 使用`useState`会在每一次状态改变的时候都会重新渲染一下组件。如果我们想要数据缓存但同时不想要触发函数组件的更新，就可以使用`useRef()`
+
+### Section 26：ReactDom `dangerouslySetInnerHTML`
+
+### Section 26：`audio`在播放过程中不断触发`onTimeUpdate`事件

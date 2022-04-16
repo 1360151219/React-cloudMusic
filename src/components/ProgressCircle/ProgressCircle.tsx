@@ -21,10 +21,6 @@ const CircleWrapper = styled.div`
             stroke: ${style["theme-color"]};
         }
     }
-    .iconfont{
-        margin:10px 6.5px 0;
-
-    }
 `
 
 function ProgressCircle(props) {

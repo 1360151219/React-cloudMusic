@@ -79,3 +79,13 @@ export function prefixStyle(style: string) {
     return vendor + style.charAt(0).toUpperCase() + style.substr(1);
 }
 // console.log(prefixStyle("transform")); webkitTransform 
+export function getSong(id: number) {
+    return `https://music.163.com/song/media/outer/url?id=${id}.mp3`;
+}
+//转换歌曲播放时间
+export const formatPlayTime = interval => {
+    interval = interval | 0;// |0表示向下取整
+    const minute = (interval / 60) | 0;
+    const second = (interval % 60).toString().padStart(2, "0");
+    return `${minute}:${second}`;
+};
