@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import style from "../../assets/global-style"
-import styled from "styled-components"
+import styled from "styled-components";
 import { prefixStyle } from "../../utils";
 const ProgressBarWrapper = styled.div`
     height: 30px;
@@ -37,12 +37,19 @@ const ProgressBarWrapper = styled.div`
 `
 
 function ProgressBar(props) {
+    const { percentChange } = props;
+    const _changePercent = () => {
+        const barWidth = progressBar.current.clientWidth - progressBtnWidthg
+        // 新的进度
+        const curPercent = progress.current.clientWidth / barWidth
+        percentChange(curPercent)
+    }
     const progressBar = useRef();
     const progress = useRef();
     const progressBtn = useRef();
     const [touch, setTouch] = useState({});
-    const progressBtnWidth = 16;
-    const handleOffset = (offset) => {
+    const progressBtnWidth = 14;
+    const _handleOffset = (offset) => {
         progress.current.style.width = `${offset}px`
         progressBtn.current.style.transform = `translate3d(${offset}px,0,0)`
     }
@@ -58,14 +65,24 @@ function ProgressBar(props) {
         const deltaX = e.touches[0].pageX - touch.startX
         const barWidth = progressBar.current.clientWidth;
         const offsetWidth = Math.min(Math.max(0, touch.left + deltaX), barWidth);
-        handleOffset(offsetWidth);
+        _handleOffset(offsetWidth);
     }
     const touchEnd = (e) => {
-        //todo
+        const endTouch = {}
+        endTouch.moving = false
+        setTouch(endTouch)
+        _changePercent();
+    }
+
+    const handleClick = (e) => {
+        const rect = progress.current.getBoundingClientRect();// 获取元素的位置和大小
+        const width = e.pageX - rect.left
+        _handleOffset(width);
+        _changePercent();
     }
     return (
         <ProgressBarWrapper>
-            <div className="bar-inner" ref={progressBar}>
+            <div className="bar-inner" ref={progressBar} onClick={handleClick}>
                 <div className="progress" ref={progress}></div>
                 <div className="progress-btn-wrapper"
                     ref={progressBtn}
