@@ -8,6 +8,11 @@ import SongsList from "../../components/SongList/SongsList";
 import Scroll from "../../components/Scroll/Scroll";
 import { getArtist } from "./store/actionCreator";
 import Loading from "../../components/Loading/Loading";
+import MusicNote from "../../components/MusicNote/MusicNote";
+
+//...
+
+
 // 列表偏移量
 const OFFSET = 5
 function Singer(props) {
@@ -26,6 +31,10 @@ function Singer(props) {
     let songScroll = useRef()
     let header = useRef()
     let layer = useRef()
+    const musicNoteRef = useRef();
+    const musicAnimation = (x, y) => {
+        musicNoteRef.current.startAnimation({ x, y });
+    };
     const heightInitial = useRef(0)
     useEffect(() => {
         let h = imgWrapper.current.offsetHeight
@@ -86,11 +95,17 @@ function Singer(props) {
                 <SongListWrapper ref={songScrollWrapper}>
                     <Scroll ref={songScroll} onScroll={handleScroll}>
                         <div>
-                            <SongsList songs={songsList} showCollect={false} collectCount={1}></SongsList>
+                            <SongsList
+                                songs={songsList}
+                                showCollect={false}
+                                collectCount={1}
+                                musicAnimation={musicAnimation}
+                            ></SongsList>
                         </div>
                     </Scroll>
                 </SongListWrapper>
                 {loading ? <Loading></Loading> : null}
+                <MusicNote ref={musicNoteRef}></MusicNote>
             </Container>
         </CSSTransition>
     )

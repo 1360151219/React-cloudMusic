@@ -35,9 +35,6 @@ function Player(props) {
 
     const audioRef = useRef()
     const toastRef = useRef()
-    useEffect(() => {
-        changeCurrentIndexDispatch(0)
-    }, [])
     // 切歌逻辑
     useEffect(() => {
         if (!playList.length
