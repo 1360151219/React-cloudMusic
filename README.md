@@ -184,6 +184,25 @@ useEffect(() => {
 
 - `CSSTransition`动画 class 只添加在其第一个子元素上。
 
+下面是一个例子：
+
+```css
+&.drop-enter {
+  opacity: 0;
+  transform: translate3d(0, 100%, 0);
+}
+&.drop-enter-active {
+  opacity: 1;
+  transition: all 0.3s;
+  transform: translate3d(0, 0, 0);
+}
+&.drop-exit-active {
+  opacity: 0;
+  transition: all 0.3s;
+  transform: translate3d(0, 100%, 0);
+}
+```
+
 ### Section 15：退出详情页后路由跳转问题
 
 这里如果在`handleBack`中直接调用`navigate(-1)`，则当前组件被立即卸载就不会有动画了。因此要去使用 react-transition-group 库内置的`onExit`钩子。

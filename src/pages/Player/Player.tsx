@@ -3,6 +3,7 @@ import "./Player.scss"
 import { connect } from "react-redux";
 import MiniPlayer from "../MiniPlayer/MiniPlayer";
 import FullPlayer from "../FullPlayer/FullPlayer";
+import Toast from "../../components/Toast/Toast";
 import {
     changePlaying,
     changeShowPlayList,
@@ -28,11 +29,12 @@ function Player(props) {
     let [duration, setDuration] = useState(0)
     // 记录上一首歌曲id，减少重新播放
     let [prevSong, setPrevSong] = useState(0)
+    let [modeText, setModeText] = useState("")
     // 歌曲播放进度
     let percent = Number.isNaN(playTime / duration) ? 0 : playTime / duration
 
     const audioRef = useRef()
-
+    const toastRef = useRef()
     useEffect(() => {
         changeCurrentIndexDispatch(0)
     }, [])
@@ -110,17 +112,21 @@ function Player(props) {
             let index = findSongIndex(sequencePlayList, currentSong.id)
             changePlayListDispatch(sequencePlayList)
             changeCurrentIndexDispatch(index)
+            setModeText("顺序循环")
         } else if (newMode === 1) {
             //单曲循环
             changePlayListDispatch(sequencePlayList);
+            setModeText("单曲循环")
         } else if (newMode === 2) {
             //随机播放
             let newList = shuffle(sequencePlayList);
             let index = findSongIndex(newList, currentSong.id);
             changePlayListDispatch(newList);
             changeCurrentIndexDispatch(index);
+            setModeText("随机播放")
         }
         changeModeDispatch(newMode)
+        toastRef.current.show()
     }
     return (
         <>
@@ -155,6 +161,7 @@ function Player(props) {
                         mode={mode}
                     ></FullPlayer>
                 }
+                <Toast text={modeText} delay={1000} ref={toastRef}></Toast>
             </div>
         </>
     )
