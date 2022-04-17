@@ -89,3 +89,18 @@ export const formatPlayTime = interval => {
     const second = (interval % 60).toString().padStart(2, "0");
     return `${minute}:${second}`;
 };
+
+// 找到歌曲index
+export const findSongIndex = (arr, id) => {
+    return arr.findIndex((item, index) => item.id == id)
+}
+export const shuffle = (arr) => {
+    let res = arr.slice()
+    for (let i = 0; i < arr.length; i++) {
+        let random = Math.floor(Math.random() * (i + 1))
+        let t = res[i]
+        res[i] = res[random]
+        res[random] = t
+    }
+    return res
+}

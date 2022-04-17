@@ -4,10 +4,11 @@ import { getName, getPosAndScale, prefixStyle, formatPlayTime } from "../../util
 import { FullPlayerContainer, Top, Middle, CDWrapper, Bottom, Operators, ProgressWrapper } from "./style";
 import animations from "create-keyframe-animation";
 import ProgressBar from "../../components/ProgressBar/ProgressBar";
+import { playMode } from "../Player/store/reducer";
 const transform = prefixStyle("transform")
 function FullPlayer(props) {
-    const { song, fullScreen, playing, percent, playTime, duration } = props
-    const { toggleFullScreen, onPercentChange, clickPlaying, handlePrev, handleNext } = props
+    const { song, fullScreen, playing, percent, playTime, duration, mode } = props
+    const { toggleFullScreen, onPercentChange, clickPlaying, handlePrev, handleNext, changeMode } = props
     // 帧动画
     const fullPlayerRef = useRef()
     const cdWrapperRef = useRef()
@@ -52,6 +53,17 @@ function FullPlayer(props) {
         cdWrapperRef.current.style[transform] = ""
         // 这里如果卸载的话，唱片的角度会变成0
         // fullPlayerRef.current.style.display = "none"
+    }
+    const getPlayMode = () => {
+        let res = ""
+        if (mode === playMode.sequence) {
+            res = "&#xe625;";
+        } else if (mode === playMode.loop) {
+            res = "&#xe653;";
+        } else {
+            res = "&#xe61b;";
+        }
+        return res
     }
     return (
         <CSSTransition
@@ -105,10 +117,16 @@ function FullPlayer(props) {
                     </ProgressWrapper>
                     <Operators>
                         <div className="icon i-left" >
-                            <i className="iconfont">&#xe625;</i>
+                            <i
+                                className="iconfont"
+                                onClick={changeMode}
+                                dangerouslySetInnerHTML={{
+                                    __html: getPlayMode()
+                                }}
+                            ></i>
                         </div>
-                        <div className="icon i-left" onClick={handlePrev}>
-                            <i className="iconfont">&#xe6e1;</i>
+                        <div className="icon i-left" >
+                            <i className="iconfont" onClick={handlePrev}>&#xe6e1;</i>
                         </div>
                         <div className="icon i-center">
                             <i
@@ -119,8 +137,8 @@ function FullPlayer(props) {
                                 }}
                             ></i>
                         </div>
-                        <div className="icon i-right" onClick={handleNext}>
-                            <i className="iconfont">&#xe718;</i>
+                        <div className="icon i-right" >
+                            <i className="iconfont" onClick={handleNext}>&#xe718;</i>
                         </div>
                         <div className="icon i-right">
                             <i className="iconfont">&#xe640;</i>
