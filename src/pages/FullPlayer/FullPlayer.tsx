@@ -6,8 +6,8 @@ import animations from "create-keyframe-animation";
 import ProgressBar from "../../components/ProgressBar/ProgressBar";
 const transform = prefixStyle("transform")
 function FullPlayer(props) {
-    const { song, fullScreen, playing, clickPlaying, percent, playTime, duration, onPercentChange } = props
-    const { toggleFullScreen } = props
+    const { song, fullScreen, playing, percent, playTime, duration } = props
+    const { toggleFullScreen, onPercentChange, clickPlaying, handlePrev, handleNext } = props
     // 帧动画
     const fullPlayerRef = useRef()
     const cdWrapperRef = useRef()
@@ -107,7 +107,7 @@ function FullPlayer(props) {
                         <div className="icon i-left" >
                             <i className="iconfont">&#xe625;</i>
                         </div>
-                        <div className="icon i-left">
+                        <div className="icon i-left" onClick={handlePrev}>
                             <i className="iconfont">&#xe6e1;</i>
                         </div>
                         <div className="icon i-center">
@@ -119,7 +119,7 @@ function FullPlayer(props) {
                                 }}
                             ></i>
                         </div>
-                        <div className="icon i-right">
+                        <div className="icon i-right" onClick={handleNext}>
                             <i className="iconfont">&#xe718;</i>
                         </div>
                         <div className="icon i-right">
