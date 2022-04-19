@@ -24,7 +24,7 @@ import LazyLoad, { forceCheck } from "react-lazyload";
 import placeholder from '../../assets/singer.png'
 
 function Singers(props) {
-    let { singerList, pageCount, pullUpLoading, pullDownLoading, loading, category, alpha, area } = props
+    let { singerList, pageCount, pullUpLoading, pullDownLoading, loading, category, alpha, area, isMiniExist } = props
     let { getHotSingerDispatch, pullUpRefreshDispatch, updateDispatch, pullDownRefreshDispatch, categoryDispatch,
         alphaDispatch, areaDispatch } = props
     let navigate = useNavigate()
@@ -86,7 +86,7 @@ function Singers(props) {
     const singerListJS = singerList ? singerList.toJS() : []
     return (
         <>
-            <div className="Singers">
+            <div className="Singers" >
                 <HorizenItem
                     list={categoryTypes}
                     title={"分类（默认热门）："}
@@ -105,7 +105,7 @@ function Singers(props) {
                     handleClick={handleAlpha}
                     oldVal={alpha}
                 ></HorizenItem>
-                <div className="singerlist-container">
+                <div className={`singerlist-container ${isMiniExist ? "mb" : ""}`}>
                     <Scroll
                         ref={scrollRef}
                         pullUp={handlePullUp}
@@ -132,6 +132,8 @@ const mapStateToProps = (state) => ({
     category: state.getIn(['singers', 'category']),
     alpha: state.getIn(['singers', 'alpha']),
     area: state.getIn(['singers', 'area']),
+    isMiniExist: state.getIn(["player", "playList"]).size > 0
+
 });
 const mapDispatchToProps = (dispatch) => {
     return {

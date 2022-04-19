@@ -236,3 +236,7 @@ useEffect(() => {
 ### Section 26：ReactDom `dangerouslySetInnerHTML`
 
 ### Section 26：`audio`在播放过程中不断触发`onTimeUpdate`事件
+
+### Section 28: 切歌太频繁导致异常
+
+解决的原理：其实从 audio 标签拿到 src 加载到能够播放之间有一个缓冲的过程，只有当控件能够播放时才能够切到下一首。如果在这个缓冲过程中切歌就会报错。

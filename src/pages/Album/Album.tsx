@@ -62,7 +62,7 @@ function renderMenu() {
 }
 function Album(props) {
     const { getAlbumListDispatch } = props
-    const { loading, currentAlbum } = props
+    const { loading, currentAlbum, isMiniExist } = props
     let navigate = useNavigate()
     const { id } = useParams()
     let [fly, setFly] = useState(true)
@@ -73,9 +73,13 @@ function Album(props) {
         musicNoteRef.current.startAnimation({ x, y });
     };
     const headerEl = useRef()
+    const scrollRef = useRef()
     useEffect(() => {
         getAlbumListDispatch(id)
     }, [])
+    useEffect(() => {
+        scrollRef.current.refresh()
+    }, [isMiniExist, currentAlbum])
     let currentAlbumJS = currentAlbum.size ? currentAlbum.toJS() : {}
     // console.log(currentAlbumJS, currentAlbum);
     const handleBack = useCallback(() => {
@@ -108,12 +112,12 @@ function Album(props) {
                 unmountOnExit
                 onExited={() => { navigate(-1) }}
             >
-                <div className="Album">
+                <div className={`Album ${isMiniExist ? "mb" : ""}`}>
                     {loading ? <Loading /> : null}
                     <Header ref={headerEl} title={title} handleClick={handleBack} isMarquee={isMarquee} />
                     <div className="album-content">
                         {!isEmptyObject(currentAlbumJS) ?
-                            <Scroll bounceTop={false} onScroll={handleScroll}>
+                            <Scroll bounceTop={false} onScroll={handleScroll} ref={scrollRef}>
                                 <div>
                                     {renderTopDes(currentAlbumJS)}
                                     {renderMenu()}
@@ -139,6 +143,8 @@ const mapStateToProps = (state) => {
     return {
         loading: state.getIn(['album', 'loading']),
         currentAlbum: state.getIn(['album', 'currentAlbum']),
+        isMiniExist: state.getIn(["player", "playList"]).size > 0
+
     }
 }
 

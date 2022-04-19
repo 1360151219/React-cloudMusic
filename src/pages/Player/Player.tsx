@@ -35,16 +35,22 @@ function Player(props) {
 
     const audioRef = useRef()
     const toastRef = useRef()
+    const songReady = useRef(true)
     // 切歌逻辑
     useEffect(() => {
-        if (!playList.length
+        if (!songReady.current ||
+            !playList.length
             || currentIndex == -1
             || !playList[currentIndex]
             || prevSong == playList[currentIndex].id) return
         let current = playList[currentIndex]
+        songReady.current = false
         audioRef.current.src = getSong(current.id)
         setTimeout(() => {
-            audioRef.current.play()
+            // 防止切歌频繁
+            audioRef.current.play().then(() => {
+                songReady.current = true
+            })
             togglePlayingDispatch(true)
         })
         changeCurrentSongDispatch(current)
@@ -101,6 +107,10 @@ function Player(props) {
         if (mode == playMode.loop) handleLoop()
         else handleNext()
     }
+    const handleError = () => {
+        songReady.current = true
+        console.log("播放错误");
+    }
     // 切换播放模式
     const changeMode = () => {
         let newMode = (mode + 1) % 3
@@ -125,10 +135,11 @@ function Player(props) {
         changeModeDispatch(newMode)
         toastRef.current.show()
     }
+
     return (
         <>
             <div className="Player">
-                <audio ref={audioRef} onTimeUpdate={updateTime} onEnded={handleEnd}></audio>
+                <audio ref={audioRef} onTimeUpdate={updateTime} onEnded={handleEnd} onError={handleError}></audio>
                 {isEmptyObject(currentSong) ? null :
                     <MiniPlayer
                         song={currentSong}

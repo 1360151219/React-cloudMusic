@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./Rank.scss"
 import { getRankList, changeLoading } from "./store";
 import { connect } from "react-redux";
@@ -8,8 +8,12 @@ import { useNavigate, Outlet } from "react-router-dom";
 // 渲染榜单
 
 function Rank(props) {
+    let { isMiniExist } = props
     let navigate = useNavigate()
-
+    let scrollRef = useRef()
+    useEffect(() => {
+        scrollRef.current.refresh()
+    }, [isMiniExist])
     function renderRankList(list, isGlobal = false) {
         const enterDetail = (detail) => {
             console.log(detail.id);
@@ -57,8 +61,8 @@ function Rank(props) {
     let globalList = rankListJS.slice(globalStartIndex)
     return (
         <>
-            <div className="Rank">
-                <Scroll>
+            <div className={`Rank ${isMiniExist ? "mb" : ""}`}>
+                <Scroll ref={scrollRef}>
                     <div>
                         <h1 className="offical">官方榜</h1>
                         {renderRankList(officialList)}
@@ -75,6 +79,7 @@ function Rank(props) {
 const mapStateToProps = (state) => ({
     loading: state.getIn(['rank', 'loading']),
     rankList: state.getIn(['rank', 'rankList']),
+    isMiniExist: state.getIn(["player", "playList"]).size > 0
 })
 const mapDispatchToProps = (dispatch) => ({
     getRankListDispatch() {

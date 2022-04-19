@@ -17,7 +17,7 @@ import MusicNote from "../../components/MusicNote/MusicNote";
 const OFFSET = 5
 function Singer(props) {
     const { getArtistDispatch } = props
-    const { loading, songsList, artist } = props
+    const { loading, songsList, artist, isMiniExist } = props
     const { id } = useParams()
     useEffect(() => {
         getArtistDispatch(id)
@@ -82,7 +82,7 @@ function Singer(props) {
             unmountOnExit
             onExited={() => { navigate(-1) }}
         >
-            <Container>
+            <Container isPlay={isMiniExist}>
                 <Header title={artist.name} handleClick={handleClick} ref={header}></Header>
                 <ImgWrapper bgUrl={artist.picUrl} ref={imgWrapper}>
                     <div className="filter"></div>
@@ -114,6 +114,7 @@ const mapStateToProp = (state) => ({
     loading: state.getIn(['singer', 'loading']),
     songsList: state.getIn(['singer', 'songsList']).toJS(),
     artist: state.getIn(['singer', 'artist']).toJS(),
+    isMiniExist: state.getIn(["player", "playList"]).size > 0
 })
 const mapDispatchToProp = (dispatch) => {
     return {
