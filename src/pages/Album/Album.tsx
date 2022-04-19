@@ -10,7 +10,8 @@ import { getCount, getName, isEmptyObject } from "../../utils";
 import { getAlbumList } from "./store/actionCreator";
 import { connect } from "react-redux";
 import Loading from "../../components/Loading/Loading";
-
+import SongsList from "../../components/SongList/SongsList";
+import MusicNote from "../../components/MusicNote/MusicNote";
 function renderTopDes(currentAlbumJS) {
     return (
         <TopDesc background={currentAlbumJS.coverImgUrl}>
@@ -59,46 +60,6 @@ function renderMenu() {
         </Menu>
     )
 }
-function renderSongList(currentAlbumJS) {
-    return (
-        <SongList>
-            <div className="first-line">
-                <div className="play-all">
-                    <i className="iconfont">&#xe6e3;</i>
-                    <span >
-                        播放全部
-                        <span className="sum">(共 {currentAlbumJS.tracks.length} 首)</span>
-                    </span>
-                </div>
-                <div className="add-list">
-                    <i className="iconfont">&#xe62d;</i>
-                    <span > 收藏 ({getCount(currentAlbumJS.subscribedCount)})</span>
-                </div>
-            </div>
-        </SongList>
-    )
-}
-function renderSongItem(currentAlbumJS) {
-    return (
-        <SongItem>
-            {
-                currentAlbumJS.tracks.map((item, index) => {
-                    return (
-                        <li key={index}>
-                            <span className="index">{index + 1}</span>
-                            <div className="info">
-                                <span>{item.name}</span>
-                                <span>
-                                    {getName(item.ar)} - {item.al.name}
-                                </span>
-                            </div>
-                        </li>
-                    )
-                })
-            }
-        </SongItem>
-    )
-}
 function Album(props) {
     const { getAlbumListDispatch } = props
     const { loading, currentAlbum } = props
@@ -107,6 +68,10 @@ function Album(props) {
     let [fly, setFly] = useState(true)
     let [title, setTitle] = useState("歌单")
     let [isMarquee, setIsMarquee] = useState(false)
+    const musicNoteRef = useRef();
+    const musicAnimation = (x, y) => {
+        musicNoteRef.current.startAnimation({ x, y });
+    };
     const headerEl = useRef()
     useEffect(() => {
         getAlbumListDispatch(id)
@@ -152,12 +117,18 @@ function Album(props) {
                                 <div>
                                     {renderTopDes(currentAlbumJS)}
                                     {renderMenu()}
-                                    {renderSongList(currentAlbumJS)}
-                                    {renderSongItem(currentAlbumJS)}
+                                    <SongsList
+                                        songs={currentAlbumJS.tracks}
+                                        showCollect={true}
+                                        collectCount={getCount(currentAlbumJS.subscribedCount)}
+                                        musicAnimation={musicAnimation}
+                                    ></SongsList>
                                 </div>
                             </Scroll>
                             : null}
                     </div>
+                    <MusicNote ref={musicNoteRef}></MusicNote>
+
                 </div>
             </CSSTransition>
         </>

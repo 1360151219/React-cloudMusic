@@ -13,7 +13,7 @@ const SongsList = React.forwardRef((props, ref) => {
         changePlayListDispatch(songs);
         changeSequecePlayListDispatch(songs);
         changeCurrentIndexDispatch(index);
-        musicAnimation(e.nativeEvent.clientX, e.nativeEvent.clientY);
+        musicAnimation(e.clientX, e.clientY);
     }
     function renderSongItem(list) {
         return (
@@ -40,7 +40,7 @@ const SongsList = React.forwardRef((props, ref) => {
         return (
             <div className="add-list">
                 <i className="iconfont">&#xe62d;</i>
-                <span > 收藏 (count)</span>
+                <span > 收藏 ({count})</span>
             </div>
         )
     }

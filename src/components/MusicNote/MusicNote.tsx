@@ -24,14 +24,12 @@ const MusicNote = forwardRef((props, ref) => {
             item.addEventListener('transitionend', function () {
                 console.log("end");
                 this.style[transform] = `translate3d(0, 0, 0)`;
-                item.style.transform = `translate3d(0, 0, 0)`;
-                // this.style["transition"] = `all 0.03s`;
+                this.style.transform = `translate3d(0, 0, 0)`;
                 this.running = false;
                 let icon = this.querySelector('div');
                 icon.style[transform] = `translate3d(0, 0, 0)`;
                 icon.style.transform = `translate3d(0, 0, 0)`;
                 this.style['display'] = 'none';
-                // icon.style["transition"] = `all 0.03s`;
             }, false);
         });
     }, [])
@@ -48,10 +46,9 @@ const MusicNote = forwardRef((props, ref) => {
                     item.running = true;
                     item.style[transform] = `translate3d(0, 1000px, 0)`;
                     item.style.transform = `translate3d(0, 1000px, 0)`;
-                    // item.style["transition"] = `all 0.03s`;
                     let icon = item.querySelector("div") as HTMLDivElement;
-                    // icon.style[transform] = `translate3d(-40px, 0, 0)`;
-                    // icon.style.transform = `translate3d(-40px, 0, 0)`;
+                    icon.style[transform] = `translate3d(40px, 0, 0)`;
+                    icon.style.transform = `translate3d(40px, 0, 0)`;
                     // icon.style["transition"] = `all 0.03s`;
                 }, 20);
                 break;
