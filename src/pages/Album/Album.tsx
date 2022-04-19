@@ -78,7 +78,8 @@ function Album(props) {
         getAlbumListDispatch(id)
     }, [])
     useEffect(() => {
-        scrollRef.current.refresh()
+        if (isMiniExist)
+            scrollRef.current.refresh()
     }, [isMiniExist, currentAlbum])
     let currentAlbumJS = currentAlbum.size ? currentAlbum.toJS() : {}
     // console.log(currentAlbumJS, currentAlbum);

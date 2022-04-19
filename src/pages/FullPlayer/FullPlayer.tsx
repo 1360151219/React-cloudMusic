@@ -8,7 +8,7 @@ import { playMode } from "../Player/store/reducer";
 const transform = prefixStyle("transform")
 function FullPlayer(props) {
     const { song, fullScreen, playing, percent, playTime, duration, mode } = props
-    const { toggleFullScreen, onPercentChange, clickPlaying, handlePrev, handleNext, changeMode } = props
+    const { toggleFullScreen, onPercentChange, clickPlaying, handlePrev, handleNext, changeMode, togglePlayList } = props
     // 帧动画
     const fullPlayerRef = useRef()
     const cdWrapperRef = useRef()
@@ -63,7 +63,19 @@ function FullPlayer(props) {
         } else {
             res = "&#xe61b;";
         }
-        return res
+        return (
+            <i
+                className="iconfont"
+                onClick={changeMode}
+                dangerouslySetInnerHTML={{
+                    __html: res
+                }}
+            ></i>
+        )
+    }
+    const showPlayList = (e) => {
+        togglePlayList(true)
+        e.stopPropagation()
     }
     return (
         <CSSTransition
@@ -117,13 +129,7 @@ function FullPlayer(props) {
                     </ProgressWrapper>
                     <Operators>
                         <div className="icon i-left" >
-                            <i
-                                className="iconfont"
-                                onClick={changeMode}
-                                dangerouslySetInnerHTML={{
-                                    __html: getPlayMode()
-                                }}
-                            ></i>
+                            {getPlayMode()}
                         </div>
                         <div className="icon i-left" >
                             <i className="iconfont" onClick={handlePrev}>&#xe6e1;</i>
@@ -140,8 +146,8 @@ function FullPlayer(props) {
                         <div className="icon i-right" >
                             <i className="iconfont" onClick={handleNext}>&#xe718;</i>
                         </div>
-                        <div className="icon i-right">
-                            <i className="iconfont">&#xe640;</i>
+                        <div className="icon i-right" >
+                            <i className="iconfont" onClick={(e) => showPlayList(e)}>&#xe640;</i>
                         </div>
                     </Operators>
                 </Bottom>

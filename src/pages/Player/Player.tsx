@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import MiniPlayer from "../MiniPlayer/MiniPlayer";
 import FullPlayer from "../FullPlayer/FullPlayer";
 import Toast from "../../components/Toast/Toast";
+import PlayList from "../../components/PlayList/PlayList";
 import {
     changePlaying,
     changeShowPlayList,
@@ -20,7 +21,7 @@ function Player(props) {
     const { fullScreen, playing, currentSong, currentIndex, sequencePlayList, mode, playList } = props
     const { toggleFullScreenDispatch, togglePlayingDispatch, changeCurrentIndexDispatch,
         changeCurrentSongDispatch, changeModeDispatch, changeSequencePlayListDispatch,
-        changePlayListDispatch
+        changePlayListDispatch, toggleShowPlayListDispatch
     } = props
 
     // 已经播放时间
@@ -150,6 +151,7 @@ function Player(props) {
                         duration={duration}
                         playTime={playTime}
                         percent={percent}
+                        togglePlayList={toggleShowPlayListDispatch}
                     ></MiniPlayer>
                 }
                 {isEmptyObject(currentSong) ? null :
@@ -167,8 +169,10 @@ function Player(props) {
                         handleNext={handleNext}
                         changeMode={changeMode}
                         mode={mode}
+                        togglePlayList={toggleShowPlayListDispatch}
                     ></FullPlayer>
                 }
+                <PlayList></PlayList>
                 <Toast text={modeText} delay={1000} ref={toastRef}></Toast>
             </div>
         </>
