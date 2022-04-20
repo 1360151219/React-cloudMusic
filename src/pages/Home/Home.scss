@@ -1,5 +1,6 @@
 @import "../../assets/global-style.scss";
 .tab {
+  position: relative;
   background-color: $theme-color;
   height: 44px;
   display: flex;
@@ -15,7 +16,16 @@
       padding: 3px 0;
       font-weight: 700;
       color: $font-color-light;
-      border-bottom: 2px solid $font-color-light;
+      // border-bottom: 2px solid $font-color-light;
     }
+  }
+  .moving-border {
+    position: absolute;
+    bottom: 10px;
+    width: 125px;
+    left: 0;
+    height: 2px;
+    background-color: $font-color-light;
+    transition: left 0.4s;
   }
 }

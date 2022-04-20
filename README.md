@@ -1,6 +1,6 @@
 # React Hooks 与 Immutable 数据流实战 by 神三元
 
-使用 Typescript 以及新 Hook 进行学习编写。
+使用 Typescript 以及新 Hook 进行学习编写。有一些地方添加了个人的爱好逻辑吧~
 
 ## 技术栈学习以及问题
 

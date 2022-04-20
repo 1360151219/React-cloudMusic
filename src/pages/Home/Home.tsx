@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Outlet, NavLink } from "react-router-dom";
+import React, { useEffect, useRef, useState } from "react";
+import { Outlet, NavLink, useLocation } from "react-router-dom";
 import "./Home.scss"
 import { Top } from "./style";
 import Player from "../Player/Player";
@@ -17,6 +17,20 @@ const Links = [
     },
 ]
 function Home() {
+    // moving-border 的left值
+    let [left, setLeft] = useState(0)
+    const borderRef = useRef()
+    let location = useLocation()
+    let pathName = location.pathname
+    useEffect(() => {
+        // path 路径变换也是副作用
+        Links.forEach((item, index) => {
+            if (item.path === pathName) {
+                setLeft(index * 125)
+            }
+        })
+        borderRef.current.style.left = `${left}px`
+    })
     let Tab = (Links.map((link, index) => {
         return <NavLink key={index} to={link.path}
         >{link.title}</NavLink>
@@ -30,6 +44,7 @@ function Home() {
             </Top>
             <div className="tab">
                 {Tab}
+                <div className="moving-border" ref={borderRef}></div>
             </div>
             <Player></Player>
             <Outlet></Outlet>
