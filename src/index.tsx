@@ -11,15 +11,15 @@ import reportWebVitals from './reportWebVitals';
 const container = document.getElementById('root') as HTMLElement
 const root = ReactDOM.createRoot(container)
 root.render(
-  <React.StrictMode>
-    <Provider store={store}>
-      <Router>
-        <App />
-        <GlobalStyle></GlobalStyle>
-        <IconStyle></IconStyle>
-      </Router>
-    </Provider>
-  </React.StrictMode>
+  // <React.StrictMode>
+  <Provider store={store}>
+    <Router>
+      <App />
+      <GlobalStyle></GlobalStyle>
+      <IconStyle></IconStyle>
+    </Router>
+  </Provider>
+  // </React.StrictMode>
 )
 
 

@@ -22,7 +22,6 @@ const MusicNote = forwardRef((props, ref) => {
         domArray.forEach(item => {
             item.running = false;
             item.addEventListener('transitionend', function () {
-                console.log("end");
                 this.style[transform] = `translate3d(0, 0, 0)`;
                 this.style.transform = `translate3d(0, 0, 0)`;
                 this.running = false;

@@ -33,7 +33,8 @@ export const PlayListWrapper = styled.div`
         opacity: 1;
         border-radius: 10px 10px 0 0;
         background-color: ${style["highlight-background-color"]};
-        transform: translate3d (0, 0, 0);
+        transform: translate3d(0, 0, 0);
+        /* transition: all .4s; */
         .list_close {
             text-align: center;
             line-height: 50px;
@@ -76,7 +77,7 @@ export const ListContent = styled.div`
     .item{
         display: flex;
         align-items: center;
-        height: 40px;
+        height: 50px;
         margin: 0 30px 0 10px;
         overflow: hidden;
         .current{
