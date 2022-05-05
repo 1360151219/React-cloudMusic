@@ -4,13 +4,14 @@ import { getName } from "../../utils";
 import { MiniPlayerContainer } from "./style";
 import ProgressCircle from "../../components/ProgressCircle/ProgressCircle";
 function MiniPlayer(props) {
-    const { song, fullScreen, playing, clickPlaying, percent, playTime, duration } = props
+    const { song, fullScreen, playing, clickPlaying, percent, playTime, duration, curLyricParser, curPlayingLyric, curLineIndex } = props
     const { toggleFullScreen, togglePlayList } = props
     const miniRef = useRef()
     const showPlayList = (e) => {
         togglePlayList(true)
         e.stopPropagation()
     }
+    // console.log(curLyricParser, curPlayingLyric, curLineIndex);
     return (
         <CSSTransition
             classNames="mini"

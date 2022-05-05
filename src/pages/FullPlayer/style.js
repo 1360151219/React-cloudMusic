@@ -125,6 +125,7 @@ export const Middle = styled.div`
     white-space: nowrap;
     font-size: 0;
     overflow: hidden;
+
 `
 
 export const CDWrapper = styled.div`
@@ -136,6 +137,18 @@ export const CDWrapper = styled.div`
     width: 80%;
     box-sizing: border-box;
     height: 80vw;
+    &.fade-enter{
+        opacity: 0;
+    }
+    &.fade-enter-active{
+        opacity: 1;
+        transition: opacity .4s;
+    }
+    &.fade-exit-active,&.fade-exit-done{
+        opacity: 0;
+        transition: opacity .4s;
+    }
+   
     .cd{
         width: 100%;
         height: 100%;
@@ -166,6 +179,29 @@ export const CDWrapper = styled.div`
         color: rgba (255, 255, 255, 0.5);
     }
 `
+
+export const LyricContainer = styled.div`
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    font-size: 14px;
+    opacity: 0;
+    &.fade-enter{
+        opacity: 0;
+    }
+    &.fade-enter-active,&.fade-enter-done{
+        opacity: 1;
+        transition: opacity .4s;
+    }
+    &.fade-exit-active,&.fade-exit-done{
+        opacity: 0;
+        transition: opacity .4s;
+    }
+`
+
+
 export const ProgressWrapper = styled.div`
   display: flex;
   align-items: center;
