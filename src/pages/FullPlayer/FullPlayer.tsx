@@ -7,11 +7,19 @@ import ProgressBar from "../../components/ProgressBar/ProgressBar";
 import { playMode } from "../Player/store/reducer";
 const transform = prefixStyle("transform")
 function FullPlayer(props) {
-    const { song, fullScreen, playing, percent, playTime, duration, mode } = props
+    const { song, fullScreen, playing, percent, playTime, duration, mode, curLyricParser, curPlayingLyric, curLineIndex } = props
     const { toggleFullScreen, onPercentChange, clickPlaying, handlePrev, handleNext, changeMode, togglePlayList } = props
     // 帧动画
     const fullPlayerRef = useRef()
     const cdWrapperRef = useRef()
+    // 歌词
+    const isLyricShow = useRef(false)
+    const lyricScrollRef = useRef()
+    const lyricLineRef = useRef()
+    const toggleLyricShow = () => {
+        console.log(1);
+        isLyricShow.current = !isLyricShow.current
+    }
     const enter = () => {
         fullPlayerRef.current.style.display = "block"
         const { x, y, scale } = getPosAndScale()// 获取 miniPlayer 图片中心相对 normalPlayer 唱片中心的偏移
@@ -105,16 +113,23 @@ function FullPlayer(props) {
                     <h1 className="title">{song.name}</h1>
                     <h1 className="subtitle">{getName(song.ar)}</h1>
                 </Top>
-                <Middle ref={cdWrapperRef}>
-                    <CDWrapper>
-                        <div className="cd">
-                            <img
-                                className={`image play ${playing ? "" : "pause"}`}
-                                src={song.al.picUrl + "?param=400x400"}
-                                alt=""
-                            />
-                        </div>
-                    </CDWrapper>
+                <Middle ref={cdWrapperRef} onClick={toggleLyricShow}>
+                    <CSSTransition
+                        classNames="fade"
+                        in={!isLyricShow.current}
+                        timeout={400}
+                    >
+                        <CDWrapper>
+                            <div className="cd">
+                                <img
+                                    className={`image play ${playing ? "" : "pause"}`}
+                                    src={song.al.picUrl + "?param=400x400"}
+                                    alt=""
+                                />
+                            </div>
+                        </CDWrapper>
+                    </CSSTransition>
+
                 </Middle>
                 <Bottom className="bottom">
                     <ProgressWrapper>

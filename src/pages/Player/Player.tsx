@@ -15,8 +15,10 @@ import {
     changeFullScreen,
     changeSequencePlayList
 } from "./store/actionCreator";
+import { getLyricRequest } from "../../api/request";
 import { getSong, isEmptyObject, findSongIndex, shuffle } from "../../utils";
 import { playMode } from "./store/reducer";
+import LyricParser from "../../utils/LyricParser";
 function Player(props) {
     const { fullScreen, playing, currentSong, currentIndex, sequencePlayList, mode, playList } = props
     const { toggleFullScreenDispatch, togglePlayingDispatch, changeCurrentIndexDispatch,
@@ -31,49 +33,37 @@ function Player(props) {
     // 记录上一首歌曲id，减少重新播放
     let [prevSong, setPrevSong] = useState(0)
     let [modeText, setModeText] = useState("")
+    // 即时歌词
+    let [curPlayingLyric, setCurPlayingLyric] = useState("")
     // 歌曲播放进度
     let percent = Number.isNaN(playTime / duration) ? 0 : playTime / duration
 
     const audioRef = useRef()
     const toastRef = useRef()
     const songReady = useRef(true)
-    // 切歌逻辑
-    useEffect(() => {
-        if (!songReady.current ||
-            !playList.length
-            || currentIndex == -1
-            || !playList[currentIndex]
-            || prevSong == playList[currentIndex].id) return
-        let current = playList[currentIndex]
-        songReady.current = false
-        audioRef.current.src = getSong(current.id)
-        setTimeout(() => {
-            // 防止切歌频繁
-            audioRef.current.play().then(() => {
-                songReady.current = true
-            })
-            togglePlayingDispatch(true)
-        })
-        changeCurrentSongDispatch(current)
-        setPrevSong(current.id)
-        setPlayTime(0)
-        setDuration(current.dt / 1000 | 0)
-    }, [currentIndex])
-    // 将audio和playing参数绑定
-    useEffect(() => {
-        playing ? audioRef.current.play() : audioRef.current.pause()
-    }, [playing])
+    const curLyricParser = useRef()
+    const curLineIndex = useRef(0)
+    // 开始播放、暂停
     const clickPlaying = (e, playing) => {
         e.stopPropagation()
         togglePlayingDispatch(playing)
+
+        if (curLyricParser.current) {
+            curLyricParser.current.togglePlay(playTime * 1000)
+        }
+
     }
+    // 自动更新记录currentTime
     const updateTime = (e) => {
-        setPlayTime(e.target.currentTime);
+        setPlayTime(e.target.currentTime);// s
     }
     const onPercentChange = (curPercent) => {
         const newTime = curPercent * duration
         setPlayTime(newTime)
         audioRef.current.currentTime = newTime
+        if (curLyricParser.current) {
+            curLyricParser.current.seek(newTime * 1000);
+        }
         if (!playing) {
             togglePlayingDispatch(true)
         }
@@ -136,6 +126,60 @@ function Player(props) {
         changeModeDispatch(newMode)
         toastRef.current.show()
     }
+    const handleLyric = ({ line, text }: { line: number, text: string }): void => {
+        if (!curLyricParser.current) return
+        curLineIndex.current = line
+        setCurPlayingLyric(text)
+    }
+    const getLyric = (id: number) => {
+        let lyric = ""
+        if (curLyricParser.current) {
+            curLyricParser.current.stop()
+        }
+        getLyricRequest(id).then(res => {
+            lyric = res.lrc.lyric
+            if (!lyric) {
+                curLyricParser.current = null
+                return
+            }
+            curLyricParser.current = new LyricParser(lyric, handleLyric)
+            curLyricParser.current.play()
+            curLineIndex.current = 0
+            // curLyricParser.current.seek(0)
+
+        }).catch(err => {
+            songReady.current = true;
+            audioRef.current.play();
+        })
+    }
+    // 切歌逻辑
+    useEffect(() => {
+        if (!songReady.current ||
+            !playList.length
+            || currentIndex == -1
+            || !playList[currentIndex]
+            || prevSong == playList[currentIndex].id) return
+        let current = playList[currentIndex]
+        songReady.current = false
+        audioRef.current.src = getSong(current.id)
+        getLyric(current.id)
+        setTimeout(() => {
+            // 防止切歌频繁
+            audioRef.current.play().then(() => {
+                songReady.current = true
+            })
+            togglePlayingDispatch(true)
+        })
+        changeCurrentSongDispatch(current)
+        setPrevSong(current.id)
+        setPlayTime(0)
+        setDuration(current.dt / 1000 | 0)
+    }, [currentIndex])
+    // 将audio和playing参数绑定
+    useEffect(() => {
+        playing ? audioRef.current.play() : audioRef.current.pause()
+    }, [playing])
+
 
     return (
         <>
@@ -152,6 +196,9 @@ function Player(props) {
                         playTime={playTime}
                         percent={percent}
                         togglePlayList={toggleShowPlayListDispatch}
+                        curLyricParser={curLyricParser.current}
+                        curPlayingLyric={curPlayingLyric}
+                        curLineIndex={curLineIndex.current}
                     ></MiniPlayer>
                 }
                 {isEmptyObject(currentSong) ? null :
@@ -170,6 +217,9 @@ function Player(props) {
                         changeMode={changeMode}
                         mode={mode}
                         togglePlayList={toggleShowPlayListDispatch}
+                        curLyricParser={curLyricParser.current}
+                        curPlayingLyric={curPlayingLyric}
+                        curLineIndex={curLineIndex.current}
                     ></FullPlayer>
                 }
                 <PlayList></PlayList>

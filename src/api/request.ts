@@ -172,3 +172,7 @@ export const getAlbumDetailRequest = (id: number) => {
 export const getSingerSongsRequest = (id: number) => {
     return axioss.get(`/artists?id=${id}`)
 }
+// 获取歌曲歌词
+export const getLyricRequest = (id: number) => {
+    return axioss.get(`/lyric?id=${id}`)
+}
