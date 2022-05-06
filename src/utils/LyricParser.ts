@@ -26,6 +26,7 @@ export default class LyricParser {
 
 
     _initLines() {
+        console.log('init');
         const lines = this.lrc.split('\n')
         for (let line of lines) {
             let res = timeExp.exec(line)
@@ -62,6 +63,7 @@ export default class LyricParser {
             delay = line.time - preTime
         }
         this.timer = window.setTimeout(() => {
+            // console.log('playRest');
             this._callHandler(this.curLineIndex++)
             if (this.curLineIndex < this.lines.length && this.state == STATE_PLAYING) {
                 this._playRest()
@@ -71,7 +73,7 @@ export default class LyricParser {
     _findcurLineIndex(time: number): number {
         for (let i = 0; i < this.lines.length; i++) {
             const line = this.lines[i]
-            if (time >= line.time) {
+            if (time <= line.time) {
                 return i
             }
         }
@@ -86,6 +88,7 @@ export default class LyricParser {
         if (!this.lines.length) return
         this.state = STATE_PLAYING
         this.curLineIndex = this._findcurLineIndex(offset);
+        // console.log(this.curLineIndex);
         // curLineIndex-1 当前行数
         this._callHandler(this.curLineIndex - 1)
         this.startStamp = +new Date() - offset // 歌曲开始时间戳

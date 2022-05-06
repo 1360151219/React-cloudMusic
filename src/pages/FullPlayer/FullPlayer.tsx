@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { CSSTransition } from 'react-transition-group';
 import { getName, getPosAndScale, prefixStyle, formatPlayTime } from "../../utils";
-import { FullPlayerContainer, Top, Middle, CDWrapper, Bottom, Operators, ProgressWrapper, LyricContainer } from "./style";
+import { FullPlayerContainer, Top, Middle, CDWrapper, Bottom, Operators, ProgressWrapper, LyricContainer, LyricList } from "./style";
 import animations from "create-keyframe-animation";
 import ProgressBar from "../../components/ProgressBar/ProgressBar";
 import { playMode } from "../Player/store/reducer";
@@ -14,12 +14,25 @@ function FullPlayer(props) {
     const fullPlayerRef = useRef()
     const cdWrapperRef = useRef()
     // 歌词
-    const isLyricShow = useRef(false)
+    let [isLyricShow, setIsLyricShow] = useState(false)
     const lyricScrollRef = useRef()
-    const lyricLineRef = useRef()
+    const lyricLineRefs = useRef([])
+
+    useEffect(() => {
+        if (!lyricScrollRef.current) return
+        let bScroll = lyricScrollRef.current.getBscroll()
+
+        if (curLineIndex > 5) {
+            // 保持当前歌词在第五行
+            let lineEl = lyricLineRefs.current[curLineIndex - 5].current
+            bScroll.scrollToElement(lineEl, 1000);
+        } else {
+            // 当前歌词行数 <=5, 直接滚动到最顶端
+            bScroll.scrollTo(0, 0, 1000);
+        }
+    }, [curLineIndex])
     const toggleLyricShow = () => {
-        console.log(1);
-        isLyricShow.current = !isLyricShow.current
+        setIsLyricShow(!isLyricShow)
     }
     const enter = () => {
         fullPlayerRef.current.style.display = "block"
@@ -62,6 +75,7 @@ function FullPlayer(props) {
         cdWrapperRef.current.style[transform] = ""
         // 这里如果卸载的话，唱片的角度会变成0
         // fullPlayerRef.current.style.display = "none"
+        setIsLyricShow(false)
     }
     const getPlayMode = () => {
         let res = ""
@@ -92,6 +106,7 @@ function FullPlayer(props) {
             in={fullScreen}
             timeout={500}
             mountOnEnter
+            unmountOnExit
             onEnter={enter}
             onEntered={afterEnter}
             onExit={leave}
@@ -117,7 +132,7 @@ function FullPlayer(props) {
                 <Middle ref={cdWrapperRef} onClick={toggleLyricShow}>
                     <CSSTransition
                         classNames="fade"
-                        in={!isLyricShow.current}
+                        in={!isLyricShow}
                         timeout={400}
                     >
                         <CDWrapper>
@@ -132,11 +147,31 @@ function FullPlayer(props) {
                     </CSSTransition>
                     <CSSTransition
                         classNames="fade"
-                        in={isLyricShow.current}
+                        in={isLyricShow}
                         timeout={400}
                     >
                         <LyricContainer>
-                            歌词列表
+                            <Scroll ref={lyricScrollRef}>
+                                <LyricList>
+                                    {curLyricParser
+                                        ? curLyricParser.lines.map((item, index) => {
+                                            lyricLineRefs.current[index] = React.createRef()
+                                            return (
+                                                <p
+                                                    className={`text ${curLineIndex == index ? 'active' : ''}`}
+                                                    key={index + item}
+                                                    ref={lyricLineRefs.current[index]}
+                                                >
+                                                    {item.text}
+                                                </p>
+                                            )
+                                        })
+                                        :
+                                        <p className="text pure">纯音乐，请欣赏！</p>
+                                    }
+                                    歌词列表
+                                </LyricList>
+                            </Scroll>
                         </LyricContainer>
                     </CSSTransition>
                 </Middle>

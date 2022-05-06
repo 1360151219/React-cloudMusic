@@ -186,7 +186,6 @@ export const LyricContainer = styled.div`
     right: 0;
     top: 0;
     bottom: 0;
-    font-size: 14px;
     opacity: 0;
     &.fade-enter{
         opacity: 0;
@@ -198,6 +197,28 @@ export const LyricContainer = styled.div`
     &.fade-exit-active,&.fade-exit-done{
         opacity: 0;
         transition: opacity .4s;
+    }
+`
+export const LyricList = styled.div`
+    position: absolute;
+    left: 0;
+    right: 0;
+    width: 100%;
+    box-sizing: border-box;
+    text-align: center;
+    p{
+        line-height: 32px;
+        color: rgba (255, 255, 255, 0.5);
+        white-space: normal;
+        font-size: ${style["font-size-l"]};
+        &.active{
+            color:#fff;
+        }
+
+        &.pure{
+            position: relative;
+            top: 30vh;
+        }
     }
 `
 

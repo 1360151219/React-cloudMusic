@@ -128,6 +128,7 @@ function Player(props) {
     }
     const handleLyric = ({ line, text }: { line: number, text: string }): void => {
         if (!curLyricParser.current) return
+        console.log(line);
         curLineIndex.current = line
         setCurPlayingLyric(text)
     }

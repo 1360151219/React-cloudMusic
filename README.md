@@ -240,3 +240,22 @@ useEffect(() => {
 ### Section 28: 切歌太频繁导致异常
 
 解决的原理：其实从 audio 标签拿到 src 加载到能够播放之间有一个缓冲的过程，只有当控件能够播放时才能够切到下一首。如果在这个缓冲过程中切歌就会报错。
+
+### Section 31: 歌曲暂停时点击切换歌词没有反应
+
+因为暂停后 props 中的`curLineIndex`没有更新，组件不会重新渲染。
+解决方法：使用`useState`去处理`isLyricShow`
+
+### Section 31: 手动调整进度条后 curLineIndex 从 0 开始
+
+```js
+_findcurLineIndex(time: number): number {
+        for (let i = 0; i < this.lines.length; i++) {
+            const line = this.lines[i]
+            if (time <= line.time) {// 这里原本是大于等于，这样的话因为lines是从小到大的，i永远返回0，因此出错
+                return i
+            }
+        }
+        return this.lines.length - 1
+    }
+```
