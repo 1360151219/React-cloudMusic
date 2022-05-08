@@ -21,7 +21,7 @@ function FullPlayer(props) {
     useEffect(() => {
         if (!lyricScrollRef.current) return
         let bScroll = lyricScrollRef.current.getBscroll()
-
+        if (!bScroll) return
         if (curLineIndex > 5) {
             // 保持当前歌词在第五行
             let lineEl = lyricLineRefs.current[curLineIndex - 5].current

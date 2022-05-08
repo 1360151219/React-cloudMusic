@@ -25,7 +25,6 @@ function Player(props) {
         changeCurrentSongDispatch, changeModeDispatch, changeSequencePlayListDispatch,
         changePlayListDispatch, toggleShowPlayListDispatch
     } = props
-
     // 已经播放时间
     let [playTime, setPlayTime] = useState(0)
     //歌曲总时长
@@ -83,6 +82,7 @@ function Player(props) {
         const index = currentIndex - 1 < 0 ? playList.length - 1 : currentIndex - 1
         if (!playing) togglePlayingDispatch(true)
         changeCurrentIndexDispatch(index)
+        console.log('prev');
     }
     const handleNext = () => {
         if (playList.length == 1) {
@@ -92,6 +92,7 @@ function Player(props) {
         const index = currentIndex + 1 >= playList.length ? 0 : currentIndex + 1
         if (!playing) togglePlayingDispatch(true)
         changeCurrentIndexDispatch(index)
+        console.log('next');
     }
     // 歌曲结束逻辑
     const handleEnd = () => {
@@ -128,7 +129,6 @@ function Player(props) {
     }
     const handleLyric = ({ line, text }: { line: number, text: string }): void => {
         if (!curLyricParser.current) return
-        console.log(line);
         curLineIndex.current = line
         setCurPlayingLyric(text)
     }
@@ -160,6 +160,8 @@ function Player(props) {
             || currentIndex == -1
             || !playList[currentIndex]
             || prevSong == playList[currentIndex].id) return
+
+        console.log('change index:' + currentIndex);
         let current = playList[currentIndex]
         songReady.current = false
         audioRef.current.src = getSong(current.id)

@@ -127,8 +127,9 @@ function PlayList(props) {
         changeCurrentIndexDispatch(index);
         musicAnimation(e.clientX, e.clientY);
     }
-    const handleDelete = (id: number) => {
+    const handleDelete = (e, id: number) => {
         deleteSongDispatch(id)
+        e.stopPropagation()
     }
     const deletePlayList = () => {
         deletePlayListDispatch()
@@ -170,7 +171,7 @@ function PlayList(props) {
                                                 <span className="like">
                                                     <i className="iconfont">&#xe601;</i>
                                                 </span>
-                                                <span className="delete" onClick={() => handleDelete(item.id)}>
+                                                <span className="delete" onClick={(e) => handleDelete(e, item.id)}>
                                                     <i className="iconfont">&#xe63d;</i>
                                                 </span>
                                             </li>
@@ -216,6 +217,7 @@ const mapDispatchToProps = (dispatch) => ({
     },
     deleteSongDispatch(index: number) {
         dispatch(deleteSong(index))
+
     },
     deletePlayListDispatch() {
         dispatch(changePlayList([]))

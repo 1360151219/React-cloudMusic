@@ -259,3 +259,7 @@ _findcurLineIndex(time: number): number {
         return this.lines.length - 1
     }
 ```
+
+### Section 31: 点击播放列表中的删除单曲的时候，`currentIndex`变成该单曲原来 index
+
+原因：`handleDelete`方法触发后，同时事件冒泡触发了`selectItem`方法。

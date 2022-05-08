@@ -24,6 +24,7 @@ const handleDelete = (state, songId) => {
     const songIndex = findSongIndex(playList, songId)
     let currentIndex = state.get("currentIndex")
     playList.splice(songIndex, 1)
+    // 如果删除歌曲在当前歌曲之前，currentIndex--
     if (songIndex <= currentIndex) currentIndex--
     const songIndexSe = findSongIndex(sequencePlayList, songId)
     sequencePlayList.splice(songIndexSe, 1)

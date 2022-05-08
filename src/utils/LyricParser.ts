@@ -18,7 +18,6 @@ export default class LyricParser {
         this.state = STATE_PAUSE
         this.curLineIndex = 0
         this.startStamp = 0
-
         this.timer = 0
         this._initLines()
     }
