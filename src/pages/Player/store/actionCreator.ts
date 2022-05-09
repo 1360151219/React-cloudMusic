@@ -1,6 +1,6 @@
 import { fromJS } from "immutable";
+import { getSongDetailRequest } from "../../../api/request";
 import * as actionTypes from "./constants"
-
 export const changeCurrentIndex = (index: number) => ({
     type: actionTypes.CHANGE_CURRENT_INDEX,
     data: index
@@ -43,3 +43,18 @@ export const deleteSong = (data) => ({
     type: actionTypes.DELETE_SONG,
     data
 })
+
+// 搜索单曲--插入
+export const insertSong = (data) => ({
+    type: actionTypes.INSERT_SONG,
+    data
+})
+
+export const getSongDetail = (id) => {
+    return dispatch => {
+        getSongDetailRequest(id).then(res => {
+            let song = res.songs[0];
+            dispatch(insertSong(song));
+        })
+    }
+}

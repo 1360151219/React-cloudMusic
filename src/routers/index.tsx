@@ -52,6 +52,10 @@ const router: RouteObject[] = [
             {
                 path: "/search",
                 element: <Search />,
+            },
+            {
+                path: "/album/:id",
+                element: <Album />,
             }
         ]
     },

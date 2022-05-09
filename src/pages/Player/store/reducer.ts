@@ -34,6 +34,49 @@ const handleDelete = (state, songId) => {
         currentIndex: currentIndex
     })
 }
+
+const handleInsert = (state, song) => {
+    const playList = state.get("playList").toJS()
+    const sequencePlayList = state.get("sequencePlayList").toJS()
+    // 这里直接加一，一方面是为了splice添加
+    let currentIndex = state.get('currentIndex') + 1
+    // 是否存在
+    const songIndex = findSongIndex(playList, song.id)
+    if (songIndex == currentIndex && currentIndex != -1) return state
+    // 插入
+    playList.splice(currentIndex, 0, song)
+    // 如果已经存在
+    if (songIndex > -1) {
+        if (currentIndex > songIndex) {
+            // 相当于将前面的单曲移到后面
+            playList.splice(songIndex, 1)
+            currentIndex--
+        } else {
+            // 直接删除即可，注意此时songIndex变化了
+            playList.splice(songIndex + 1, 1)
+        }
+    }
+
+    let currentIndexSe = findSongIndex(sequencePlayList, playList[currentIndex].id) + 1
+    const songIndexSe = findSongIndex(sequencePlayList, song.id)
+    sequencePlayList.splice(currentIndexSe, 0, song)
+    if (songIndexSe > -1) {
+        if (currentIndexSe > songIndexSe) {
+            // 相当于将前面的单曲移到后面
+            sequencePlayList.splice(songIndexSe, 1)
+            currentIndexSe--
+        } else {
+            // 直接删除即可，注意此时songIndex变化了
+            sequencePlayList.splice(songIndexSe + 1, 1)
+        }
+    }
+    return state.merge({
+        playList: fromJS(playList),
+        sequencePlayList: fromJS(sequencePlayList),
+        currentIndex: currentIndex
+    })
+
+}
 export default (state = defaultState, action) => {
     switch (action.type) {
         case (actionTypes.CHANGE_CURRENT_INDEX): {
@@ -55,6 +98,8 @@ export default (state = defaultState, action) => {
             return state.set("showPlayList", action.data);
         case (actionTypes.DELETE_SONG):
             return handleDelete(state, action.data)
+        case (actionTypes.INSERT_SONG):
+            return handleInsert(state, action.data)
         default:
             return state
     }

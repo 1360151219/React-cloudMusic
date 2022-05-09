@@ -176,3 +176,20 @@ export const getSingerSongsRequest = (id: number) => {
 export const getLyricRequest = (id: number) => {
     return axioss.get(`/lyric?id=${id}`)
 }
+
+// 搜索模块
+export const getHotKeyWordsRequest = () => {
+    return axioss.get(`/search/hot`);
+};
+
+export const getSuggestListRequest = (query: string) => {
+    return axioss.get(`/search/suggest?keywords=${query}`);
+};
+
+export const getResultSongsListRequest = (query: string) => {
+    return axioss.get(`/search?keywords=${query}`);
+};
+
+export const getSongDetailRequest = (id: string) => {
+    return axioss.get(`/song/detail?ids=${id}`);
+};

@@ -155,6 +155,7 @@ function Player(props) {
     }
     // 切歌逻辑
     useEffect(() => {
+        console.log(prevSong, playList[currentIndex]?.id || 0);
         if (!songReady.current ||
             !playList.length
             || currentIndex == -1

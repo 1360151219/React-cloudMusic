@@ -1,12 +1,10 @@
-import React, { useMemo, useEffect, useRef, useState, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useMemo, useEffect, useRef, useState, } from "react";
 import { debounce } from "../../utils";
 import { SearchBoxWrapper } from "./style"
 
 const SearchBox = (props) => {
     const { newQuery } = props
     const { handleQuery, back } = props
-    const navigate = useNavigate()
     const queryRef = useRef()
     let [query, setQuery] = useState("")
     const clearQuery = () => {
@@ -27,7 +25,6 @@ const SearchBox = (props) => {
         queryRef.current.focus()
     }, [])
     useEffect(() => {
-        console.log(handleQueryDebounce);
         handleQueryDebounce(query)
     }, [query])
     useEffect(() => {
