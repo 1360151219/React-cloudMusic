@@ -5,6 +5,7 @@ import Singers from "../pages/Singers/Singers"
 import Singer from "../pages/Singer/Singer"
 import Recommend from "../pages/Recommend/Recommend"
 import Album from "../pages/Album/Album"
+import Search from "../pages/Search/Search"
 const router: RouteObject[] = [
     {
         path: '/',
@@ -47,6 +48,10 @@ const router: RouteObject[] = [
                         element: <Album />
                     }
                 ]
+            },
+            {
+                path: "/search",
+                element: <Search />,
             }
         ]
     },

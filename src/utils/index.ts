@@ -5,7 +5,7 @@ export function getCount(count: number) {
     else
         return Math.floor(count / 10000 / 10000) + '亿'
 }
-export function debounce(func?: () => void, delay: number) {
+export function debounce(func?: (key?: string) => void, delay: number) {
     if (!func) return
     let timer: NodeJS.Timeout;
     return function (...args: any) {

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Outlet, NavLink, useLocation } from "react-router-dom";
+import { Outlet, NavLink, useLocation, useNavigate } from "react-router-dom";
 import "./Home.scss"
 import { Top } from "./style";
 import Player from "../Player/Player";
@@ -17,6 +17,7 @@ const Links = [
     },
 ]
 function Home() {
+    const navigate = useNavigate()
     // moving-border 的left值
     let [left, setLeft] = useState(0)
     const borderRef = useRef()
@@ -40,7 +41,7 @@ function Home() {
             <Top>
                 <span className="iconfont menu">&#xe65c;</span>
                 <span className="title">云音乐</span>
-                <span className="iconfont search">&#xe62b;</span>
+                <span className="iconfont search" onClick={() => { navigate('/search') }}>&#xe62b;</span>
             </Top>
             <div className="tab">
                 {Tab}
