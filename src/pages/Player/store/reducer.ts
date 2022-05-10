@@ -38,7 +38,7 @@ const handleDelete = (state, songId) => {
 const handleInsert = (state, song) => {
     const playList = state.get("playList").toJS()
     const sequencePlayList = state.get("sequencePlayList").toJS()
-    // 这里直接加一，一方面是为了splice添加
+    // 这里直接加一，一方面是为了splice添加,二是当播放列表为0的时候，直接添加一首
     let currentIndex = state.get('currentIndex') + 1
     // 是否存在
     const songIndex = findSongIndex(playList, song.id)

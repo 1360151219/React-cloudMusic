@@ -1,11 +1,20 @@
 import { RouteObject, Navigate } from "react-router-dom"
-import Home from "../pages/Home/Home"
-import Rank from "../pages/Rank/Rank"
-import Singers from "../pages/Singers/Singers"
-import Singer from "../pages/Singer/Singer"
-import Recommend from "../pages/Recommend/Recommend"
-import Album from "../pages/Album/Album"
-import Search from "../pages/Search/Search"
+import { lazy, Suspense } from "react"
+const Home = lazy(() => import("../pages/Home/Home"))
+const Rank = lazy(() => import("../pages/Rank/Rank"))
+const Singers = lazy(() => import("../pages/Singers/Singers"))
+const Singer = lazy(() => import("../pages/Singer/Singer"))
+const Recommend = lazy(() => import("../pages/Recommend/Recommend"))
+const Album = lazy(() => import("../pages/Album/Album"))
+const Search = lazy(() => import("../pages/Search/Search"))
+
+const suspenseComponent = (Component: React.LazyExoticComponent<any>) => {
+    return (
+        <Suspense fallback={null}>
+            <Component />
+        </Suspense>
+    )
+}
 const router: RouteObject[] = [
     {
         path: '/',
@@ -13,7 +22,7 @@ const router: RouteObject[] = [
     },
     {
         path: '/',
-        element: <Home />,
+        element: suspenseComponent(Home),
         children: [
             // {
             //     path: '',
@@ -21,41 +30,41 @@ const router: RouteObject[] = [
             // },
             {
                 path: "/recommend",
-                element: <Recommend />,
+                element: suspenseComponent(Recommend),
                 children: [
                     {
                         path: '/recommend/:id',
-                        element: <Album />
+                        element: suspenseComponent(Album),
                     }
                 ]
             },
             {
                 path: "/singers",
-                element: <Singers />,
+                element: suspenseComponent(Singers),
                 children: [
                     {
                         path: '/singers/:id',
-                        element: <Singer />
+                        element: suspenseComponent(Singer),
                     }
                 ]
             },
             {
                 path: "/rank",
-                element: <Rank />,
+                element: suspenseComponent(Rank),
                 children: [
                     {
                         path: "/rank/:id",
-                        element: <Album />
+                        element: suspenseComponent(Album),
                     }
                 ]
             },
             {
                 path: "/search",
-                element: <Search />,
+                element: suspenseComponent(Search),
             },
             {
                 path: "/album/:id",
-                element: <Album />,
+                element: suspenseComponent(Album),
             }
         ]
     },
