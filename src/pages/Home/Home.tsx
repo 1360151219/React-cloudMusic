@@ -47,7 +47,7 @@ function Home() {
                 {Tab}
                 <div className="moving-border" ref={borderRef}></div>
             </div>
-            <Player></Player>
+            {/* <Player></Player> */}
             <Outlet></Outlet>
         </div>
     )

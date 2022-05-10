@@ -2,6 +2,10 @@
 
 使用 Typescript 以及新 Hook 进行学习编写。有一些地方添加了个人的爱好逻辑吧~
 
+## basic-tutorial 分支
+
+按照 tutorial 的步骤实现的一个基础版
+
 ## 技术栈学习以及问题
 
 ### immutable 库

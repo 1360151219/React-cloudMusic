@@ -31,41 +31,41 @@ const router: RouteObject[] = [
             {
                 path: "/recommend",
                 element: suspenseComponent(Recommend),
-                children: [
-                    {
-                        path: '/recommend/:id',
-                        element: suspenseComponent(Album),
-                    }
-                ]
+                // children: [
+                //     {
+                //         path: '/recommend/:id',
+                //         element: suspenseComponent(Album),
+                //     }
+                // ]
             },
-            {
-                path: "/singers",
-                element: suspenseComponent(Singers),
-                children: [
-                    {
-                        path: '/singers/:id',
-                        element: suspenseComponent(Singer),
-                    }
-                ]
-            },
-            {
-                path: "/rank",
-                element: suspenseComponent(Rank),
-                children: [
-                    {
-                        path: "/rank/:id",
-                        element: suspenseComponent(Album),
-                    }
-                ]
-            },
-            {
-                path: "/search",
-                element: suspenseComponent(Search),
-            },
-            {
-                path: "/album/:id",
-                element: suspenseComponent(Album),
-            }
+            // {
+            //     path: "/singers",
+            //     element: suspenseComponent(Singers),
+            //     children: [
+            //         {
+            //             path: '/singers/:id',
+            //             element: suspenseComponent(Singer),
+            //         }
+            //     ]
+            // },
+            // {
+            //     path: "/rank",
+            //     element: suspenseComponent(Rank),
+            //     children: [
+            //         {
+            //             path: "/rank/:id",
+            //             element: suspenseComponent(Album),
+            //         }
+            //     ]
+            // },
+            // {
+            //     path: "/search",
+            //     element: suspenseComponent(Search),
+            // },
+            // {
+            //     path: "/album/:id",
+            //     element: suspenseComponent(Album),
+            // }
         ]
     },
 ]
