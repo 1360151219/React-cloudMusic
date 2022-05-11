@@ -8,26 +8,65 @@ import Loading from "../../components/Loading/Loading";
 import {
     getHotSingerList,
     getSingeTypes,
-    changeLoading,
-    changePageCount,
-    changePullDownLoading,
-    changeCategory,
-    changeAlpha,
-    changeArea,
-    changePullUpLoading,
-    changeNoMore,
     refreshMoreHotSingerList,
     refreshMoreSingerList
-} from "./store/actionCreator";
-import { connect } from "react-redux";
+} from "./store/actions";
+import {
+    changeSingerList, changeLoading, changePullUpLoading, changePullDownLoading, changePageCount, changeNoMore
+    , changeCategory, changeArea, changeAlpha
+} from "./store"
+import { connect, useDispatch, useSelector } from "react-redux";
 import LazyLoad, { forceCheck } from "react-lazyload";
 import placeholder from '../../assets/singer.png'
 
-function Singers(props) {
-    let { singerList, pageCount, pullUpLoading, pullDownLoading, loading, category, alpha, area, isMiniExist } = props
-    let { getHotSingerDispatch, pullUpRefreshDispatch, updateDispatch, pullDownRefreshDispatch, categoryDispatch,
-        alphaDispatch, areaDispatch } = props
+function Singers() {
+    const { singerList, pageCount, pullUpLoading, pullDownLoading, loading, category, alpha, area } = useSelector((state) => state.singers)
+    const dispatch = useDispatch()
+    function getHotSingerDispatch() {
+        dispatch(getHotSingerList());
+    }
+    // 上拉加载新数据
+    function pullUpRefreshDispatch(count: number, isHot: boolean) {
+        dispatch(changePullUpLoading(true))
+        dispatch(changePageCount(count + 1))
+        if (isHot)
+            dispatch(refreshMoreHotSingerList())
+        else {
+            dispatch(refreshMoreSingerList())
+        }
+    }
+    //顶部下拉刷新
+    function pullDownRefreshDispatch(isHot: boolean) {
+        dispatch(changePullDownLoading(true))
+        dispatch(changePageCount(0))
+        dispatch(changeNoMore(false))
+        if (isHot)
+            dispatch(getHotSingerList())
+        else dispatch(getSingeTypes())
+    }
+
+    // 重新刷新
+    function updateDispatch(scrollRef, isHot: boolean) {
+        dispatch(changePageCount(0));//由于改变了分类，所以pageCount清零
+        dispatch(changeLoading(true));//loading，现在实现控制逻辑，效果实现放到下一节，后面的loading同理
+        dispatch(changeNoMore(false))
+        if (isHot) dispatch(getHotSingerList());
+        else
+            dispatch(getSingeTypes());
+        scrollRef.current.refresh()
+    }
+    // 数据参数变化
+    function categoryDispatch(category: number) {
+        dispatch(changeCategory(category))
+    }
+    function alphaDispatch(alpha: string) {
+        dispatch(changeAlpha(alpha))
+    }
+    function areaDispatch(area: number) {
+        dispatch(changeArea(area))
+    }
     let navigate = useNavigate()
+    const isMiniExist = false
     // 注意，这里渲染的时候不能写成组件形式，会出bug！！
     const renderSingerList = (childList) => {
         const enterDetail = (id: number) => {
@@ -55,7 +94,7 @@ function Singers(props) {
     };
     useEffect(() => {
         // 修复再次渲染Singers的时候导致数据重新刷新的问题
-        if (singerList.size > 0) return
+        if (singerList.length > 0) return
         getHotSingerDispatch()
     }, [])
     // ！！！这里逻辑一定要清晰：每次改变参数的时候，都需要以新的参数状态去判断当前是否是hot
@@ -77,13 +116,13 @@ function Singers(props) {
     }
     const handlePullUp = () => {
         let hot = !alpha && category == -1 && area == -1
-        pullUpRefreshDispatch(pageCount, hot, area, alpha)
+        pullUpRefreshDispatch(pageCount, hot)
     }
     const handlePullDown = () => {
         let hot = !alpha && category == -1 && area == -1
         pullDownRefreshDispatch(hot)
     }
-    const singerListJS = singerList ? singerList.toJS() : []
+
     return (
         <>
             <div className="Singers" >
@@ -114,7 +153,7 @@ function Singers(props) {
                         pullUpLoading={pullUpLoading}
                         onScroll={forceCheck}
                     >
-                        {renderSingerList(singerListJS)}
+                        {renderSingerList(singerList)}
                     </Scroll>
                 </div>
                 {loading ? <Loading></Loading> : null}
@@ -123,64 +162,5 @@ function Singers(props) {
         </>
     )
 }
-const mapStateToProps = (state) => ({
-    singerList: state.getIn(['singers', 'singerList']),
-    loading: state.getIn(['singers', 'loading']),
-    pullUpLoading: state.getIn(['singers', 'pullUpLoading']),
-    pullDownLoading: state.getIn(['singers', 'pullDownLoading']),
-    pageCount: state.getIn(['singers', 'pageCount']),
-    category: state.getIn(['singers', 'category']),
-    alpha: state.getIn(['singers', 'alpha']),
-    area: state.getIn(['singers', 'area']),
-    isMiniExist: state.getIn(["player", "playList"]).size > 0
 
-});
-const mapDispatchToProps = (dispatch) => {
-    return {
-        // 首次请求热门歌手（会将singerList先置空）
-        getHotSingerDispatch() {
-            dispatch(getHotSingerList());
-        },
-        // 上拉加载新数据
-        pullUpRefreshDispatch(count: number, isHot: boolean) {
-            dispatch(changePullUpLoading(true))
-            dispatch(changePageCount(count + 1))
-            if (isHot)
-                dispatch(refreshMoreHotSingerList())
-            else {
-                dispatch(refreshMoreSingerList())
-            }
-        },
-        //顶部下拉刷新
-        pullDownRefreshDispatch(isHot: boolean) {
-            dispatch(changePullDownLoading(true))
-            dispatch(changePageCount(0))
-            dispatch(changeNoMore(false))
-            if (isHot)
-                dispatch(getHotSingerList())
-            else dispatch(getSingeTypes())
-        }
-        ,
-        // 重新刷新
-        updateDispatch(scrollRef, isHot: boolean) {
-            dispatch(changePageCount(0));//由于改变了分类，所以pageCount清零
-            dispatch(changeLoading(true));//loading，现在实现控制逻辑，效果实现放到下一节，后面的loading同理
-            dispatch(changeNoMore(false))
-            if (isHot) dispatch(getHotSingerList());
-            else
-                dispatch(getSingeTypes());
-            scrollRef.current.refresh()
-        },
-        // 数据参数变化
-        categoryDispatch(category: number) {
-            dispatch(changeCategory(category))
-        },
-        alphaDispatch(alpha: string) {
-            dispatch(changeAlpha(alpha))
-        },
-        areaDispatch(area: number) {
-            dispatch(changeArea(area))
-        }
-    }
-};
-export default connect(mapStateToProps, mapDispatchToProps)(React.memo(Singers))
+export default React.memo(Singers)

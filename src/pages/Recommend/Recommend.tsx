@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect } from "react";
 import "./Recommend.scss"
 import RecommendList from "../../components/RecommendList/RecommendList";
 import Scroll from "../../components/Scroll/Scroll";
@@ -14,27 +14,17 @@ function pullUp() {
 function pullDown() {
     console.log('down');
 }
-
-// interface RecommendProps {
-//     bannerList: any[]
-//     recommendList: any[]
-//     getBannerDataDispatch: () => void
-//     getRecommendListDataDispatch: () => void
-// }
 function Recommend() {
     const { bannerList, recommendList, loading } = useSelector((state) => state.recommend);
     // const isMiniExist = useSelector((state) => state.player.playList.size > 0)
     const isMiniExist = false
     const dispatch = useDispatch()
     useEffect(() => {
-        if (!bannerList.size)
+        if (!bannerList.length)
             dispatch(actions.getBanner())
-
-        // if (recommendList.size == 0)
-        // getRecommendListDataDispatch();
+        if (!recommendList.length)
+            dispatch(actions.getRecommendList())
     }, []);
-    // const recommendListJS = recommendList ? recommendList.toJS() : []
-    console.log(bannerList);
     return (
         <div className={`Recommend ${isMiniExist ? "mb" : ""}`}>
             <Scroll pullUp={pullUp} pullDown={pullDown} onScroll={forceCheck}>

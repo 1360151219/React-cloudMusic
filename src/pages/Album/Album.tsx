@@ -7,32 +7,32 @@ import Scroll from "../../components/Scroll/Scroll";
 import { TopDesc, Menu, SongList, SongItem } from './style';
 import style from '../../assets/global-style'
 import { getCount, getName, isEmptyObject } from "../../utils";
-import { getAlbumList } from "./store/actionCreator";
-import { connect } from "react-redux";
+import { getAlbumList } from "./store/actions";
 import Loading from "../../components/Loading/Loading";
 import SongsList from "../../components/SongList/SongsList";
 import MusicNote from "../../components/MusicNote/MusicNote";
-function renderTopDes(currentAlbumJS) {
+import { useDispatch, useSelector } from "react-redux";
+function renderTopDes(currentAlbum) {
     return (
-        <TopDesc background={currentAlbumJS.coverImgUrl}>
+        <TopDesc background={currentAlbum.coverImgUrl}>
             <div className="background">
                 <div className="filter"></div>
             </div>
             <div className="img-wrapper">
                 <div className="decorate"></div>
-                <img src={currentAlbumJS.coverImgUrl} alt="" />
+                <img src={currentAlbum.coverImgUrl} alt="" />
                 <div className="play_count">
                     <i className="iconfont play">&#xe885;</i>
-                    <span className="count">{Math.floor(currentAlbumJS.subscribedCount / 1000) / 10} 万 </span>
+                    <span className="count">{Math.floor(currentAlbum.playCount / 1000) / 10} 万 </span>
                 </div>
             </div>
             <div className="desc-wrapper">
-                <div className="title">{currentAlbumJS.name}</div>
+                <div className="title">{currentAlbum.name}</div>
                 <div className="person">
                     <div className="avatar">
-                        <img src={currentAlbumJS.creator.avatarUrl} alt="" />
+                        <img src={currentAlbum.creator.avatarUrl} alt="" />
                     </div>
-                    <div className="name">{currentAlbumJS.creator.nickname}</div>
+                    <div className="name">{currentAlbum.creator.nickname}</div>
                 </div>
             </div>
         </TopDesc>
@@ -60,9 +60,13 @@ function renderMenu() {
         </Menu>
     )
 }
-function Album(props) {
-    const { getAlbumListDispatch } = props
-    const { loading, currentAlbum, isMiniExist } = props
+function Album() {
+    // const { getAlbumListDispatch } = props
+    // const { loading, currentAlbum, isMiniExist } = props
+    const dispatch = useDispatch()
+    const { loading, currentAlbum } = useSelector((state) => state.album)
+    // 
+    const isMiniExist = false
     let navigate = useNavigate()
     const { id } = useParams()
     let [fly, setFly] = useState(true)
@@ -75,14 +79,12 @@ function Album(props) {
     const headerEl = useRef()
     const scrollRef = useRef()
     useEffect(() => {
-        getAlbumListDispatch(id)
+        dispatch(getAlbumList(id))
     }, [])
     useEffect(() => {
         if (isMiniExist)
             scrollRef.current.refresh()
     }, [isMiniExist, currentAlbum])
-    let currentAlbumJS = currentAlbum.size ? currentAlbum.toJS() : {}
-    // console.log(currentAlbumJS, currentAlbum);
     const handleBack = useCallback(() => {
         setFly(false)
     }, [])
@@ -117,15 +119,15 @@ function Album(props) {
                     {loading ? <Loading /> : null}
                     <Header ref={headerEl} title={title} handleClick={handleBack} isMarquee={isMarquee} />
                     <div className="album-content">
-                        {!isEmptyObject(currentAlbumJS) ?
+                        {!isEmptyObject(currentAlbum) ?
                             <Scroll bounceTop={false} onScroll={handleScroll} ref={scrollRef}>
                                 <div>
-                                    {renderTopDes(currentAlbumJS)}
+                                    {renderTopDes(currentAlbum)}
                                     {renderMenu()}
                                     <SongsList
-                                        songs={currentAlbumJS.tracks}
+                                        songs={currentAlbum.tracks}
                                         showCollect={true}
-                                        collectCount={getCount(currentAlbumJS.subscribedCount)}
+                                        collectCount={getCount(currentAlbum.subscribedCount)}
                                         musicAnimation={musicAnimation}
                                     ></SongsList>
                                 </div>
@@ -140,20 +142,5 @@ function Album(props) {
     )
 }
 
-const mapStateToProps = (state) => {
-    return {
-        loading: state.getIn(['album', 'loading']),
-        currentAlbum: state.getIn(['album', 'currentAlbum']),
-        isMiniExist: state.getIn(["player", "playList"]).size > 0
 
-    }
-}
-
-const mapDispatchToProps = (dispatch) => {
-    return {
-        getAlbumListDispatch(id) {
-            dispatch(getAlbumList(id))
-        }
-    }
-}
-export default connect(mapStateToProps, mapDispatchToProps)(React.memo(Album))
+export default React.memo(Album)
