@@ -6,65 +6,17 @@ import HorizenItem from "../../components/Horizen-Item/HorizenItem";
 import { categoryTypes, alphaTypes, areaTypes } from '../../api/request'
 import Loading from "../../components/Loading/Loading";
 import {
-    getHotSingerList,
-    getSingeTypes,
-    refreshMoreHotSingerList,
-    refreshMoreSingerList
+    getHotSingerDispatch, categoryDispatch, alphaDispatch, areaDispatch, updateDispatch, pullDownRefreshDispatch, pullUpRefreshDispatch
 } from "./store/actions";
-import {
-    changeSingerList, changeLoading, changePullUpLoading, changePullDownLoading, changePageCount, changeNoMore
-    , changeCategory, changeArea, changeAlpha
-} from "./store"
-import { connect, useDispatch, useSelector } from "react-redux";
+
+import { useDispatch, useSelector } from "react-redux";
 import LazyLoad, { forceCheck } from "react-lazyload";
 import placeholder from '../../assets/singer.png'
 
 function Singers() {
     const { singerList, pageCount, pullUpLoading, pullDownLoading, loading, category, alpha, area } = useSelector((state) => state.singers)
     const dispatch = useDispatch()
-    function getHotSingerDispatch() {
-        dispatch(getHotSingerList());
-    }
-    // 上拉加载新数据
-    function pullUpRefreshDispatch(count: number, isHot: boolean) {
-        dispatch(changePullUpLoading(true))
-        dispatch(changePageCount(count + 1))
-        if (isHot)
-            dispatch(refreshMoreHotSingerList())
-        else {
-            dispatch(refreshMoreSingerList())
-        }
-    }
-    //顶部下拉刷新
-    function pullDownRefreshDispatch(isHot: boolean) {
-        dispatch(changePullDownLoading(true))
-        dispatch(changePageCount(0))
-        dispatch(changeNoMore(false))
-        if (isHot)
-            dispatch(getHotSingerList())
-        else dispatch(getSingeTypes())
-    }
 
-    // 重新刷新
-    function updateDispatch(scrollRef, isHot: boolean) {
-        dispatch(changePageCount(0));//由于改变了分类，所以pageCount清零
-        dispatch(changeLoading(true));//loading，现在实现控制逻辑，效果实现放到下一节，后面的loading同理
-        dispatch(changeNoMore(false))
-        if (isHot) dispatch(getHotSingerList());
-        else
-            dispatch(getSingeTypes());
-        scrollRef.current.refresh()
-    }
-    // 数据参数变化
-    function categoryDispatch(category: number) {
-        dispatch(changeCategory(category))
-    }
-    function alphaDispatch(alpha: string) {
-        dispatch(changeAlpha(alpha))
-    }
-    function areaDispatch(area: number) {
-        dispatch(changeArea(area))
-    }
     let navigate = useNavigate()
     const isMiniExist = false
     // 注意，这里渲染的时候不能写成组件形式，会出bug！！
@@ -95,32 +47,32 @@ function Singers() {
     useEffect(() => {
         // 修复再次渲染Singers的时候导致数据重新刷新的问题
         if (singerList.length > 0) return
-        getHotSingerDispatch()
+        getHotSingerDispatch(dispatch)
     }, [])
     // ！！！这里逻辑一定要清晰：每次改变参数的时候，都需要以新的参数状态去判断当前是否是hot
     let scrollRef = useRef()
     const handleCategory = (value: number | string) => {
-        categoryDispatch(value as number)
+        categoryDispatch(dispatch, value as number)
         let hot = !alpha && value == -1 && area == -1
-        updateDispatch(scrollRef, hot)
+        updateDispatch(dispatch, scrollRef, hot)
     }
     const handleAlpha = (value: number | string) => {
-        alphaDispatch(value)
+        alphaDispatch(dispatch, value)
         let hot = !value && category == -1 && area == -1
-        updateDispatch(scrollRef, hot)
+        updateDispatch(dispatch, scrollRef, hot)
     }
     const handleArea = (value: number | string) => {
-        areaDispatch(value as number)
+        areaDispatch(dispatch, value as number)
         let hot = !alpha && category == -1 && value == -1
-        updateDispatch(scrollRef, hot)
+        updateDispatch(dispatch, scrollRef, hot)
     }
     const handlePullUp = () => {
         let hot = !alpha && category == -1 && area == -1
-        pullUpRefreshDispatch(pageCount, hot)
+        pullUpRefreshDispatch(dispatch, pageCount, hot)
     }
     const handlePullDown = () => {
         let hot = !alpha && category == -1 && area == -1
-        pullDownRefreshDispatch(hot)
+        pullDownRefreshDispatch(dispatch, hot)
     }
 
     return (

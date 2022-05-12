@@ -1,14 +1,17 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./Rank.scss"
-import { getRankList, changeLoading } from "./store";
-import { connect } from "react-redux";
+import { getRankList } from "./store";
+import { useSelector, useDispatch } from "react-redux";
 import { findGlobalIndex } from "../../utils";
 import Scroll from "../../components/Scroll/Scroll";
 import { useNavigate, Outlet } from "react-router-dom";
 // 渲染榜单
 
-function Rank(props) {
-    let { isMiniExist } = props
+function Rank() {
+    const dispatch = useDispatch()
+    const { rankList } = useSelector((state) => state.rank)
+
+    const isMiniExist = false
     let navigate = useNavigate()
     let scrollRef = useRef()
     useEffect(() => {
@@ -47,18 +50,16 @@ function Rank(props) {
             </ul>
         ) : null
     }
-    const { loading, rankList } = props
-    const { getRankListDispatch } = props
+
     useEffect(() => {
-        getRankListDispatch()
+        dispatch(getRankList())
     }, [])
-    let rankListJS = rankList ? rankList.toJS() : []
     //排行榜单分为两个部分，一部分是官方榜，另一部分是全球榜。
     //官方榜单数据有 tracks 数组，存放部分歌曲信息，而全球榜没有。
     //但是后端数据并没有将这两者分开，因此我们需要做一下数据的处理。
-    let globalStartIndex = findGlobalIndex(rankListJS)
-    let officialList = rankListJS.slice(0, globalStartIndex)
-    let globalList = rankListJS.slice(globalStartIndex)
+    let globalStartIndex = findGlobalIndex(rankList)
+    let officialList = rankList.slice(0, globalStartIndex)
+    let globalList = rankList.slice(globalStartIndex)
     return (
         <>
             <div className={`Rank ${isMiniExist ? "mb" : ""}`}>
@@ -76,16 +77,5 @@ function Rank(props) {
         </>
     )
 }
-const mapStateToProps = (state) => ({
-    loading: state.getIn(['rank', 'loading']),
-    rankList: state.getIn(['rank', 'rankList']),
-    isMiniExist: state.getIn(["player", "playList"]).size > 0
-})
-const mapDispatchToProps = (dispatch) => ({
-    getRankListDispatch() {
-        dispatch(changeLoading(true))
-        dispatch(getRankList())
-    },
 
-})
-export default connect(mapStateToProps, mapDispatchToProps)(React.memo(Rank)) 
+export default React.memo(Rank)

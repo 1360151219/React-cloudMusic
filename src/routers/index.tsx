@@ -48,16 +48,16 @@ const router: RouteObject[] = [
                     }
                 ]
             },
-            // {
-            //     path: "/rank",
-            //     element: suspenseComponent(Rank),
-            //     children: [
-            //         {
-            //             path: "/rank/:id",
-            //             element: suspenseComponent(Album),
-            //         }
-            //     ]
-            // },
+            {
+                path: "/rank",
+                element: suspenseComponent(Rank),
+                children: [
+                    {
+                        path: "/rank/:id",
+                        element: suspenseComponent(Album),
+                    }
+                ]
+            },
             // {
             //     path: "/search",
             //     element: suspenseComponent(Search),
