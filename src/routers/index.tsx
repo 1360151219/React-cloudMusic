@@ -58,14 +58,14 @@ const router: RouteObject[] = [
                     }
                 ]
             },
-            // {
-            //     path: "/search",
-            //     element: suspenseComponent(Search),
-            // },
-            // {
-            //     path: "/album/:id",
-            //     element: suspenseComponent(Album),
-            // }
+            {
+                path: "/search",
+                element: suspenseComponent(Search),
+            },
+            {
+                path: "/album/:id",
+                element: suspenseComponent(Album),
+            }
         ]
     },
 ]
