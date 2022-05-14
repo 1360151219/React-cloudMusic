@@ -6,6 +6,12 @@
 
 按照 tutorial 的步骤实现的一个基础版
 
+## master/my-innovation 分支
+
+- ✅ 使用 Redux Toolkit 代替 Redux 和 immutable
+- ✅ 使用 typescript：初始化 RootState、useAppSelector、useAppDispatch 等等。。
+-
+
 ## 技术栈学习以及问题
 
 ### immutable 库
