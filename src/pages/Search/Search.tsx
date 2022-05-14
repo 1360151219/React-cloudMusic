@@ -6,22 +6,22 @@ import SearchBox from "../../components/SeachBox/SearchBox";
 import Scroll from "../../components/Scroll/Scroll";
 import Loading from "../../components/Loading/Loading";
 import MusicNote from "../../components/MusicNote/MusicNote";
-import { getHotKeyWords, getSuggestList } from "./store/actionCreator";
-import { connect } from "react-redux";
+import { getHotKeyWords, getSuggestList } from "./store";
+import { useSelector, useDispatch } from "react-redux";
 import LazyLoad, { forceCheck } from "react-lazyload";
 import placeholderImg from '../../assets/music.png'
 import { getName } from "../../utils";
-import { getSongDetail } from "../Player/store/actionCreator";
-function Search(props) {
-
+import { getSongDetail } from "../Player/store";
+function Search() {
+    const dispatch = useDispatch()
     const { hotList,
         loading,
         songList,
         suggestList,
         playing
-    } = props
+    } = useSelector((state) => state.search)
 
-    const { getHotKeyWordsDispatch, getSuggestListDispatch, getSongDetailDispatch } = props
+    // const { getHotKeyWordsDispatch, getSuggestListDispatch, getSongDetailDispatch } = props
     const navigate = useNavigate()
     let [show, setShow] = useState(false)
     let [query, setQuery] = useState("")
@@ -32,19 +32,19 @@ function Search(props) {
     const handleQuery = useCallback((q) => {
         setQuery(q)
         if (!q) return
-        getSuggestListDispatch(q)
+        dispatch(getSuggestList(q))
     }, [])
     const selectItem = (e, id: string) => {
         //搜索单曲的数据并不完整，需要重新获取具体数据
-        getSongDetailDispatch(id)
+        dispatch(getSongDetail(id))
         musicNoteRef.current.startAnimation({ x: e.clientX, y: e.clientY })
 
     }
     useEffect(() => {
-        getHotKeyWordsDispatch()
+        dispatch(getHotKeyWords())
     }, [])
     const renderHotKeys = () => {
-        let datalist = hotList ? hotList.toJS() : []
+        let datalist = hotList
         return (
             <ul>
                 {
@@ -61,7 +61,7 @@ function Search(props) {
         )
     }
     const renderSingers = () => {
-        let datalist = suggestList.toJS().artists
+        let datalist = suggestList.artists
         return (
             <AlbumList>
                 <h1 className="title">相关歌手</h1>
@@ -96,7 +96,7 @@ function Search(props) {
     };
     const renderAlbum = () => {
         if (!suggestList.size) return
-        let datalist = suggestList.toJS().playlists
+        let datalist = suggestList.playlists
         return (
             <AlbumList>
                 <h1 className="title">相关歌单</h1>
@@ -130,7 +130,7 @@ function Search(props) {
         )
     };
     const renderSongs = () => {
-        let datalist = songList.toJS()
+        let datalist = songList
         return (
             <SongItem style={{ paddingLeft: "20px" }}>
                 {
@@ -195,24 +195,5 @@ function Search(props) {
     )
 }
 
-const mapStateToProps = (state) => ({
-    hotList: state.getIn(["search", "hotList"]),
-    loading: state.getIn(["search", "loading"]),
-    songList: state.getIn(["search", "songList"]),
-    suggestList: state.getIn(["search", "suggestList"]),
-    playing: state.getIn(["player", "playList"]).size > 0
-})
-const mapDispatchToProps = (dispatch) => {
-    return {
-        getHotKeyWordsDispatch() {
-            dispatch(getHotKeyWords())
-        },
-        getSuggestListDispatch(query) {
-            dispatch(getSuggestList(query))
-        },
-        getSongDetailDispatch(id) {
-            dispatch(getSongDetail(id))
-        }
-    }
-}
-export default connect(mapStateToProps, mapDispatchToProps)(React.memo(Search))
+
+export default React.memo(Search)

@@ -2,6 +2,16 @@
 
 使用 Typescript 以及新 Hook 进行学习编写。有一些地方添加了个人的爱好逻辑吧~
 
+## basic-tutorial 分支
+
+按照 tutorial 的步骤实现的一个基础版
+
+## master/my-innovation 分支
+
+- ✅ 使用 Redux Toolkit 代替 Redux 和 immutable
+- ✅ 使用 typescript：初始化 RootState、useAppSelector、useAppDispatch 等等。。
+-
+
 ## 技术栈学习以及问题
 
 ### immutable 库

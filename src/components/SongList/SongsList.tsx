@@ -1,18 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { SongList, SongItem } from "./style";
 import { getName } from "../../utils";
-import { changePlayList, changeCurrentIndex, changeSequencePlayList } from "../../pages/Player/store/actionCreator";
-import { connect } from "react-redux";
+import { changePlayList, changeCurrentIndex, changeSequencePlayList } from "../../pages/Player/store";
+import { useDispatch } from "react-redux";
 const SongsList = React.forwardRef((props, ref) => {
     const { songs, showCollect, collectCount } = props
-    const { changePlayListDispatch, changeCurrentIndexDispatch, changeSequecePlayListDispatch } = props;
+    const dispatch = useDispatch()
     // 接受触发动画的函数
     const { musicAnimation } = props;
-
     const selectItem = (e, index) => {
-        changePlayListDispatch(songs);
-        changeSequecePlayListDispatch(songs);
-        changeCurrentIndexDispatch(index);
+        dispatch(changePlayList(songs))
+        dispatch(changeSequencePlayList(songs))
+        dispatch(changeCurrentIndex(index))
         musicAnimation(e.clientX, e.clientY);
     }
     function renderSongItem(list) {
@@ -62,20 +61,5 @@ const SongsList = React.forwardRef((props, ref) => {
         </SongList>
     )
 })
-// 映射 dispatch 到 props 上
-const mapDispatchToProps = (dispatch) => {
-    return {
-        changePlayListDispatch(data) {
-            dispatch(changePlayList(data));
-        },
-        changeCurrentIndexDispatch(data) {
-            dispatch(changeCurrentIndex(data));
-        },
-        changeSequecePlayListDispatch(data) {
-            dispatch(changeSequencePlayList(data))
-        }
-    }
-};
-
 // 将 ui 组件包装成容器组件
-export default connect(null, mapDispatchToProps)(React.memo(SongsList));
+export default React.memo(SongsList)

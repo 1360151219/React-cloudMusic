@@ -24,10 +24,10 @@ const router: RouteObject[] = [
         path: '/',
         element: suspenseComponent(Home),
         children: [
-            // {
-            //     path: '',
-            //     element: <Navigate to='/recommend'></Navigate>
-            // },
+            {
+                path: '',
+                element: <Navigate to='/recommend'></Navigate>
+            },
             {
                 path: "/recommend",
                 element: suspenseComponent(Recommend),

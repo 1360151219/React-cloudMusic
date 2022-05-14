@@ -11,7 +11,7 @@ import {
 } from './style';
 
 interface recommendItem {
-    id: number,
+    id: string,
     picUrl: string,
     playCount: number,
     name: string
@@ -21,7 +21,7 @@ interface recommendItem {
 
 function RecommendList(props: { recommendList: recommendItem[] }) {
     let navigate = useNavigate()
-    function enterDetail(id) {
+    function enterDetail(id: string) {
         navigate(`/recommend/${id}`)
     }
     return (

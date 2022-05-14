@@ -2,18 +2,27 @@ import React, { useRef, useState } from "react";
 import Scroll from "../Scroll/Scroll";
 import MusicNote from "../MusicNote/MusicNote";
 import Confirm from "../Confirm/Confirm";
-import { changePlaying, changeShowPlayList } from "../../pages/Player/store/actionCreator";
-import { connect } from "react-redux";
+import { changePlaying, changeShowPlayList } from "../../pages/Player/store";
+import { useDispatch, useSelector } from "react-redux";
 import { PlayListWrapper, ScrollWrapper, ListHeader, ListContent } from "./style";
 import { CSSTransition } from "react-transition-group"
-import { playMode } from "../../pages/Player/store/reducer";
-import { changeCurrentSong, changeCurrentIndex, changePlayList, changeMode, changeSequencePlayList, deleteSong } from "../../pages/Player/store/actionCreator";
+import { playMode } from "../../pages/Player/store";
+import { changeCurrentSong, changeCurrentIndex, changePlayList, changeMode as changeModeState, changeSequencePlayList, deleteSong } from "../../pages/Player/store/actionCreator";
 import { getName, findSongIndex, shuffle } from "../../utils";
-function PlayList(props) {
-    const { showPlayList, currentIndex, currentSong, playList, sequencePlayList, mode } = props
-    const { togglePlayListDispatch, changeCurrentSongDispatch, changeCurrentIndexDispatch, changePlayListDispatch, changeModeDispatch, changeSequencePlayListDispatch, deleteSongDispatch, deletePlayListDispatch } = props
+function PlayList() {
+    const { showPlayList, currentSong, playList, sequencePlayList, mode } = useSelector((state) => state.player)
+    const dispatch = useDispatch()
+    const deletePlayListDispatch = () => {
+        dispatch(changePlayList([]))
+        dispatch(changeSequencePlayList([]))
+        dispatch(changeCurrentIndex(-1))
+        dispatch(changeShowPlayList(false))
+        dispatch(changeCurrentSong({}))
+        dispatch(changePlaying(false))
+    }
+
     const closePlayList = () => {
-        togglePlayListDispatch(false)
+        dispatch(changeShowPlayList(false));
     }
     // 切换模式
     const changeMode = () => {
@@ -21,19 +30,19 @@ function PlayList(props) {
         if (newMode == 0) {
             // 顺序
             let index = findSongIndex(sequencePlayList, currentSong.id)
-            changePlayListDispatch(sequencePlayList)
-            changeCurrentIndexDispatch(index)
+            dispatch(changePlayList(sequencePlayList))
+            dispatch(changeCurrentIndex(index))
         } else if (newMode === 1) {
             //单曲循环
-            changePlayListDispatch(sequencePlayList);
+            dispatch(changePlayList(sequencePlayList))
         } else if (newMode === 2) {
             //随机播放
             let newList = shuffle(sequencePlayList);
             let index = findSongIndex(newList, currentSong.id);
-            changePlayListDispatch(newList);
-            changeCurrentIndexDispatch(index);
+            dispatch(changePlayList(newList))
+            dispatch(changeCurrentIndex(index))
         }
-        changeModeDispatch(newMode)
+        dispatch(changeModeState(newMode))
     }
     const getPlayMode = () => {
         let res = ""
@@ -124,11 +133,11 @@ function PlayList(props) {
     };
     // 切歌逻辑
     const selectItem = (e, index) => {
-        changeCurrentIndexDispatch(index);
+        dispatch(changeCurrentIndex(index))
         musicAnimation(e.clientX, e.clientY);
     }
     const handleDelete = (e, id: number) => {
-        deleteSongDispatch(id)
+        dispatch(deleteSong(id))
         e.stopPropagation()
     }
     const deletePlayList = () => {
@@ -188,44 +197,6 @@ function PlayList(props) {
         </CSSTransition>
     )
 }
-const mapStateToProps = (state) => ({
-    showPlayList: state.getIn(["player", "showPlayList"]),
-    currentIndex: state.getIn(['player', 'currentIndex']),
-    currentSong: state.getIn(['player', 'currentSong']).toJS(),
-    playList: state.getIn(['player', 'playList']).toJS(),// 播放列表
-    sequencePlayList: state.getIn(['player', 'sequencePlayList']).toJS(),// 顺序排列时的播放列表
-    mode: state.getIn(['player', 'mode'])
-})
-const mapDispatchToProps = (dispatch) => ({
-    togglePlayListDispatch(data: boolean) {
-        dispatch(changeShowPlayList(data));
-    },
-    changeCurrentIndexDispatch(index: number) {
-        dispatch(changeCurrentIndex(index))
-    },
-    changePlayListDispatch(data: any) {
-        dispatch(changePlayList(data))
-    },
-    changeModeDispatch(mode: number) {
-        dispatch(changeMode(mode))
-    },
-    changeSequencePlayListDispatch(playList) {
-        dispatch(changeSequencePlayList(playList))
-    },
-    changeCurrentSongDispatch(song: any) {
-        dispatch(changeCurrentSong(song))
-    },
-    deleteSongDispatch(index: number) {
-        dispatch(deleteSong(index))
 
-    },
-    deletePlayListDispatch() {
-        dispatch(changePlayList([]))
-        dispatch(changeSequencePlayList([]))
-        dispatch(changeCurrentIndex(-1))
-        dispatch(changeShowPlayList(false))
-        dispatch(changeCurrentSong({}))
-        dispatch(changePlaying(false))
-    }
-})
-export default connect(mapStateToProps, mapDispatchToProps)(React.memo(PlayList))
+
+export default React.memo(PlayList)

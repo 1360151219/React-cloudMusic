@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import "./Player.scss"
-import { connect } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import MiniPlayer from "../MiniPlayer/MiniPlayer";
 import FullPlayer from "../FullPlayer/FullPlayer";
 import Toast from "../../components/Toast/Toast";
@@ -11,20 +11,22 @@ import {
     changeCurrentIndex,
     changeCurrentSong,
     changePlayList,
-    changeMode,
+    changeMode as changeModeState,
     changeFullScreen,
-    changeSequencePlayList
-} from "./store/actionCreator";
+} from "./store";
 import { getLyricRequest } from "../../api/request";
 import { getSong, isEmptyObject, findSongIndex, shuffle } from "../../utils";
-import { playMode } from "./store/reducer";
+import { playMode } from "./store";
 import LyricParser from "../../utils/LyricParser";
-function Player(props) {
-    const { fullScreen, playing, currentSong, currentIndex, sequencePlayList, mode, playList } = props
-    const { toggleFullScreenDispatch, togglePlayingDispatch, changeCurrentIndexDispatch,
-        changeCurrentSongDispatch, changeModeDispatch, changeSequencePlayListDispatch,
-        changePlayListDispatch, toggleShowPlayListDispatch
-    } = props
+function Player() {
+    const { fullScreen, playing, currentSong, currentIndex, sequencePlayList, mode, playList } = useSelector((state) => state.player)
+    const dispatch = useDispatch()
+    const toggleShowPlayListDispatch = (isShow: boolean) => {
+        dispatch(changeShowPlayList(isShow))
+    }
+    const toggleFullScreenDispatch = (isFullScreen: boolean) => {
+        dispatch(changeFullScreen(isFullScreen))
+    }
     // 已经播放时间
     let [playTime, setPlayTime] = useState(0)
     //歌曲总时长
@@ -45,7 +47,7 @@ function Player(props) {
     // 开始播放、暂停
     const clickPlaying = (e, playing) => {
         e.stopPropagation()
-        togglePlayingDispatch(playing)
+        dispatch(changePlaying(playing))
 
         if (curLyricParser.current) {
             curLyricParser.current.togglePlay(playTime * 1000)
@@ -64,14 +66,14 @@ function Player(props) {
             curLyricParser.current.seek(newTime * 1000);
         }
         if (!playing) {
-            togglePlayingDispatch(true)
+            dispatch(changePlaying(true))
         }
     }
     // 单歌曲循环
     const handleLoop = () => {
         audioRef.current.currentTime = 0;
         audioRef.current.play();
-        togglePlayingDispatch(true)
+        dispatch(changePlaying(true))
     };
     const handlePrev = () => {
         // 歌单中只有一首歌
@@ -80,8 +82,8 @@ function Player(props) {
             return
         }
         const index = currentIndex - 1 < 0 ? playList.length - 1 : currentIndex - 1
-        if (!playing) togglePlayingDispatch(true)
-        changeCurrentIndexDispatch(index)
+        if (!playing) dispatch(changePlaying(true))
+        dispatch(changeCurrentIndex(index))
         console.log('prev');
     }
     const handleNext = () => {
@@ -90,8 +92,8 @@ function Player(props) {
             return
         }
         const index = currentIndex + 1 >= playList.length ? 0 : currentIndex + 1
-        if (!playing) togglePlayingDispatch(true)
-        changeCurrentIndexDispatch(index)
+        if (!playing) dispatch(changePlaying(true))
+        dispatch(changeCurrentIndex(index))
         console.log('next');
     }
     // 歌曲结束逻辑
@@ -109,22 +111,22 @@ function Player(props) {
         if (newMode == 0) {
             // 顺序
             let index = findSongIndex(sequencePlayList, currentSong.id)
-            changePlayListDispatch(sequencePlayList)
-            changeCurrentIndexDispatch(index)
+            dispatch(changePlayList(sequencePlayList))
+            dispatch(changeCurrentIndex(index))
             setModeText("顺序循环")
         } else if (newMode === 1) {
             //单曲循环
-            changePlayListDispatch(sequencePlayList);
+            dispatch(changePlayList(sequencePlayList))
             setModeText("单曲循环")
         } else if (newMode === 2) {
             //随机播放
             let newList = shuffle(sequencePlayList);
             let index = findSongIndex(newList, currentSong.id);
-            changePlayListDispatch(newList);
-            changeCurrentIndexDispatch(index);
+            dispatch(changePlayList(newList))
+            dispatch(changeCurrentIndex(index))
             setModeText("随机播放")
         }
-        changeModeDispatch(newMode)
+        dispatch(changeModeState(newMode))
         toastRef.current.show()
     }
     const handleLyric = ({ line, text }: { line: number, text: string }): void => {
@@ -172,9 +174,9 @@ function Player(props) {
             audioRef.current.play().then(() => {
                 songReady.current = true
             })
-            togglePlayingDispatch(true)
+            dispatch(changePlaying(true))
         })
-        changeCurrentSongDispatch(current)
+        dispatch(changeCurrentSong(current))
         setPrevSong(current.id)
         setPlayTime(0)
         setDuration(current.dt / 1000 | 0)
@@ -232,42 +234,6 @@ function Player(props) {
         </>
     )
 }
-const mapStateToProps = state => ({
-    fullScreen: state.getIn(["player", "fullScreen"]),
-    playing: state.getIn(["player", "playing"]),
-    sequencePlayList: state.getIn(["player", "sequencePlayList"]).toJS(),
-    playList: state.getIn(["player", "playList"]).toJS(),
-    mode: state.getIn(["player", "mode"]),
-    currentIndex: state.getIn(["player", "currentIndex"]),
-    showPlayList: state.getIn(["player", "showPlayList"]),
-    currentSong: state.getIn(["player", "currentSong"]).toJS(),
-})
-const mapDispatchToProps = dispatch => {
-    return {
-        togglePlayingDispatch(isplaying: boolean) {
-            dispatch(changePlaying(isplaying))
-        },
-        toggleShowPlayListDispatch(isShow: boolean) {
-            dispatch(changeShowPlayList(isShow))
-        },
-        toggleFullScreenDispatch(isFullScreen: boolean) {
-            dispatch(changeFullScreen(isFullScreen))
-        },
-        changeCurrentIndexDispatch(index: number) {
-            dispatch(changeCurrentIndex(index))
-        },
-        changeCurrentSongDispatch(song: any) {
-            dispatch(changeCurrentSong(song))
-        },
-        changePlayListDispatch(data: any) {
-            dispatch(changePlayList(data))
-        },
-        changeModeDispatch(mode: number) {
-            dispatch(changeMode(mode))
-        },
-        changeSequencePlayListDispatch(playList) {
-            dispatch(changeSequencePlayList(playList))
-        },
-    }
-}
-export default connect(mapStateToProps, mapDispatchToProps)(React.memo(Player))
+
+
+export default React.memo(Player)

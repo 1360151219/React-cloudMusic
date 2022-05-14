@@ -1,27 +1,27 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { CSSTransition } from "react-transition-group"
-import { connect } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Container, ImgWrapper, CollectButton, BgLayer, SongListWrapper } from "./style"
 import Header from "../../components/Header/Header";
 import SongsList from "../../components/SongList/SongsList";
 import Scroll from "../../components/Scroll/Scroll";
-import { getArtist } from "./store/actionCreator";
+import { getArtist } from "./store";
 import Loading from "../../components/Loading/Loading";
 import MusicNote from "../../components/MusicNote/MusicNote";
-
+import { isMiniExist as isMiniExistState } from "../Player/store";
 //...
 
 
 // 列表偏移量
 const OFFSET = 5
-function Singer(props) {
-    const { getArtistDispatch } = props
-    const { loading, songsList, artist, isMiniExist } = props
+function Singer() {
+    const { loading, songsList, artist } = useSelector((state) => state.singer)
+    const isMiniExist = useSelector(isMiniExistState)
+    const dispatch = useDispatch()
     const { id } = useParams()
     useEffect(() => {
-        getArtistDispatch(id)
-
+        dispatch(getArtist(id))
     }, [])
     let [fly, setFly] = useState(true)
     let navigate = useNavigate()
@@ -110,17 +110,5 @@ function Singer(props) {
         </CSSTransition>
     )
 }
-const mapStateToProp = (state) => ({
-    loading: state.getIn(['singer', 'loading']),
-    songsList: state.getIn(['singer', 'songsList']).toJS(),
-    artist: state.getIn(['singer', 'artist']).toJS(),
-    isMiniExist: state.getIn(["player", "playList"]).size > 0
-})
-const mapDispatchToProp = (dispatch) => {
-    return {
-        getArtistDispatch(id: number) {
-            dispatch(getArtist(id))
-        }
-    }
-}
-export default connect(mapStateToProp, mapDispatchToProp)(React.memo(Singer))
+
+export default React.memo(Singer)

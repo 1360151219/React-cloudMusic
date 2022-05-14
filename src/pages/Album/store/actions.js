@@ -1,19 +1,9 @@
 import { getAlbumDetailRequest } from "../../../api/request";
-import * as actionTypes from './constants'
-import { fromJS } from "immutable";
-
-export const changeLoading = (loading: boolean) => ({
-    type: actionTypes.CHANGE_LOADING,
-    data: loading
-})
-
-export const changeCurrentAlbum = (data: any) => ({
-    type: actionTypes.CHANGE_CURRENT_ALBUM,
-    data: fromJS(data)
-})
+import { changeLoading, changeCurrentAlbum } from ".";
 
 
-export const getAlbumList = (id: number) => {
+
+export const getAlbumList = (id) => {
     return dispatch => {
         dispatch(changeLoading(true))
         getAlbumDetailRequest(id).then(res => {
