@@ -6,12 +6,13 @@ import { findGlobalIndex } from "../../utils";
 import Scroll from "../../components/Scroll/Scroll";
 import { useNavigate, Outlet } from "react-router-dom";
 // 渲染榜单
+import { isMiniExist as isMiniExistState } from "../Player/store";
 
 function Rank() {
     const dispatch = useDispatch()
     const { rankList } = useSelector((state) => state.rank)
 
-    const isMiniExist = false
+    const isMiniExist = useSelector(isMiniExistState)
     let navigate = useNavigate()
     let scrollRef = useRef()
     useEffect(() => {

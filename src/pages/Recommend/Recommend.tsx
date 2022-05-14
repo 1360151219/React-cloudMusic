@@ -8,6 +8,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { Outlet } from "react-router-dom";
 import { forceCheck } from "react-lazyload";
 import Loading from "../../components/Loading/Loading";
+import { isMiniExist as isMiniExistState } from "../Player/store";
+
 function pullUp() {
     console.log('up');
 }
@@ -16,7 +18,7 @@ function pullDown() {
 }
 function Recommend() {
     const { bannerList, recommendList, loading } = useSelector((state) => state.recommend);
-    // const isMiniExist = useSelector((state) => state.player.playList.size > 0)
+    const isMiniExist = useSelector(isMiniExistState)
     const isMiniExist = false
     const dispatch = useDispatch()
     useEffect(() => {

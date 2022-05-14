@@ -12,13 +12,14 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import LazyLoad, { forceCheck } from "react-lazyload";
 import placeholder from '../../assets/singer.png'
+import { isMiniExist as isMiniExistState } from "../Player/store";
 
 function Singers() {
     const { singerList, pageCount, pullUpLoading, pullDownLoading, loading, category, alpha, area } = useSelector((state) => state.singers)
     const dispatch = useDispatch()
 
     let navigate = useNavigate()
-    const isMiniExist = false
+    const isMiniExist = useSelector(isMiniExistState)
     // 注意，这里渲染的时候不能写成组件形式，会出bug！！
     const renderSingerList = (childList) => {
         const enterDetail = (id: number) => {

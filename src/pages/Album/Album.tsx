@@ -12,6 +12,8 @@ import Loading from "../../components/Loading/Loading";
 import SongsList from "../../components/SongList/SongsList";
 import MusicNote from "../../components/MusicNote/MusicNote";
 import { useDispatch, useSelector } from "react-redux";
+import { isMiniExist as isMiniExistState } from "../Player/store";
+
 function renderTopDes(currentAlbum) {
     return (
         <TopDesc background={currentAlbum.coverImgUrl}>
@@ -66,7 +68,7 @@ function Album() {
     const dispatch = useDispatch()
     const { loading, currentAlbum } = useSelector((state) => state.album)
     // 
-    const isMiniExist = false
+    const isMiniExist = useSelector(isMiniExistState)
     let navigate = useNavigate()
     const { id } = useParams()
     let [fly, setFly] = useState(true)
