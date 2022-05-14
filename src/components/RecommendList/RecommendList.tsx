@@ -11,7 +11,7 @@ import {
 } from './style';
 
 interface recommendItem {
-    id: number,
+    id: string,
     picUrl: string,
     playCount: number,
     name: string

@@ -1,10 +1,10 @@
 import React, { useEffect } from "react";
+import { useAppSelector, useAppDispatch } from "../../stores";
 import "./Recommend.scss"
 import RecommendList from "../../components/RecommendList/RecommendList";
 import Scroll from "../../components/Scroll/Scroll";
 import Slider from '../../components/Slider/slider';
 import * as actions from './store/actions'
-import { useSelector, useDispatch } from "react-redux";
 import { Outlet } from "react-router-dom";
 import { forceCheck } from "react-lazyload";
 import Loading from "../../components/Loading/Loading";
@@ -17,10 +17,9 @@ function pullDown() {
     console.log('down');
 }
 function Recommend() {
-    const { bannerList, recommendList, loading } = useSelector((state) => state.recommend);
-    const isMiniExist = useSelector(isMiniExistState)
-    const isMiniExist = false
-    const dispatch = useDispatch()
+    const { bannerList, recommendList, loading } = useAppSelector((state) => state.recommend);
+    const isMiniExist = useAppSelector(isMiniExistState)
+    const dispatch = useAppDispatch()
     useEffect(() => {
         if (!bannerList.length)
             dispatch(actions.getBanner())
