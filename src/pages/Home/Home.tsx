@@ -20,7 +20,7 @@ function Home() {
     const navigate = useNavigate()
     // moving-border 的left值
     let [left, setLeft] = useState(0)
-    const borderRef = useRef()
+    const borderRef = useRef<HTMLDivElement>(null!)
     let location = useLocation()
     let pathName = location.pathname
     useEffect(() => {
@@ -47,7 +47,7 @@ function Home() {
                 {Tab}
                 <div className="moving-border" ref={borderRef}></div>
             </div>
-            {/* <Player></Player> */}
+            <Player></Player>
             <Outlet></Outlet>
         </div>
     )

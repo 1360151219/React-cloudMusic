@@ -4,19 +4,19 @@ import { getName, getPosAndScale, prefixStyle, formatPlayTime } from "../../util
 import { FullPlayerContainer, Top, Middle, CDWrapper, Bottom, Operators, ProgressWrapper, LyricContainer, LyricList } from "./style";
 import animations from "create-keyframe-animation";
 import ProgressBar from "../../components/ProgressBar/ProgressBar";
-import { playMode } from "../Player/store/reducer";
+import { playMode } from "../Player/store";
 import Scroll from "../../components/Scroll/Scroll";
 const transform = prefixStyle("transform")
-function FullPlayer(props) {
+function FullPlayer(props: any) {
     const { song, fullScreen, playing, percent, playTime, duration, mode, curLyricParser, curPlayingLyric, curLineIndex } = props
     const { toggleFullScreen, onPercentChange, clickPlaying, handlePrev, handleNext, changeMode, togglePlayList } = props
     // 帧动画
-    const fullPlayerRef = useRef()
-    const cdWrapperRef = useRef()
+    const fullPlayerRef = useRef<HTMLDivElement>(null!)
+    const cdWrapperRef = useRef<HTMLDivElement>(null!)
     // 歌词
     let [isLyricShow, setIsLyricShow] = useState(false)
-    const lyricScrollRef = useRef()
-    const lyricLineRefs = useRef([])
+    const lyricScrollRef = useRef<any>()
+    const lyricLineRefs = useRef<React.RefObject<HTMLParagraphElement>[]>([])
 
     useEffect(() => {
         if (!lyricScrollRef.current) return
@@ -66,13 +66,13 @@ function FullPlayer(props) {
         if (!cdWrapperRef.current) return
         const { x, y, scale } = getPosAndScale()
         cdWrapperRef.current.style.transition = "all .4s"
-        cdWrapperRef.current.style[transform] = `translate3d(${x}px,${y}px,0) scale(${scale})`
+        cdWrapperRef.current.style[(transform as any)] = `translate3d(${x}px,${y}px,0) scale(${scale})`
 
     }
     const afterLeave = () => {
         if (!cdWrapperRef.current) return
         cdWrapperRef.current.style.transition = ""
-        cdWrapperRef.current.style[transform] = ""
+        cdWrapperRef.current.style[(transform as any)] = ""
         // 这里如果卸载的话，唱片的角度会变成0
         // fullPlayerRef.current.style.display = "none"
         setIsLyricShow(false)
@@ -96,7 +96,7 @@ function FullPlayer(props) {
             ></i>
         )
     }
-    const showPlayList = (e) => {
+    const showPlayList = (e: React.MouseEvent<HTMLElement>) => {
         togglePlayList(true)
         e.stopPropagation()
     }
@@ -154,12 +154,12 @@ function FullPlayer(props) {
                             <Scroll ref={lyricScrollRef}>
                                 <LyricList>
                                     {curLyricParser
-                                        ? curLyricParser.lines.map((item, index) => {
+                                        ? curLyricParser.lines.map((item: { text: string }, index: number) => {
                                             lyricLineRefs.current[index] = React.createRef()
                                             return (
                                                 <p
                                                     className={`text ${curLineIndex == index ? 'active' : ''}`}
-                                                    key={index + item}
+                                                    key={index + item.text}
                                                     ref={lyricLineRefs.current[index]}
                                                 >
                                                     {item.text}

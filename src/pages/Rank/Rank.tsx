@@ -1,26 +1,25 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./Rank.scss"
-import { getRankList } from "./store";
-import { useSelector, useDispatch } from "react-redux";
+import { getRankList, IRankItem } from "./store";
 import { findGlobalIndex } from "../../utils";
 import Scroll from "../../components/Scroll/Scroll";
 import { useNavigate, Outlet } from "react-router-dom";
 // 渲染榜单
 import { isMiniExist as isMiniExistState } from "../Player/store";
+import { useAppDispatch, useAppSelector } from "../../stores";
 
 function Rank() {
-    const dispatch = useDispatch()
-    const { rankList } = useSelector((state) => state.rank)
+    const dispatch = useAppDispatch()
+    const { rankList } = useAppSelector((state) => state.rank)
 
-    const isMiniExist = useSelector(isMiniExistState)
+    const isMiniExist = useAppSelector(isMiniExistState)
     let navigate = useNavigate()
-    let scrollRef = useRef()
+    let scrollRef = useRef<any>()
     useEffect(() => {
         scrollRef.current.refresh()
     }, [isMiniExist])
-    function renderRankList(list, isGlobal = false) {
-        const enterDetail = (detail) => {
-            console.log(detail.id);
+    function renderRankList(list: IRankItem[], isGlobal = false) {
+        const enterDetail = (detail: IRankItem) => {
             navigate(`/rank/${detail.id}`)
         }
         return (
@@ -42,7 +41,7 @@ function Rank() {
             </div>
         )
     }
-    function renderSongList(list) {
+    function renderSongList(list: any[]) {
         return list.length ? (
             <ul className="song-wrap">
                 {list.map((item, index) => {

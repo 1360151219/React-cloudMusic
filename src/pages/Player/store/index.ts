@@ -1,14 +1,48 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { getSongDetailRequest } from "../../../api/request";
 import { findSongIndex } from "../../../utils";
+import { RootState } from "../../../stores"
+interface ISong {
+    al: any
+    alia: any
+    ar: any
+    cd: string
+    copyright: number
+    cp: number
+    djId: number
+    dt: number
+    fee: number
+    ftype: number
+    h: any
+    id: number
+    l: any
+    m: any
+    mark: number
+    mst: number
+    mv: number
+    name: string
+    no: number
+    originCoverType: number
+    pop: number
+    pst: number
+    publishTime: number
+    rt: string
+    rtype: number
+    s_id: number
+    single: number
+    sq: any
+    st: number
+    t: number
+}
 export const playMode = {
     sequence: 0,
     loop: 1,
     random: 2
 }
 
-const handleDelete = (state, songId) => {
+const handleDelete = (state: RootState["player"], songId: string) => {
     const playList = state.playList
+
     const sequencePlayList = state.sequencePlayList
     const songIndex = findSongIndex(playList, songId)
     let currentIndex = state.currentIndex
@@ -24,7 +58,7 @@ const handleDelete = (state, songId) => {
     state.currentIndex = currentIndex
 }
 
-const handleInsert = (state, song) => {
+const handleInsert = (state: RootState["player"], song: ISong) => {
     const playList = state.playList
     const sequencePlayList = state.sequencePlayList
     // 这里直接加一，一方面是为了splice添加,二是当播放列表为0的时候，直接添加一首
@@ -71,43 +105,43 @@ const playerSlice = createSlice({
     initialState: {
         fullScreen: false,
         playing: false,
-        sequencePlayList: [], // 顺序列表，之后有乱序的
-        playList: [],
+        sequencePlayList: [] as ISong[], // 顺序列表，之后有乱序的
+        playList: [] as ISong[],
         mode: playMode.sequence,
         currentIndex: -1,
         showPlayList: false,
-        currentSong: {}
+        currentSong: {} as ISong
     },
     reducers: {
-        changeFullScreen: (state, action) => {
+        changeFullScreen: (state, action: PayloadAction<boolean>) => {
             state.fullScreen = action.payload
         },
-        changePlaying: (state, action) => {
+        changePlaying: (state, action: PayloadAction<boolean>) => {
             state.playing = action.payload
         },
-        changeSequencePlayList: (state, action) => {
+        changeSequencePlayList: (state, action: PayloadAction<ISong[]>) => {
             state.sequencePlayList = action.payload
         },
-        changePlayList: (state, action) => {
+        changePlayList: (state, action: PayloadAction<ISong[]>) => {
             state.playList = action.payload
         },
-        changeMode: (state, action) => {
+        changeMode: (state, action: PayloadAction<number>) => {
             state.mode = action.payload
         },
-        changeCurrentIndex: (state, action) => {
+        changeCurrentIndex: (state, action: PayloadAction<number>) => {
             state.currentIndex = action.payload
         },
-        changeShowPlayList: (state, action) => {
+        changeShowPlayList: (state, action: PayloadAction<boolean>) => {
             state.showPlayList = action.payload
         },
-        changeCurrentSong: (state, action) => {
+        changeCurrentSong: (state, action: PayloadAction<ISong>) => {
             state.currentSong = action.payload
         },
-        deleteSong: (state, action) => {
+        deleteSong: (state, action: PayloadAction<string>) => {
             handleDelete(state, action.payload)
         },
         // 搜索单曲--插入
-        insertSong: (state, action) => {
+        insertSong: (state, action: PayloadAction<ISong>) => {
             handleInsert(state, action.payload)
         },
     }
@@ -117,13 +151,13 @@ const playerSlice = createSlice({
 export const { changeCurrentIndex, changeCurrentSong, changeFullScreen, changeMode, changePlaying, changePlayList,
     changeSequencePlayList, changeShowPlayList, deleteSong, insertSong } = playerSlice.actions
 
-export let isMiniExist = (state) => state.player.playlist.length > 0
+export let isMiniExist = (state: RootState) => state.player.playList.length > 0
 
 export default playerSlice.reducer
 
-export const getSongDetail = (id) => {
+export const getSongDetail = (id: string) => {
     return dispatch => {
-        getSongDetailRequest(id).then(res => {
+        getSongDetailRequest(id).then((res: any) => {
             let song = res.songs[0];
             dispatch(insertSong(song));
         })

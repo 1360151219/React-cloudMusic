@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
 import "./Player.scss"
-import { useDispatch, useSelector } from "react-redux";
 import MiniPlayer from "../MiniPlayer/MiniPlayer";
 import FullPlayer from "../FullPlayer/FullPlayer";
 import Toast from "../../components/Toast/Toast";
@@ -18,9 +17,10 @@ import { getLyricRequest } from "../../api/request";
 import { getSong, isEmptyObject, findSongIndex, shuffle } from "../../utils";
 import { playMode } from "./store";
 import LyricParser from "../../utils/LyricParser";
+import { useAppSelector, useAppDispatch } from "../../stores";
 function Player() {
-    const { fullScreen, playing, currentSong, currentIndex, sequencePlayList, mode, playList } = useSelector((state) => state.player)
-    const dispatch = useDispatch()
+    const { fullScreen, playing, currentSong, currentIndex, sequencePlayList, mode, playList } = useAppSelector((state) => state.player)
+    const dispatch = useAppDispatch()
     const toggleShowPlayListDispatch = (isShow: boolean) => {
         dispatch(changeShowPlayList(isShow))
     }
@@ -39,13 +39,13 @@ function Player() {
     // 歌曲播放进度
     let percent = Number.isNaN(playTime / duration) ? 0 : playTime / duration
 
-    const audioRef = useRef()
-    const toastRef = useRef()
+    const audioRef = useRef<HTMLAudioElement>(null!)
+    const toastRef = useRef<any>(null!)
     const songReady = useRef(true)
-    const curLyricParser = useRef()
+    const curLyricParser = useRef<LyricParser | null>(null)
     const curLineIndex = useRef(0)
     // 开始播放、暂停
-    const clickPlaying = (e, playing) => {
+    const clickPlaying = (e: React.MouseEvent<HTMLElement>, playing: boolean) => {
         e.stopPropagation()
         dispatch(changePlaying(playing))
 
@@ -55,10 +55,10 @@ function Player() {
 
     }
     // 自动更新记录currentTime
-    const updateTime = (e) => {
+    const updateTime = (e: any) => {
         setPlayTime(e.target.currentTime);// s
     }
-    const onPercentChange = (curPercent) => {
+    const onPercentChange = (curPercent: number) => {
         const newTime = curPercent * duration
         setPlayTime(newTime)
         audioRef.current.currentTime = newTime
@@ -139,7 +139,7 @@ function Player() {
         if (curLyricParser.current) {
             curLyricParser.current.stop()
         }
-        getLyricRequest(id).then(res => {
+        getLyricRequest(id).then((res: any) => {
             lyric = res.lrc.lyric
             if (!lyric) {
                 curLyricParser.current = null
@@ -157,14 +157,12 @@ function Player() {
     }
     // 切歌逻辑
     useEffect(() => {
-        console.log(prevSong, playList[currentIndex]?.id || 0);
         if (!songReady.current ||
             !playList.length
             || currentIndex == -1
             || !playList[currentIndex]
             || prevSong == playList[currentIndex].id) return
 
-        console.log('change index:' + currentIndex);
         let current = playList[currentIndex]
         songReady.current = false
         audioRef.current.src = getSong(current.id)
