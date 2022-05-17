@@ -4,9 +4,9 @@ import { prefixStyle } from './../../utils';
 const transform = prefixStyle("transfrom")
 const ICON_NUMBER = 3
 const MusicNote = forwardRef((props, ref) => {
-    const iconsRef = useRef()
+    const iconsRef = useRef<HTMLDivElement>(null!)
     // 原生 DOM 操作，返回一个 DOM 节点对象
-    const createNode = (txt) => {
+    const createNode = (txt: string) => {
         const template = `<div class='icon_wrapper'>${txt}</div>`;
         let tempNode = document.createElement('div');
         tempNode.innerHTML = template;

@@ -35,13 +35,18 @@ const ProgressBarWrapper = styled.div`
     }
 
 `
+interface ITouch {
+    moving: boolean
+    startX: number
+    left: number
 
-function ProgressBar(props) {
+}
+function ProgressBar(props: { percentChange: (c: number) => void, percent: number }) {
     const { percentChange, percent } = props;
-    const progressBar = useRef();
-    const progress = useRef();
-    const progressBtn = useRef();
-    const [touch, setTouch] = useState({});
+    const progressBar = useRef<HTMLDivElement>(null!);
+    const progress = useRef<HTMLDivElement>(null!);
+    const progressBtn = useRef<HTMLDivElement>(null!);
+    const [touch, setTouch] = useState<ITouch>({} as ITouch);
     useEffect(() => {
         if (percent >= 0 && percent <= 1 && !touch.moving) {
             const barWidth = progressBar.current.clientWidth
@@ -56,32 +61,32 @@ function ProgressBar(props) {
         const curPercent = progress.current.clientWidth / barWidth
         percentChange(curPercent)
     }
-    const _handleOffset = (offset) => {
+    const _handleOffset = (offset: number) => {
         progress.current.style.width = `${offset}px`
         progressBtn.current.style.transform = `translate3d(${offset}px,0,0)`
     }
-    const touchStart = (e) => {
-        const startTouch = {}
+    const touchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+        const startTouch = {} as ITouch
         startTouch.moving = true // 开始滑动
         startTouch.startX = e.touches[0].pageX
         startTouch.left = progress.current.clientWidth
         setTouch(startTouch)
     }
-    const touchMove = (e) => {
+    const touchMove = (e: React.TouchEvent<HTMLDivElement>) => {
         if (!touch.moving) return
         const deltaX = e.touches[0].pageX - touch.startX
         const barWidth = progressBar.current.clientWidth;
         const offsetWidth = Math.min(Math.max(0, touch.left + deltaX), barWidth);
         _handleOffset(offsetWidth);
     }
-    const touchEnd = (e) => {
-        const endTouch = {}
+    const touchEnd = (e: React.TouchEvent<HTMLDivElement>) => {
+        const endTouch = {} as ITouch
         endTouch.moving = false
         setTouch(endTouch)
         _changePercent();
     }
 
-    const handleClick = (e) => {
+    const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
         const rect = progress.current.getBoundingClientRect();// 获取元素的位置和大小
         const width = e.pageX - rect.left
         _handleOffset(width);

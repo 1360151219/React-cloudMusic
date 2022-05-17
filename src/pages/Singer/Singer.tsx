@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { CSSTransition } from "react-transition-group"
-import { useDispatch, useSelector } from "react-redux";
 import { Container, ImgWrapper, CollectButton, BgLayer, SongListWrapper } from "./style"
 import Header from "../../components/Header/Header";
 import SongsList from "../../components/SongList/SongsList";
@@ -10,27 +9,28 @@ import { getArtist } from "./store";
 import Loading from "../../components/Loading/Loading";
 import MusicNote from "../../components/MusicNote/MusicNote";
 import { isMiniExist as isMiniExistState } from "../Player/store";
+import { useAppSelector, useAppDispatch } from "../../stores";
 //...
 
 
 // 列表偏移量
 const OFFSET = 5
 function Singer() {
-    const { loading, songsList, artist } = useSelector((state) => state.singer)
-    const isMiniExist = useSelector(isMiniExistState)
-    const dispatch = useDispatch()
+    const { loading, songsList, artist } = useAppSelector((state) => state.singer)
+    const isMiniExist = useAppSelector(isMiniExistState)
+    const dispatch = useAppDispatch()
     const { id } = useParams()
     useEffect(() => {
-        dispatch(getArtist(id))
+        dispatch(getArtist(id!))
     }, [])
     let [fly, setFly] = useState(true)
     let navigate = useNavigate()
     let songScrollWrapper = useRef()
-    let imgWrapper = useRef()
-    let collectButton = useRef()
+    let imgWrapper = useRef<HTMLDivElement>(null!)
+    let collectButton = useRef<HTMLDivElement>(null!)
     let songScroll = useRef()
-    let header = useRef()
-    let layer = useRef()
+    let header = useRef<HTMLDivElement>(null!)
+    let layer = useRef<HTMLDivElement>(null!)
     const musicNoteRef = useRef();
     const musicAnimation = (x, y) => {
         musicNoteRef.current.startAnimation({ x, y });
@@ -64,12 +64,12 @@ function Singer() {
             collectButton.current.style.opacity = `${1 - percent * 2}`// 加快消失速度
             imgWrapper.current.style.height = `0px`;
             imgWrapper.current.style.paddingTop = '75%';
-            imgWrapper.current.style.zIndex = 0;
+            imgWrapper.current.style.zIndex = '0';
         } else {
             // 超过了Header的时候
             imgWrapper.current.style.height = `${headerHeight}px`;
-            imgWrapper.current.style.paddingTop = 0;
-            imgWrapper.current.style.zIndex = 99;
+            imgWrapper.current.style.paddingTop = '0';
+            imgWrapper.current.style.zIndex = '99';
         }
 
     }, [])

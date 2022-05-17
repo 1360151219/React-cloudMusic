@@ -165,15 +165,15 @@ export const getRankListRequest = () => {
     return axioss.get('/toplist/detail')
 }
 // 歌单详情
-export const getAlbumDetailRequest = (id: number) => {
+export const getAlbumDetailRequest = (id: string) => {
     return axioss.get(`/playlist/detail?id=${id}`)
 }
 // 歌手歌曲
-export const getSingerSongsRequest = (id: number) => {
+export const getSingerSongsRequest = (id: string) => {
     return axioss.get(`/artists?id=${id}`)
 }
 // 获取歌曲歌词
-export const getLyricRequest = (id: number) => {
+export const getLyricRequest = (id: string) => {
     return axioss.get(`/lyric?id=${id}`)
 }
 

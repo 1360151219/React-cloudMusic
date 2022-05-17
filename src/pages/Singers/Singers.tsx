@@ -9,17 +9,18 @@ import {
     getHotSingerDispatch, categoryDispatch, alphaDispatch, areaDispatch, updateDispatch, pullDownRefreshDispatch, pullUpRefreshDispatch
 } from "./store/actions";
 
-import { useDispatch, useSelector } from "react-redux";
+import { useAppDispatch, useAppSelector } from "../../stores";
+
 import LazyLoad, { forceCheck } from "react-lazyload";
 import placeholder from '../../assets/singer.png'
 import { isMiniExist as isMiniExistState } from "../Player/store";
 
 function Singers() {
-    const { singerList, pageCount, pullUpLoading, pullDownLoading, loading, category, alpha, area } = useSelector((state) => state.singers)
-    const dispatch = useDispatch()
+    const { singerList, pageCount, pullUpLoading, pullDownLoading, loading, category, alpha, area } = useAppSelector((state) => state.singers)
+    const dispatch = useAppDispatch()
 
     let navigate = useNavigate()
-    const isMiniExist = useSelector(isMiniExistState)
+    const isMiniExist = useAppSelector(isMiniExistState)
     // 注意，这里渲染的时候不能写成组件形式，会出bug！！
     const renderSingerList = (childList) => {
         const enterDetail = (id: number) => {

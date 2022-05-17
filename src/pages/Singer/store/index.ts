@@ -21,10 +21,10 @@ const singerSlice = createSlice({
 })
 export const { changeSongsList, changeArtist, changeLoading } = singerSlice.actions
 export default singerSlice.reducer
-export function getArtist(id: number) {
+export function getArtist(id: string) {
     return dispatch => {
         dispatch(changeLoading(true))
-        getSingerSongsRequest(id).then(res => {
+        getSingerSongsRequest(id).then((res: any) => {
             const artist = res.artist
             const songs = res.hotSongs
             dispatch(changeArtist(artist))
