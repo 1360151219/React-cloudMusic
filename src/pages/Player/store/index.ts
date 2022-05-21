@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { getSongDetailRequest } from "../../../api/request";
 import { findSongIndex } from "../../../utils";
-import { RootState } from "../../../stores"
+import { RootState, Dispatch } from "../../../stores"
 interface ISong {
     al: any
     alia: any
@@ -39,6 +39,28 @@ export const playMode = {
     loop: 1,
     random: 2
 }
+export const SpeedConfig = [
+    {
+        key: 0.75,
+        name: "x0.75"
+    },
+    {
+        key: 1,
+        name: "x1"
+    },
+    {
+        key: 1.25,
+        name: "x1.25"
+    },
+    {
+        key: 1.5,
+        name: "x1.5"
+    },
+    {
+        key: 2,
+        name: "x2"
+    }
+]
 
 const handleDelete = (state: RootState["player"], songId: string) => {
     const playList = state.playList
@@ -110,7 +132,8 @@ const playerSlice = createSlice({
         mode: playMode.sequence,
         currentIndex: -1,
         showPlayList: false,
-        currentSong: {} as ISong
+        currentSong: {} as ISong,
+        speed: 1
     },
     reducers: {
         changeFullScreen: (state, action: PayloadAction<boolean>) => {
@@ -144,19 +167,23 @@ const playerSlice = createSlice({
         insertSong: (state, action: PayloadAction<ISong>) => {
             handleInsert(state, action.payload)
         },
+        // 歌曲倍速
+        changeSpeed: (state, action: PayloadAction<number>) => {
+            state.speed = action.payload
+        }
     }
 })
 
 
 export const { changeCurrentIndex, changeCurrentSong, changeFullScreen, changeMode, changePlaying, changePlayList,
-    changeSequencePlayList, changeShowPlayList, deleteSong, insertSong } = playerSlice.actions
+    changeSequencePlayList, changeShowPlayList, deleteSong, insertSong, changeSpeed } = playerSlice.actions
 
 export let isMiniExist = (state: RootState) => state.player.playList.length > 0
 
 export default playerSlice.reducer
 
 export const getSongDetail = (id: string) => {
-    return dispatch => {
+    return (dispatch: Dispatch) => {
         getSongDetailRequest(id).then((res: any) => {
             let song = res.songs[0];
             dispatch(insertSong(song));

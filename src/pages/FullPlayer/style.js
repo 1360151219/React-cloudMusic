@@ -1,6 +1,7 @@
 import style from "../../assets/global-style"
 import styled, { keyframes } from "styled-components"
-
+import disc from "../../assets/disc.png"
+import needle from "../../assets/needle.png"
 const rotate = keyframes`
     0%{
         transform: rotate(0);
@@ -84,37 +85,45 @@ export const FullPlayerContainer = styled.div`
 `
 
 export const Top = styled.div`
-    position: relative;
-    margin-bottom: 25px;
-    .back{
-        position: absolute;
-        top: 0;
-        left: 6px;
-        z-index: 50px;
-        .iconfont{
-            display: block;
-            padding: 9px;
-            font-size: 24px;
-            color: ${style["font-color-desc"]};
-            font-weight: bold;
-            transform: rotate(90deg);
-        }
+    box-sizing: border-box;
+    position: absolute;
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    border-bottom: 1px solid ${style["border-color-v2"]};
+    padding-bottom: 5px;
+    width: 100%;
+    height: 8%;
+    .back {
+    margin-left: 5px;
+    z-index: 50;
+    .iconfont {
+      display: block;
+      padding: 9px;
+      font-size: 24px;
+      color: ${style["font-color-desc"]};
+      font-weight: bold;
+      transform: rotate(90deg);
     }
-    .title{
-        text-align: center;
-        margin: auto;
-        line-height: 40px;
-        font-size: ${style["font-size-m"]};
-        color:${style["font-color-desc"]};
-        ${style.noWrap()}
-    }
-    .subtitle{
-        line-height: 20px;
-        text-align: center;
-        font-size: ${style["font-size-m"]};
-        color:${style["font-color-desc-v2"]};
-        ${style.noWrap()}
-    }
+  }
+  .text {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
+  }
+  .title {
+    line-height: 25px;
+    font-size: ${style["font-size-l"]};
+    color: ${style["font-color-desc"]};
+    ${style.noWrap()};
+  }
+  .subtitle {
+    line-height: 20px;
+    font-size: ${style["font-size-m"]};
+    color: ${style["font-color-desc-v2"]};
+    ${style.noWrap()};
+  }
 `
 
 export const Middle = styled.div`
@@ -131,7 +140,7 @@ export const Middle = styled.div`
 export const CDWrapper = styled.div`
     position: absolute;
     margin: auto;
-    top: 10%;
+    top: 4%;
     left: 0;
     right: 0;
     width: 80%;
@@ -148,17 +157,39 @@ export const CDWrapper = styled.div`
         opacity: 0;
         transition: opacity .4s;
     }
-   
+    .needle {
+        position: absolute;
+        top: -11.67vw;
+        left: 48vw;
+        width: 25vw;
+        height: 40vw;
+        z-index: 100;
+        background-image: url(${needle});
+        ${style.bgFull()};
+        transform-origin: 4.5vw 4.5vw;
+        transition: all 0.3s;
+        transform: rotate(0);
+        &.pause {
+        transform: rotate(-30deg);
+        }
+    }
     .cd{
+        position: relative;
         width: 100%;
         height: 100%;
+        background-image: url(${disc});
+        border: 4px solid ${style["border-color-v2"]};
         border-radius: 50%;
+        ${style.bgFull()};
         .image {
         position: absolute;
         left: 0;
         top: 0;
-        width: 100%;
-        height: 100%;
+        bottom: 0;
+        right: 0;
+        margin: auto;
+        width:80%;
+        height: 80%;
         box-sizing: border-box;
         border-radius: 50%;
         border: 10px solid rgba(255, 255, 255, 0.1) ;
@@ -171,12 +202,15 @@ export const CDWrapper = styled.div`
         }
     }
     .playing_lyric {
-        margin-top: 20px;
-        font-size: 14px;
+        position: absolute;
+        margin: auto;
+        width: 100%;
+        top: 95vw;
+        font-size: 16px;
         line-height: 20px;
         white-space: normal;
         text-align: center;
-        color: rgba (255, 255, 255, 0.5);
+        color: rgba(255, 255, 255, 0.8);
     }
 `
 
@@ -252,7 +286,35 @@ export const Bottom = styled.div`
     bottom: 50px;
     width: 100%;
 `
-
+export const List = styled.div`
+  width: 70%;
+  margin: auto;
+  display: flex;
+  align-items: center;
+  height: 30px;
+  justify-content: space-around;
+  overflow: hidden;
+  >span:first-of-type {
+    display: block;
+    flex: 0 0 auto;
+    padding: 5px 0;
+    color: ${style["font-color-desc-v2"]};
+    font-size: ${style["font-size-m"]};
+    vertical-align: middle;
+  }
+`
+export const ListItem = styled.span`
+  flex: 0 0 auto;
+  font-size: ${style["font-size-m"]};
+  padding: 5px 5px;
+  border-radius: 10px;
+  color: ${style["font-color-desc-v2"]};
+  &.selected {
+    color: ${style["theme-color"]};
+    border: 1px solid ${style["theme-color"]};
+    opacity: 0.8;
+  }
+`
 export const Operators = styled.div`
     display: flex;
     align-items: center;

@@ -11,7 +11,8 @@ export default class LyricParser {
     curLineIndex: number
     startStamp: number
     timer: number
-    constructor(lrc: string, handler = (object: { line: number, text: string }) => { }) {
+    speed: number
+    constructor(lrc: string, handler = (object: { line: number, text: string }) => { }, speed = 1) {
         this.lrc = lrc
         this.lines = [] // 解析后数组
         this.handler = handler
@@ -19,6 +20,7 @@ export default class LyricParser {
         this.curLineIndex = 0
         this.startStamp = 0
         this.timer = 0
+        this.speed = speed
         this._initLines()
     }
 
@@ -67,7 +69,8 @@ export default class LyricParser {
             if (this.curLineIndex < this.lines.length && this.state == STATE_PLAYING) {
                 this._playRest()
             }
-        }, delay)
+            // 倍速关键
+        }, delay / this.speed)
     }
     _findcurLineIndex(time: number): number {
         for (let i = 0; i < this.lines.length; i++) {
@@ -84,10 +87,10 @@ export default class LyricParser {
  * @param isSeek : 用户是否手动调整过
  */
     play(offset = 0, isSeek = false) {
+        // 重新触发定时器
         if (!this.lines.length) return
         this.state = STATE_PLAYING
         this.curLineIndex = this._findcurLineIndex(offset);
-        // console.log(this.curLineIndex);
         // curLineIndex-1 当前行数
         this._callHandler(this.curLineIndex - 1)
         this.startStamp = +new Date() - offset // 歌曲开始时间戳
@@ -97,7 +100,7 @@ export default class LyricParser {
             this._playRest(isSeek)
         }
     }
-    togglePlay(offset) {
+    togglePlay(offset: number) {
         if (this.state === STATE_PLAYING) {
             this.stop()
         } else {
@@ -109,8 +112,11 @@ export default class LyricParser {
         this.state = STATE_PAUSE
         clearTimeout(this.timer)
     }
-    seek(offset) {
+    seek(offset: number) {
         this.play(offset, true)
+    }
+    changeSpeed(speed: number) {
+        this.speed = speed
     }
 }
 //let s="[00:01.997]""

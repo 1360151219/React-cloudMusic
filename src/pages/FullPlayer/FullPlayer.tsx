@@ -1,15 +1,15 @@
 import React, { useEffect, useRef, useState } from "react";
 import { CSSTransition } from 'react-transition-group';
 import { getName, getPosAndScale, prefixStyle, formatPlayTime } from "../../utils";
-import { FullPlayerContainer, Top, Middle, CDWrapper, Bottom, Operators, ProgressWrapper, LyricContainer, LyricList } from "./style";
+import { FullPlayerContainer, Top, Middle, CDWrapper, Bottom, List, ListItem, Operators, ProgressWrapper, LyricContainer, LyricList } from "./style";
 import animations from "create-keyframe-animation";
 import ProgressBar from "../../components/ProgressBar/ProgressBar";
-import { playMode } from "../Player/store";
+import { playMode, SpeedConfig } from "../Player/store";
 import Scroll from "../../components/Scroll/Scroll";
 const transform = prefixStyle("transform")
 function FullPlayer(props: any) {
-    const { song, fullScreen, playing, percent, playTime, duration, mode, curLyricParser, curPlayingLyric, curLineIndex } = props
-    const { toggleFullScreen, onPercentChange, clickPlaying, handlePrev, handleNext, changeMode, togglePlayList } = props
+    const { song, fullScreen, playing, percent, playTime, duration, mode, curLyricParser, curPlayingLyric, curLineIndex, speed } = props
+    const { toggleFullScreen, onPercentChange, clickPlaying, handlePrev, handleNext, changeMode, togglePlayList, clickSpeed } = props
     // 帧动画
     const fullPlayerRef = useRef<HTMLDivElement>(null!)
     const cdWrapperRef = useRef<HTMLDivElement>(null!)
@@ -100,6 +100,7 @@ function FullPlayer(props: any) {
         togglePlayList(true)
         e.stopPropagation()
     }
+   
     return (
         <CSSTransition
             classNames="fullScreen"
@@ -126,8 +127,11 @@ function FullPlayer(props: any) {
                     <div className="back">
                         <i className="iconfont icon-back" onClick={() => toggleFullScreen(false)}>&#xe662;</i>
                     </div>
-                    <h1 className="title">{song.name}</h1>
-                    <h1 className="subtitle">{getName(song.ar)}</h1>
+                    <div className="text">
+                        <h1 className="title">{song.name}</h1>
+                        <h1 className="subtitle">{getName(song.ar)}</h1>
+                    </div>
+
                 </Top>
                 <Middle ref={cdWrapperRef} onClick={toggleLyricShow}>
                     <CSSTransition
@@ -136,6 +140,7 @@ function FullPlayer(props: any) {
                         timeout={400}
                     >
                         <CDWrapper>
+                            <div className={`needle ${playing ? '' : 'pause'}`}></div>
                             <div className="cd">
                                 <img
                                     className={`image play ${playing ? "" : "pause"}`}
@@ -143,6 +148,7 @@ function FullPlayer(props: any) {
                                     alt=""
                                 />
                             </div>
+                            <p className="playing_lyric">{curPlayingLyric}</p>
                         </CDWrapper>
                     </CSSTransition>
                     <CSSTransition
@@ -176,6 +182,21 @@ function FullPlayer(props: any) {
                     </CSSTransition>
                 </Middle>
                 <Bottom className="bottom">
+                    <List>
+                        <span > 倍速听歌 </span>
+                        {
+                            SpeedConfig.map((item) => {
+                                return (
+                                    <ListItem
+                                        onClick={() => clickSpeed(item.key)}
+                                        key={item.key}
+                                        className={`${speed === item.key ? 'selected' : ''}`} >
+                                        {item.name}
+                                    </ListItem>
+                                )
+                            })
+                        }
+                    </List>
                     <ProgressWrapper>
                         <span className="time time-l">{formatPlayTime(playTime)}</span>
                         <div className="progress-bar-wrapper">

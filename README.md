@@ -273,3 +273,13 @@ _findcurLineIndex(time: number): number {
 ### Section 31: 点击播放列表中的删除单曲的时候，`currentIndex`变成该单曲原来 index
 
 原因：`handleDelete`方法触发后，同时事件冒泡触发了`selectItem`方法。
+
+### Audio 元素的属性与方法总结
+
+- `play()`、`parse()` 播放和暂停
+- currentTime 当前播放时间
+- src 歌曲源地址
+- autoplay
+- \*playbackRate 歌曲播放速度
+- 事件 ：`onTimeUpdate` `onEnded` `onError`
+- ....

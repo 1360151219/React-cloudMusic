@@ -12,14 +12,17 @@ import {
     changePlayList,
     changeMode as changeModeState,
     changeFullScreen,
+    changeSpeed,
+    SpeedConfig
 } from "./store";
 import { getLyricRequest } from "../../api/request";
 import { getSong, isEmptyObject, findSongIndex, shuffle } from "../../utils";
 import { playMode } from "./store";
 import LyricParser from "../../utils/LyricParser";
 import { useAppSelector, useAppDispatch } from "../../stores";
+
 function Player() {
-    const { fullScreen, playing, currentSong, currentIndex, sequencePlayList, mode, playList } = useAppSelector((state) => state.player)
+    const { fullScreen, playing, currentSong, currentIndex, sequencePlayList, mode, playList, speed } = useAppSelector((state) => state.player)
     const dispatch = useAppDispatch()
     const toggleShowPlayListDispatch = (isShow: boolean) => {
         dispatch(changeShowPlayList(isShow))
@@ -134,12 +137,12 @@ function Player() {
         curLineIndex.current = line
         setCurPlayingLyric(text)
     }
-    const getLyric = (id: number) => {
+    const getLyric = (id: string | number) => {
         let lyric = ""
         if (curLyricParser.current) {
             curLyricParser.current.stop()
         }
-        getLyricRequest(id).then((res: any) => {
+        getLyricRequest(id as string).then((res: any) => {
             lyric = res.lrc.lyric
             if (!lyric) {
                 curLyricParser.current = null
@@ -166,6 +169,8 @@ function Player() {
         let current = playList[currentIndex]
         songReady.current = false
         audioRef.current.src = getSong(current.id)
+        audioRef.current.autoplay = true
+        audioRef.current.playbackRate = speed
         getLyric(current.id)
         setTimeout(() => {
             // 防止切歌频繁
@@ -178,12 +183,22 @@ function Player() {
         setPrevSong(current.id)
         setPlayTime(0)
         setDuration(current.dt / 1000 | 0)
-    }, [currentIndex])
+        // ...
+
+
+    }, [currentIndex, playList])
     // 将audio和playing参数绑定
     useEffect(() => {
         playing ? audioRef.current.play() : audioRef.current.pause()
     }, [playing])
-
+    const clickSpeed = (key: number) => {
+        if (!curLyricParser.current) return
+        dispatch(changeSpeed(key))
+        audioRef.current.playbackRate = key
+        // 同步歌词
+        curLyricParser.current.changeSpeed(key)
+        curLyricParser.current.seek(playTime * 1000)
+    }
 
     return (
         <>
@@ -203,6 +218,7 @@ function Player() {
                         curLyricParser={curLyricParser.current}
                         curPlayingLyric={curPlayingLyric}
                         curLineIndex={curLineIndex.current}
+
                     ></MiniPlayer>
                 }
                 {isEmptyObject(currentSong) ? null :
@@ -224,6 +240,8 @@ function Player() {
                         curLyricParser={curLyricParser.current}
                         curPlayingLyric={curPlayingLyric}
                         curLineIndex={curLineIndex.current}
+                        speed={speed}
+                        clickSpeed={clickSpeed}
                     ></FullPlayer>
                 }
                 <PlayList></PlayList>
