@@ -7,25 +7,25 @@ import Scroll from "../../components/Scroll/Scroll";
 import Loading from "../../components/Loading/Loading";
 import MusicNote from "../../components/MusicNote/MusicNote";
 import { getHotKeyWords, getSuggestList } from "./store";
-import { useSelector, useDispatch } from "react-redux";
 import LazyLoad, { forceCheck } from "react-lazyload";
 import placeholderImg from '../../assets/music.png'
 import { getName } from "../../utils";
 import { getSongDetail } from "../Player/store";
+import { useAppDispatch, useAppSelector } from "../../stores";
 function Search() {
-    const dispatch = useDispatch()
+    const dispatch = useAppDispatch()
     const { hotList,
         loading,
         songList,
         suggestList,
-        playing
-    } = useSelector((state) => state.search)
+    } = useAppSelector((state) => state.search)
+    const playing = useAppSelector((state) => state.player.playing)
 
     // const { getHotKeyWordsDispatch, getSuggestListDispatch, getSongDetailDispatch } = props
     const navigate = useNavigate()
     let [show, setShow] = useState(false)
     let [query, setQuery] = useState("")
-    const musicNoteRef = useRef()
+    const musicNoteRef = useRef<any>()
     const searchBack = useCallback(() => {
         setShow(false)
     }, [])
@@ -34,7 +34,7 @@ function Search() {
         if (!q) return
         dispatch(getSuggestList(q))
     }, [])
-    const selectItem = (e, id: string) => {
+    const selectItem = (e: React.MouseEvent<HTMLDivElement>, id: string) => {
         //搜索单曲的数据并不完整，需要重新获取具体数据
         dispatch(getSongDetail(id))
         musicNoteRef.current.startAnimation({ x: e.clientX, y: e.clientY })
@@ -44,7 +44,7 @@ function Search() {
         dispatch(getHotKeyWords())
     }, [])
     const renderHotKeys = () => {
-        let datalist = hotList
+        let datalist = hotList as any
         return (
             <ul>
                 {
@@ -95,7 +95,7 @@ function Search() {
         )
     };
     const renderAlbum = () => {
-        if (!suggestList.size) return
+        if (!suggestList.length) return
         let datalist = suggestList.playlists
         return (
             <AlbumList>
@@ -191,7 +191,7 @@ function Search() {
                 </ShortcutWrapper>
                 {loading ? <Loading /> : null}
             </Container>
-        </CSSTransition>
+        </CSSTransition >
     )
 }
 

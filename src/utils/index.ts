@@ -71,7 +71,7 @@ let vendor = (() => {
 })()
 export function prefixStyle(style: string) {
     if (vendor === false) {
-        return false;
+        return '';
     }
     if (vendor === "standard") {
         return style;

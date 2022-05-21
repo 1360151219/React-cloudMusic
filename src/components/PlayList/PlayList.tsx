@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { PlayListWrapper, ScrollWrapper, ListHeader, ListContent } from "./style";
 import { CSSTransition } from "react-transition-group"
 import { playMode } from "../../pages/Player/store";
-import { changeCurrentSong, changeCurrentIndex, changePlayList, changeMode as changeModeState, changeSequencePlayList, deleteSong } from "../../pages/Player/store/actionCreator";
+import { changeCurrentSong, changeCurrentIndex, changePlayList, changeMode as changeModeState, changeSequencePlayList, deleteSong } from "../../pages/Player/store";
 import { getName, findSongIndex, shuffle } from "../../utils";
 function PlayList() {
     const { showPlayList, currentSong, playList, sequencePlayList, mode } = useSelector((state) => state.player)
@@ -87,7 +87,7 @@ function PlayList() {
     //touchStart 后记录 y 值
     const [startY, setStartY] = useState(0);
     //touchStart 事件是否已经被触发
-    const [initialed, setInitialed] = useState(0);
+    const [initialed, setInitialed] = useState(false);
     // 用户下滑的距离
     const [distance, setDistance] = useState(0);
     // List高度

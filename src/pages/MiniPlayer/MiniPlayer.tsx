@@ -3,11 +3,11 @@ import { CSSTransition } from 'react-transition-group';
 import { getName } from "../../utils";
 import { MiniPlayerContainer } from "./style";
 import ProgressCircle from "../../components/ProgressCircle/ProgressCircle";
-function MiniPlayer(props) {
+function MiniPlayer(props: any) {
     const { song, fullScreen, playing, clickPlaying, percent, playTime, duration, curLyricParser, curPlayingLyric, curLineIndex } = props
     const { toggleFullScreen, togglePlayList } = props
     const miniRef = useRef()
-    const showPlayList = (e) => {
+    const showPlayList = (e: React.MouseEvent<HTMLElement>) => {
         togglePlayList(true)
         e.stopPropagation()
     }

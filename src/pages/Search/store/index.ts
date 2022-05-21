@@ -30,21 +30,21 @@ export default searchSlice.reducer
 
 export const getHotKeyWords = () => {
     return dispatch => {
-        getHotKeyWordsRequest().then(res => {
+        getHotKeyWordsRequest().then((res: any) => {
             const list = res.result.hots
             dispatch(changeHotList(list))
         })
     }
 }
-export const getSuggestList = (query) => {
+export const getSuggestList = (query: string) => {
     return dispatch => {
         dispatch(changeLoading(true))
-        getSuggestListRequest(query).then(data => {
+        getSuggestListRequest(query).then((data: any) => {
             if (!data) return;
             let res = data.result || [];
             dispatch(changeSuggestList(res));
         })
-        getResultSongsListRequest(query).then(data => {
+        getResultSongsListRequest(query).then((data: any) => {
             if (!data) return;
             let res = data.result.songs || [];
             dispatch(changeSongList(res));

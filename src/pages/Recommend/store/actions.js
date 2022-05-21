@@ -3,6 +3,7 @@ import { changeBannerList, changeRecommendList, changeLoading } from ".";
 
 
 export const getBanner = () => (dispatch) => {
+
     dispatch(changeLoading(true))
     getBannerRequest().then(data => {
         dispatch(changeBannerList(data.banners));

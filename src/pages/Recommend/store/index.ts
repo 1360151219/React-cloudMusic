@@ -11,8 +11,8 @@ interface recommendItem {
 export const recommendSlice = createSlice({
     name: 'recommend',
     initialState: {
-        bannerList: [{ imageUrl: "" }],
-        recommendList: [{ id: "", picUrl: "", playCount: 0, name: "" }],
+        bannerList: [] as bannerItem[],
+        recommendList: [] as recommendItem[],
         loading: true
     },
     reducers: {
